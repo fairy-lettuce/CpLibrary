@@ -8,7 +8,7 @@ using System.Text;
 using System.Globalization;
 using System.Threading;
 using System.Diagnostics;
-using CpLibrary.Library.Collections;
+
 using static System.Math;
 
 namespace CpLibrary.Contest
@@ -22,10 +22,9 @@ namespace CpLibrary.Contest
 
 		public override void Solve()
 		{
-			var deque = new Deque<int>();
-			deque.PushBack(1);
-			deque.PushBack(3);
-			deque.PopBack();
+			/*
+			 * Write your code here!
+			 */
 		}
 
 		public SolverA(Scanner cin, StreamWriter cout)

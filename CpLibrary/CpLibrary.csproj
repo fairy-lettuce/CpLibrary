@@ -27,6 +27,10 @@
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Library\" />
+	</ItemGroup>
+
 	<ProjectExtensions><VisualStudio><UserProperties workspace_4info_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
