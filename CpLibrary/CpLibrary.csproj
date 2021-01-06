@@ -18,10 +18,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ac-library-csharp" Version="1.0.8" />
 		<PackageReference Include="AtCoderAnalyzer" Version="1.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="SourceExpander" Version="2.5.0" />
 		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" />
 	</ItemGroup>
 
