@@ -20,7 +20,7 @@ namespace CpLibrary
 
 		static void Main(string[] args)
 		{
-			if (args[0] == "expand")
+			if (args.Length > 1 && args[0] == "expand")
 			{
 				ProgramA.Expand();
 				ProgramB.Expand();
