@@ -13,7 +13,7 @@ using static System.Math;
 
 namespace CpLibrary.Contest
 {
-	public class SolverB : SolverBase
+	public class SolverC : SolverBase
 	{
 		Scanner sr;
 		bool willExpandSource = true;
@@ -26,7 +26,7 @@ namespace CpLibrary.Contest
 			 */
 		}
 
-		public SolverB(Scanner sr) => this.sr = sr;
+		public SolverC(Scanner sr) => this.sr = sr;
 
 		public override void Run()
 		{
@@ -37,14 +37,14 @@ namespace CpLibrary.Contest
 		}
 	}
 
-	public static class ProgramB
+	public static class ProgramC
 	{
 		public static void Main(string[] args)
 		{
 			var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
 			Console.SetOut(sw);
 			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-			var solver = new SolverB(sr);
+			var solver = new SolverC(sr);
 			var thread = new Thread(new ThreadStart(() => solver.Run()), 1 << 27);
 			thread.Start();
 			thread.Join();

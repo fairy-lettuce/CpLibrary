@@ -16,9 +16,8 @@ namespace CpLibrary.Contest
 	public class SolverA : SolverBase
 	{
 		Scanner sr;
-		StreamWriter sw;
-		bool isMultipleTestcases = false;
 		bool willExpandSource = true;
+		bool isMultipleTestcases = false;
 
 		public override void Solve()
 		{
@@ -27,11 +26,7 @@ namespace CpLibrary.Contest
 			 */
 		}
 
-		public SolverA(Scanner cin, StreamWriter cout)
-		{
-			this.sr = cin;
-			this.sw = cout;
-		}
+		public SolverA(Scanner sr) => this.sr = sr;
 
 		public override void Run()
 		{
@@ -49,8 +44,10 @@ namespace CpLibrary.Contest
 			var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
 			Console.SetOut(sw);
 			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-			var solver = new SolverA(sr, sw);
-			solver.Run();
+			var solver = new SolverA(sr);
+			var thread = new Thread(new ThreadStart(() => solver.Run()), 1 << 27);
+			thread.Start();
+			thread.Join();
 			Console.Out.Flush();
 		}
 	}

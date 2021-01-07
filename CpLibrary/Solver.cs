@@ -19,26 +19,22 @@ namespace CpLibrary
 
 	public abstract class SolverBase : ISolver
 	{
-		Scanner sr;
-		StreamWriter sw;
-		bool isMultipleTestcases = false;
-
 		public abstract void Solve();
 		public abstract void Run();
 
 		public bool YesNo(bool condition)
 		{
-			sw.WriteLine(condition ? "Yes" : "No");
+			Console.WriteLine(condition ? "Yes" : "No");
 			return condition;
 		}
 		public bool YESNO(bool condition)
 		{
-			sw.WriteLine(condition ? "YES" : "NO");
+			Console.WriteLine(condition ? "YES" : "NO");
 			return condition;
 		}
 		public bool yesno(bool condition)
 		{
-			sw.WriteLine(condition ? "yes" : "no");
+			Console.WriteLine(condition ? "yes" : "no");
 			return condition;
 		}
 	}

@@ -20,8 +20,9 @@ namespace CpLibrary
 		{
 			SolverBase solver;
 			var sr = new Scanner(new StreamReader("../../../Workspace/A_input.txt"));
-			solver = new SolverA(sr, new StreamWriter(Console.OpenStandardOutput()));
+			solver = new SolverA(sr);
 			solver.Run();
+			Console.ReadKey();
 		}
 	}
 }
