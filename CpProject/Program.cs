@@ -20,6 +20,21 @@ namespace CpLibrary
 
 		static void Main(string[] args)
 		{
+			if (args[0] == "expand")
+			{
+				ProgramA.Expand();
+				ProgramB.Expand();
+				ProgramC.Expand();
+				ProgramD.Expand();
+				ProgramE.Expand();
+				ProgramF.Expand();
+				ProgramG.Expand();
+				ProgramH.Expand();
+				ProgramI.Expand();
+				ProgramJ.Expand();
+				return;
+			}
+
 			Directory.SetCurrentDirectory(workspacePath);
 
 			while (true)

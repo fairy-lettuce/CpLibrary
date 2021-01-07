@@ -23,5 +23,9 @@
     <PackageReference Include="SourceExpander" Version="2.5.0" />
     <ProjectReference Include="..\CpLibrary\CpLibrary.csproj" />
   </ItemGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet $(TargetPath) expand" />
+  </Target>
 
 </Project>

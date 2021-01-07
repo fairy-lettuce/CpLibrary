@@ -16,12 +16,10 @@ namespace CpLibrary.Contest
 	public class SolverF : SolverBase
 	{
 		Scanner sr;
-		bool willExpandSource = true;
 		bool isMultipleTestcases = false;
 
 		public override void Solve()
 		{
-			YESNO(true);
 			/*
 			 * Write your code here!
 			 */
@@ -31,7 +29,6 @@ namespace CpLibrary.Contest
 
 		public override void Run()
 		{
-			if (willExpandSource) SourceExpander.Expander.Expand();
 			var _t = 1;
 			if (isMultipleTestcases) _t = sr.ReadInt();
 			while (_t-- > 0) Solve();
@@ -51,5 +48,7 @@ namespace CpLibrary.Contest
 			thread.Join();
 			Console.Out.Flush();
 		}
+
+		public static void Expand() => SourceExpander.Expander.Expand();
 	}
 }
