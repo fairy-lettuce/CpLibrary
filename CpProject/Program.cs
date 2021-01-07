@@ -71,7 +71,7 @@ namespace CpLibrary
 
 			sr = new StreamReader(((char)(program + 'A')).ToString() + "_input.txt");
 			sw = new StreamWriter(Console.OpenStandardOutput());
-			if (opt.DumpResult) sw = new StreamWriter(((char)(program + 'A')).ToString() + "_output.txt");
+			if (opt.DumpResult) sw = new StreamWriter("output.txt");
 			if (opt.IsInputConsole) sr = new StreamReader(Console.OpenStandardInput());
 			if (opt.IsSampleTestcases) throw new NotImplementedException();
 			Console.SetIn(sr);
