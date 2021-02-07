@@ -18,6 +18,9 @@ namespace CpLibrary
 	{
 		const string workspacePath = @"../../../Workspace/";
 
+		private static StreamReader standardStreamReader;
+		private static StreamWriter standardStreamWriter;
+
 		static void Main(string[] args)
 		{
 			if (args.Length >= 1 && args[0] == "expand")
@@ -37,27 +40,26 @@ namespace CpLibrary
 
 			Directory.SetCurrentDirectory(workspacePath);
 
+			standardStreamReader = new StreamReader(Console.OpenStandardInput());
+			standardStreamWriter = new StreamWriter(Console.OpenStandardOutput());
+
 			while (true)
 			{
-				using (var cin = new StreamReader(Console.OpenStandardInput()))
-				using (var cout = new StreamWriter(Console.OpenStandardOutput()))
-				{
-					Console.SetIn(cin);
-					Console.SetOut(cout);
+				Console.SetIn(standardStreamReader);
+				Console.SetOut(standardStreamWriter);
 
-					Console.Write(">> ");
-					Console.Out.Flush();
+				Console.Write(">> ");
+				Console.Out.Flush();
 
-					var regex = new Regex(@"\s\s+");
-					var arg = regex.Replace(Console.ReadLine().Trim(), " ").Split(' ');
+				var regex = new Regex(@"\s\s+");
+				var arg = regex.Replace(Console.ReadLine().Trim(), " ").Split(' ');
 
-					Parser.Default.ParseArguments<RunCommand, DlCommand, SubmitCommand, ExitCommand>(arg)
-						.WithParsed<RunCommand>(opt => Run(opt))
-						.WithParsed<DlCommand>(opt => Download(opt))
-						.WithParsed<SubmitCommand>(opt => Submit(opt))
-						.WithParsed<ExitCommand>(opt => Exit(opt))
-						.WithNotParsed(err => Console.WriteLine("Failed to parse arguments."));
-				}
+				Parser.Default.ParseArguments<RunCommand, DlCommand, SubmitCommand, ExitCommand>(arg)
+					.WithParsed<RunCommand>(opt => Run(opt))
+					.WithParsed<DlCommand>(opt => Download(opt))
+					.WithParsed<SubmitCommand>(opt => Submit(opt))
+					.WithParsed<ExitCommand>(opt => Exit(opt))
+					.WithNotParsed(err => Console.WriteLine("Failed to parse arguments."));
 			}
 		}
 
@@ -84,11 +86,14 @@ namespace CpLibrary
 			if (program < 0) return;
 			if (program >= 10) return;
 
-			sr = new StreamReader(((char)(program + 'A')).ToString() + "_input.txt");
-			sw = new StreamWriter(Console.OpenStandardOutput());
 			if (opt.DumpResult) sw = new StreamWriter("output.txt");
+			else sw = new StreamWriter(Console.OpenStandardOutput());
+
 			if (opt.IsInputConsole) sr = new StreamReader(Console.OpenStandardInput());
+			else sr = new StreamReader(((char)(program + 'A')).ToString() + "_input.txt");
+
 			if (opt.IsSampleTestcases) throw new NotImplementedException();
+
 			Console.SetIn(sr);
 			Console.SetOut(sw);
 
@@ -101,7 +106,7 @@ namespace CpLibrary
 			solver.Run();
 
 			var endTime = DateTime.Now;
-			
+
 			sr.Close();
 			sw.Close();
 
