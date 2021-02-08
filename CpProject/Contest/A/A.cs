@@ -37,15 +37,21 @@ namespace CpLibrary.Contest
 
 	public static class ProgramA
 	{
+		private static bool StartsOnThread = true;
+
 		public static void Main(string[] args)
 		{
 			var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
 			Console.SetOut(sw);
 			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 			var solver = new SolverA(sr);
-			var thread = new Thread(new ThreadStart(() => solver.Run()), 1 << 27);
-			thread.Start();
-			thread.Join();
+			if (StartsOnThread)
+			{
+				var thread = new Thread(new ThreadStart(() => solver.Run()), 1 << 27);
+				thread.Start();
+				thread.Join();
+			}
+			else solver.Run();
 			Console.Out.Flush();
 		}
 
