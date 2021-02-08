@@ -16,7 +16,6 @@ namespace CpLibrary.Contest
 	public class SolverI : SolverBase
 	{
 		Scanner sr;
-		bool isMultipleTestcases = false;
 
 		bool HasMultipleTestcases { get; }
 
