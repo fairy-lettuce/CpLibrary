@@ -18,6 +18,8 @@ namespace CpLibrary.Contest
 		Scanner sr;
 		bool isMultipleTestcases = false;
 
+		bool HasMultipleTestcases { get; }
+
 		public override void Solve()
 		{
 			/*
@@ -30,7 +32,7 @@ namespace CpLibrary.Contest
 		public override void Run()
 		{
 			var _t = 1;
-			if (isMultipleTestcases) _t = sr.ReadInt();
+			if (HasMultipleTestcases) _t = sr.ReadInt();
 			while (_t-- > 0) Solve();
 		}
 	}
