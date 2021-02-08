@@ -28,7 +28,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Library\" />
+	  <Folder Include="Library\DataStructure\" />
+	  <Folder Include="Library\Graph\" />
+	  <Folder Include="Library\Mathematics\" />
+	  <Folder Include="Library\Util\" />
+	  <Folder Include="Library\Strings\" />
+	  <Folder Include="Library\Geometry\" />
+	  <Folder Include="Library\Collections\" />
+	  <Folder Include="Library\Algorithms\" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties workspace_4info_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
