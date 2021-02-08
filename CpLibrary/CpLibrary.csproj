@@ -34,7 +34,6 @@
 	  <Folder Include="Library\Util\" />
 	  <Folder Include="Library\Strings\" />
 	  <Folder Include="Library\Geometry\" />
-	  <Folder Include="Library\Collections\" />
 	  <Folder Include="Library\Algorithms\" />
 	</ItemGroup>
 
