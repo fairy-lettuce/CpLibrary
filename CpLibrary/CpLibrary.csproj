@@ -9,25 +9,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ac-library-csharp" Version="1.0.8" />
-		<PackageReference Include="AtCoderAnalyzer" Version="1.0.8">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
-		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
-		<PackageReference Include="SourceExpander.Embedder" Version="2.5.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="SourceExpander.Embedder.Analyzer" Version="2.5.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Folder Include="Library\DataStructure\" />
 	  <Folder Include="Library\Graph\" />
 	  <Folder Include="Library\Mathematics\" />
@@ -35,6 +16,13 @@
 	  <Folder Include="Library\Strings\" />
 	  <Folder Include="Library\Geometry\" />
 	  <Folder Include="Library\Algorithms\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="SourceExpander.Embedder" Version="3.0.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties workspace_4info_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
