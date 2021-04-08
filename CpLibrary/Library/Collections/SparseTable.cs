@@ -38,7 +38,7 @@ namespace CpLibrary.Collections
 			table[0] = a;
 			for (int i = 1; i <= log[Count]; i++)
 			{
-				table[i] = new T[Count];
+				table[i] = new T[Count - (1 << i) + 1];
 				for (int j = 0; j <= Count - (1 << i); j++)
 				{
 					table[i][j] = func(table[i - 1][j], table[i - 1][j + (1 << (i - 1))]);
