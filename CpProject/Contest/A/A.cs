@@ -22,7 +22,7 @@ namespace CpLibrary.Contest
 		{
 			var (n, k) = sr.ReadValue<int, int>();
 			var (w, p) = sr.ReadValueArray<long, int>(n);
-
+			var dp = 
 		}
 
 		public SolverA(Scanner sr) => this.sr = sr;
