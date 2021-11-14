@@ -20,9 +20,9 @@ namespace CpLibrary.Contest
 
 		public override void Solve()
 		{
-			/*
-			 * Write your code here!
-			 */
+			var (n, k) = sr.ReadValue<int, int>();
+			var (w, p) = sr.ReadValueArray<long, int>(n);
+
 		}
 
 		public SolverA(Scanner sr) => this.sr = sr;
