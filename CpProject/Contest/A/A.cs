@@ -10,6 +10,7 @@ using System.Threading;
 using System.Diagnostics;
 
 using static System.Math;
+using static CpLibrary.Util;
 
 namespace CpLibrary.Contest
 {

@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Library\DataStructure\" />
-	  <Folder Include="Library\Graph\" />
 	  <Folder Include="Library\Mathematics\" />
 	  <Folder Include="Library\Strings\" />
 	  <Folder Include="Library\Geometry\" />
