@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace CpLibrary
 {
-	public static class Util
+	public static partial class Util
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int PopCount(uint n)
