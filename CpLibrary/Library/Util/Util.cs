@@ -9,9 +9,9 @@ namespace CpLibrary
 {
 	public static partial class Util
 	{
-		static int[] dx4 => new int[] { 1, 0, -1, 0 };
-		static int[] dy4 => new int[] { 0, 1, 0, -1 };
-		static int[] dx8 => new int[] { 1, 1, 0, -1, -1, -1, 0, 1 };
-		static int[] dy8 => new int[] { 0, 1, 1, 1, 0, -1, -1, -1 };
+		public static int[] dx4 => new int[] { 1, 0, -1, 0 };
+		public static int[] dy4 => new int[] { 0, 1, 0, -1 };
+		public static int[] dx8 => new int[] { 1, 1, 0, -1, -1, -1, 0, 1 };
+		public static int[] dy8 => new int[] { 0, 1, 1, 1, 0, -1, -1, -1 };
 	}
 }
