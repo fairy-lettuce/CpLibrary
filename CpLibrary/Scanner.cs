@@ -71,6 +71,13 @@ namespace CpLibrary
 
 		public T1 ReadValue<T1>() => (T1)Convert.ChangeType(ReadString(), typeof(T1));
 
+		public (T1, T2) ReadValue<T1, T2>() => (ReadValue<T1>(), ReadValue<T2>());
+		public (T1, T2, T3) ReadValue<T1, T2, T3>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>());
+		public (T1, T2, T3, T4) ReadValue<T1, T2, T3, T4>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>());
+		public (T1, T2, T3, T4, T5) ReadValue<T1, T2, T3, T4, T5>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>());
+		public (T1, T2, T3, T4, T5, T6) ReadValue<T1, T2, T3, T4, T5, T6>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>());
+		public (T1, T2, T3, T4, T5, T6, T7) ReadValue<T1, T2, T3, T4, T5, T6, T7>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>(), ReadValue<T7>());
+
 		public T1[] ReadValueArray<T1>(int n)
 		{
 			var arr = new T1[n];
@@ -80,14 +87,6 @@ namespace CpLibrary
 			}
 			return arr;
 		}
-
-		public (T1, T2) ReadValue<T1, T2>() => (ReadValue<T1>(), ReadValue<T2>());
-		public (T1, T2, T3) ReadValue<T1, T2, T3>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>());
-		public (T1, T2, T3, T4) ReadValue<T1, T2, T3, T4>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>());
-		public (T1, T2, T3, T4, T5) ReadValue<T1, T2, T3, T4, T5>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>());
-		public (T1, T2, T3, T4, T5, T6) ReadValue<T1, T2, T3, T4, T5, T6>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>());
-		public (T1, T2, T3, T4, T5, T6, T7) ReadValue<T1, T2, T3, T4, T5, T6, T7>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>(), ReadValue<T7>());
-
 		public (T1[], T2[]) ReadValueArray<T1, T2>(int n)
 		{
 			var (v1, v2) = (new T1[n], new T2[n]);
@@ -141,6 +140,61 @@ namespace CpLibrary
 				(v1[i], v2[i], v3[i], v4[i], v5[i], v6[i], v7[i]) = ReadValue<T1, T2, T3, T4, T5, T6, T7>();
 			}
 			return (v1, v2, v3, v4, v5, v6, v7);
+		}
+
+		public (T1, T2)[] ReadTupleArray<T1, T2>(int n)
+		{
+			var ret = new (T1, T2)[n];
+			for (int i = 0; i < n; i++)
+			{
+				ret[i] = ReadValue<T1, T2>();
+			}
+			return ret;
+		}
+		public (T1, T2, T3)[] ReadTupleArray<T1, T2, T3>(int n)
+		{
+			var ret = new (T1, T2, T3)[n];
+			for (int i = 0; i < n; i++)
+			{
+				ret[i] = ReadValue<T1, T2, T3>();
+			}
+			return ret;
+		}
+		public (T1, T2, T3, T4)[] ReadTupleArray<T1, T2, T3, T4>(int n)
+		{
+			var ret = new (T1, T2, T3, T4)[n];
+			for (int i = 0; i < n; i++)
+			{
+				ret[i] = ReadValue<T1, T2, T3, T4>();
+			}
+			return ret;
+		}
+		public (T1, T2, T3, T4, T5)[] ReadTupleArray<T1, T2, T3, T4, T5>(int n)
+		{
+			var ret = new (T1, T2, T3, T4, T5)[n];
+			for (int i = 0; i < n; i++)
+			{
+				ret[i] = ReadValue<T1, T2, T3, T4, T5>();
+			}
+			return ret;
+		}
+		public (T1, T2, T3, T4, T5, T6)[] ReadTupleArray<T1, T2, T3, T4, T5, T6>(int n)
+		{
+			var ret = new (T1, T2, T3, T4, T5, T6)[n];
+			for (int i = 0; i < n; i++)
+			{
+				ret[i] = ReadValue<T1, T2, T3, T4, T5, T6>();
+			}
+			return ret;
+		}
+		public (T1, T2, T3, T4, T5, T6, T7)[] ReadTupleArray<T1, T2, T3, T4, T5, T6, T7>(int n)
+		{
+			var ret = new (T1, T2, T3, T4, T5, T6, T7)[n];
+			for (int i = 0; i < n; i++)
+			{
+				ret[i] = ReadValue<T1, T2, T3, T4, T5, T6, T7>();
+			}
+			return ret;
 		}
 	}
 }
