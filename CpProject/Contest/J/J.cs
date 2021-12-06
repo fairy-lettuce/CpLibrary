@@ -11,7 +11,7 @@ using System.Diagnostics;
 using ModInt = AtCoder.StaticModInt<AtCoder.Mod1000000007>;
 //using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 using static System.Math;
-using static CpLibrary.Util;
+using static CpLibrary.StaticItems;
 
 namespace CpLibrary.Contest
 {
