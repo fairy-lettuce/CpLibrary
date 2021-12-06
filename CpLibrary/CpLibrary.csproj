@@ -9,6 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Library\Mathematics\Matrix.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="ac-library-csharp" Version="1.0.8" />
 		<PackageReference Include="AtCoderAnalyzer" Version="1.0.8">
 			<PrivateAssets>all</PrivateAssets>
@@ -29,10 +33,13 @@
 
 	<ItemGroup>
 	  <Folder Include="Library\DataStructure\" />
-	  <Folder Include="Library\Mathematics\" />
 	  <Folder Include="Library\Strings\" />
 	  <Folder Include="Library\Geometry\" />
 	  <Folder Include="Library\Algorithms\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Library\Mathematics\Matrix.cs" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties workspace_4info_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
