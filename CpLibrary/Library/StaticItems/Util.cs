@@ -30,6 +30,8 @@ namespace CpLibrary
 			return condition;
 		}
 		public static T SignOutput<T>(int x, T pos, T zero, T neg) => x == 0 ? zero : (x > 0 ? pos : neg);
+		public static T SignOutput<T>(long x, T pos, T zero, T neg) => x == 0 ? zero : (x > 0 ? pos : neg);
+		public static T SignOutput<T>(double x, T pos, T zero, T neg) => x == 0 ? zero : (x > 0 ? pos : neg);
 
 		public static T[] CreateArray<T>(int n, Func<int, T> func) => Enumerable.Range(0, n).Select(p => func(p)).ToArray();
 		public static T[][] CreateArray<T>(int x, int y, Func<int, int, T> func) => Enumerable.Range(0, x).Select(i => Enumerable.Range(0, y).Select(j => func(i, j)).ToArray()).ToArray();
