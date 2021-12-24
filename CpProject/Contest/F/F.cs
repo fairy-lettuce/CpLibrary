@@ -20,6 +20,8 @@ namespace CpLibrary.Contest
 		Scanner sr;
 		bool hasMultipleTestcases = false;
 
+		bool IsLocal { get; set; }
+
 		public override void Solve()
 		{
 			/*
@@ -27,10 +29,18 @@ namespace CpLibrary.Contest
 			 */
 		}
 
-		public SolverF(Scanner sr) => this.sr = sr;
+		public void Init()
+		{
+			/*
+			 * Write your init code here if you need!
+			 */
+		}
+
+		public SolverF(Scanner sr, bool isLocal = false) { this.sr = sr; this.IsLocal = isLocal; }
 
 		public override void Run()
 		{
+			Init();
 			var _t = 1;
 			if (hasMultipleTestcases) _t = sr.ReadInt();
 			while (_t-- > 0) Solve();

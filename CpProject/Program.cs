@@ -99,7 +99,7 @@ namespace CpLibrary
 
 			var scanner = new Scanner(sr);
 
-			solver = (SolverBase)Activator.CreateInstance(solvers[program], scanner);
+			solver = (SolverBase)Activator.CreateInstance(solvers[program], scanner, true);
 
 			var startTime = DateTime.Now;
 
