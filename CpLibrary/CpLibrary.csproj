@@ -13,22 +13,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="ac-library-csharp" Version="1.0.8" />
-		<PackageReference Include="AtCoderAnalyzer" Version="1.0.8">
+		<PackageReference Include="ac-library-csharp" Version="2.0.0" />
+		<PackageReference Include="AtCoderAnalyzer" Version="2.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
-		<PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
-		<PackageReference Include="SourceExpander.Embedder" Version="2.5.0">
+		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" />
+		<PackageReference Include="SourceExpander.Embedder" Version="5.0.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="SourceExpander.Embedder.Analyzer" Version="2.5.0">
+		<PackageReference Include="SourceExpander.Embedder.Analyzer" Version="2.6.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
