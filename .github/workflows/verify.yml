@@ -60,7 +60,7 @@ jobs:
         with:
           working-directory: CpLibrary
           solution: ${{ env.WORKFLOW_BUILD_SLN }}
-          output-path: verify_files.json
+          output-path: ${{ runner.temp }}/verify_files.json
           msbuild-properties: Configuration=Release
           # Specify patterns
           # include: your-own-include/
@@ -71,7 +71,7 @@ jobs:
       - name: Upload verify_files.json
         uses: competitive-verifier/actions/upload-verify-artifact@v1
         with:
-          file: verify_files.json
+          file: ${{ runner.temp }}/verify_files.json
 
       - name: Check bundled
         id: test-bundled
