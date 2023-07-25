@@ -21,4 +21,4 @@
 - たくさんのライブラリ (未移植)
 - verify コード
 - ライブラリのドキュメント
-- 他色々→ <a href="{{ site.baseurl }}/libray-dev-milestone"> に詳しく書きました
+- 他色々→ <a href="{{ site.baseurl }}/library-dev-milestone"> に詳しく書きました
