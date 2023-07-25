@@ -17,11 +17,14 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  WORKFLOW_BUILD_SLN: CpLibrary/CpLibrary.sln
+  WORKFLOW_BUILD_SLN: CpLibrary.sln
 
 jobs:
   setup:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: CpLibrary
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
@@ -47,11 +50,11 @@ jobs:
       - name: Unit test
         run: dotnet test $UNITTEST_CSPROJ --logger "CompetitiveVerifier;OutDirectory=${{runner.temp}}/VerifierCsUnitTestResult" --no-build -c Release
         env:
-          UNITTEST_CSPROJ: CpLibrary/CpLibrary.Test/CpLibrary.Test.csproj
+          UNITTEST_CSPROJ: CpLibrary.Test/CpLibrary.Test.csproj
       - name: Resolve
         run: dotnet run --project $VERIFY_CSPROJ --no-launch-profile --no-build -c Release | tee ${{runner.temp}}/problems.json
         env:
-          VERIFY_CSPROJ: CpLibrary/CpLibrary.Verify/CpLibrary.Verify.csproj
+          VERIFY_CSPROJ: CpLibrary.Verify/CpLibrary.Verify.csproj
       - name: cs-resolve
         uses: competitive-verifier/actions/cs-resolve@v1
         with:
@@ -83,6 +86,9 @@ jobs:
 
   verify:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: CpLibrary
     needs: [setup]
     env:
       SPLIT_SIZE: 20
@@ -132,6 +138,9 @@ jobs:
 
   docs-and-check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: CpLibrary
     needs: [verify]
     outputs:
       upload-pages: ${{steps.upload-pages.outcome == 'success'}}
