@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  WORKFLOW_BUILD_SLN: CpLibrary.sln
+  WORKFLOW_BUILD_SLN: CpLibrary.CpLibrary.csproj
 
 jobs:
   setup:
