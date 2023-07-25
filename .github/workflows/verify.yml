@@ -55,7 +55,7 @@ jobs:
       - name: cs-resolve
         uses: competitive-verifier/actions/cs-resolve@v1
         with:
-          solution: ${{ WORKFLOW_BUILD_SLN }}
+          solution: ${{ env.WORKFLOW_BUILD_SLN }}
           output-path: verify_files.json
           msbuild-properties: Configuration=Release
           # Specify patterns
