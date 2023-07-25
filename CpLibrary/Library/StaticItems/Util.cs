@@ -14,17 +14,31 @@ namespace CpLibrary
 		public static int[] dx8 => new int[] { 1, 1, 0, -1, -1, -1, 0, 1 };
 		public static int[] dy8 => new int[] { 0, 1, 1, 1, 0, -1, -1, -1 };
 
-		public static bool YesNo(bool condition)
+		public enum YesNoOption
+		{
+			Normal,
+			Upper,
+			Lower
+		}
+
+		public static bool YesNo(bool condition, YesNoOption option = YesNoOption.Normal)
+		{
+			if (option == YesNoOption.Normal) return YesNoNormal(condition);
+			else if (option == YesNoOption.Upper) return YesNoUpper(condition);
+			else if (option == YesNoOption.Lower) return YesNoLower(condition);
+			else throw new ArgumentException();
+		}
+		public static bool YesNoNormal(bool condition)
 		{
 			Console.WriteLine(condition ? "Yes" : "No");
 			return condition;
 		}
-		public static bool YESNO(bool condition)
+		public static bool YesNoUpper(bool condition)
 		{
 			Console.WriteLine(condition ? "YES" : "NO");
 			return condition;
 		}
-		public static bool yesno(bool condition)
+		public static bool YesNoLower(bool condition)
 		{
 			Console.WriteLine(condition ? "yes" : "no");
 			return condition;
