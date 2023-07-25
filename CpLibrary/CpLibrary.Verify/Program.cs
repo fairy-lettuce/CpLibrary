@@ -12,6 +12,7 @@ using CpLibrary;
 
 namespace CpLibrary.Verify
 {
+	// competitive-verifier: document_title A+B Test
 	internal class APlusB : CompetitiveVerifier.ProblemSolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/aplusb";
@@ -20,7 +21,7 @@ namespace CpLibrary.Verify
 			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 			var a = sr.ReadInt();
 			var b = sr.ReadInt();
-            Console.WriteLine(a + b);
-        }
+			Console.WriteLine(a + b);
+		}
 	}
 }
