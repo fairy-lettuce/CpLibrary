@@ -1,18 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Globalization;
-using System.Threading;
-using System.Diagnostics;
-using CpLibrary;
+﻿using CpLibrary;
 
 namespace CpLibrary.Verify
 {
-	// competitive-verifier: document_title A+B Test
+	// competitive-verifier: document_title Sample Program (Library Checker A+B)
 	internal class APlusB : CompetitiveVerifier.ProblemSolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/aplusb";
