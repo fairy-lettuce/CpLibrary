@@ -3,10 +3,10 @@ using Xunit;
 
 namespace CpLibrary.Test
 {
-	public class UnitTest1
+	public class AssertTrue
 	{
 		[Fact]
-		public void Test1()
+		public void Test()
 		{
 			Assert.True(true);
 		}
