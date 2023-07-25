@@ -47,11 +47,11 @@ jobs:
       - name: Unit test
         run: dotnet test $UNITTEST_CSPROJ --logger "CompetitiveVerifier;OutDirectory=${{runner.temp}}/VerifierCsUnitTestResult" --no-build  -c Release
         env:
-          UNITTEST_CSPROJ: CpLibrary.Test.csproj
+          UNITTEST_CSPROJ: CpLibrary/CpLibrary.Test.csproj
       - name: Resolve
         run: dotnet run --project $VERIFY_CSPROJ --no-launch-profile --no-build -c Release | tee ${{runner.temp}}/problems.json
         env:
-          VERIFY_CSPROJ: CpLibrary.Verify.csproj
+          VERIFY_CSPROJ: CpLibrary/CpLibrary.Verify.csproj
       - name: cs-resolve
         uses: competitive-verifier/actions/cs-resolve@v1
         with:
