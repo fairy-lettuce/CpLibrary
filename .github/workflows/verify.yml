@@ -154,6 +154,7 @@ jobs:
         id: all-artifacts
         uses: competitive-verifier/actions/download-verify-artifact@v1
         with:
+          working-directory: CpLibrary
           download-all: true
           artifact-root: .artifacts/
 
@@ -179,6 +180,7 @@ jobs:
       - name: Docs
         uses: competitive-verifier/actions/docs@v1
         with:
+          working-directory: CpLibrary
           verify-result: ${{ steps.all-artifacts.outputs.artifacts-root }}/Result-*/result.json
           destination: _jekyll
           write-summary: true
