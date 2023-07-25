@@ -24,9 +24,6 @@ env:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: CpLibrary
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
@@ -87,9 +84,6 @@ jobs:
 
   verify:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: CpLibrary
     needs: [setup]
     env:
       SPLIT_SIZE: 20
@@ -139,9 +133,6 @@ jobs:
 
   docs-and-check:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: CpLibrary
     needs: [verify]
     outputs:
       upload-pages: ${{steps.upload-pages.outcome == 'success'}}
