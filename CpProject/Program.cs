@@ -54,10 +54,9 @@ namespace CpLibrary
 				var regex = new Regex(@"\s\s+");
 				var arg = regex.Replace(Console.ReadLine().Trim(), " ").Split(' ');
 
-				Parser.Default.ParseArguments<RunCommand, DlCommand, SubmitCommand, ExitCommand>(arg)
+				Parser.Default.ParseArguments<RunCommand, DlCommand, ExitCommand>(arg)
 					.WithParsed<RunCommand>(opt => Run(opt))
 					.WithParsed<DlCommand>(opt => Download(opt))
-					.WithParsed<SubmitCommand>(opt => Submit(opt))
 					.WithParsed<ExitCommand>(opt => Exit(opt))
 					.WithNotParsed(err => Console.WriteLine("Failed to parse arguments."));
 			}
@@ -122,8 +121,6 @@ namespace CpLibrary
 
 		static void Download(DlCommand opt) => throw new NotImplementedException();
 
-		static void Submit(SubmitCommand opt) => throw new NotImplementedException();
-
 		static void Exit(ExitCommand opt) => Environment.Exit(0);
 	}
 
@@ -145,13 +142,6 @@ namespace CpLibrary
 
 	[Verb("dl", HelpText = "Downloads the sample testcases.")]
 	class DlCommand
-	{
-		[Value(0, Required = true)]
-		public char Program { get; set; }
-	}
-
-	[Verb("submit", HelpText = "Submits the solution.")]
-	class SubmitCommand
 	{
 		[Value(0, Required = true)]
 		public char Program { get; set; }
