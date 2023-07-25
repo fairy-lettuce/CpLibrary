@@ -44,14 +44,14 @@ jobs:
       - name: setup CompetitiveVerifierCsResolver
         run: dotnet tool install -g CompetitiveVerifierCsResolver
       # required only if you have unit test.
-#      - name: Unit test
-#        run: dotnet test $UNITTEST_CSPROJ --logger "CompetitiveVerifier;OutDirectory=${{runner.temp}}/VerifierCsUnitTestResult" --no-build  -c Release
-#        env:
-#          UNITTEST_CSPROJ: YourUnittest.csproj
+      - name: Unit test
+        run: dotnet test $UNITTEST_CSPROJ --logger "CompetitiveVerifier;OutDirectory=${{runner.temp}}/VerifierCsUnitTestResult" --no-build  -c Release
+        env:
+          UNITTEST_CSPROJ: CpLibrary.Test.csproj
       - name: Resolve
         run: dotnet run --project $VERIFY_CSPROJ --no-launch-profile --no-build -c Release | tee ${{runner.temp}}/problems.json
         env:
-          VERIFY_CSPROJ: YourVerify.csproj
+          VERIFY_CSPROJ: CpLibrary.Verify.csproj
       - name: cs-resolve
         uses: competitive-verifier/actions/cs-resolve@v1
         with:
@@ -61,7 +61,7 @@ jobs:
           # Specify patterns
           # include: your-own-include/
           # exclude: your-own-exclude/
-#          unittest-result: ${{runner.temp}}/VerifierCsUnitTestResult/*.csv
+          unittest-result: ${{runner.temp}}/VerifierCsUnitTestResult/*.csv
           problems: ${{runner.temp}}/problems.json
 
       - name: Upload verify_files.json
