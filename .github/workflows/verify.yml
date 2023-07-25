@@ -182,7 +182,7 @@ jobs:
         with:
           working-directory: CpLibrary
           verify-result: ${{ steps.all-artifacts.outputs.artifacts-root }}/Result-*/result.json
-          destination: _jekyll
+          destination: ${{ github.workspace }}/_jekyll
           write-summary: true
 
       - name: Setup Pages
