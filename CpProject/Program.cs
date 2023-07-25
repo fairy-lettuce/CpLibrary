@@ -89,7 +89,7 @@ namespace CpLibrary
 			else sw = new StreamWriter(Console.OpenStandardOutput());
 
 			if (opt.IsInputConsole) sr = new StreamReader(Console.OpenStandardInput());
-			else sr = new StreamReader(((char)(program + 'A')).ToString() + "_input.txt");
+			else sr = new StreamReader("input.txt");
 
 			if (opt.IsSampleTestcases) throw new NotImplementedException();
 
