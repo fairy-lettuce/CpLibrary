@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CpProject": {
+      "commandName": "Project",
+      "workingDirectory": "Workspace"
+    }
+  }
+}

@@ -16,8 +16,6 @@ namespace CpLibrary
 {
 	public static class Program
 	{
-		const string workspacePath = @"../../../Workspace/";
-
 		const string inputPath = "input.txt";
 		const string outputPath = "output.txt";
 
@@ -37,8 +35,6 @@ namespace CpLibrary
 				}
 				return;
 			}
-
-			Directory.SetCurrentDirectory(workspacePath);
 
 			standardStreamReader = new StreamReader(Console.OpenStandardInput());
 			standardStreamWriter = new StreamWriter(Console.OpenStandardOutput());
