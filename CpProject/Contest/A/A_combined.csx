@@ -10,8 +10,10 @@ namespace CpLibrary.Contest
 
 		public override void Solve()
 		{
-            writer.WriteLine(DateTime.Now);
-        }
+			/*
+			 * Write your code here!
+			 */
+		}
 
 		public override void Init()
 		{
