@@ -21,27 +21,24 @@ namespace CpLibrary
 			Lower
 		}
 
-		public static bool YesNo(bool condition, YesNoOption option = YesNoOption.Normal)
+		public static void YesNo(bool condition, YesNoOption option = YesNoOption.Normal)
 		{
-			if (option == YesNoOption.Normal) return YesNoNormal(condition);
-			else if (option == YesNoOption.Upper) return YesNoUpper(condition);
-			else if (option == YesNoOption.Lower) return YesNoLower(condition);
+			if (option == YesNoOption.Normal) YesNoNormal(condition);
+			else if (option == YesNoOption.Upper) YesNoUpper(condition);
+			else if (option == YesNoOption.Lower) YesNoLower(condition);
 			else throw new ArgumentException();
 		}
-		public static bool YesNoNormal(bool condition)
+		public static void YesNoNormal(bool condition)
 		{
 			Console.WriteLine(condition ? "Yes" : "No");
-			return condition;
 		}
-		public static bool YesNoUpper(bool condition)
+		public static void YesNoUpper(bool condition)
 		{
 			Console.WriteLine(condition ? "YES" : "NO");
-			return condition;
 		}
-		public static bool YesNoLower(bool condition)
+		public static void YesNoLower(bool condition)
 		{
 			Console.WriteLine(condition ? "yes" : "no");
-			return condition;
 		}
 		public static T SignOutput<T>(int x, T pos, T zero, T neg) => x == 0 ? zero : (x > 0 ? pos : neg);
 		public static T SignOutput<T>(long x, T pos, T zero, T neg) => x == 0 ? zero : (x > 0 ? pos : neg);
