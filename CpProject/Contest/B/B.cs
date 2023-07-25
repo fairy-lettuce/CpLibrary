@@ -17,10 +17,7 @@ namespace CpLibrary.Contest
 {
 	public class SolverB : SolverBase
 	{
-		Scanner sr;
-		bool hasMultipleTestcases = false;
-
-		bool IsLocal { get; set; }
+		static void Main() => OnlineJudge.Run(new SolverB());
 
 		public override void Solve()
 		{
@@ -29,44 +26,11 @@ namespace CpLibrary.Contest
 			 */
 		}
 
-		public void Init()
+		public override void Init()
 		{
 			/*
-			 * Write your init code here if you need!
+			 * Write your init code here!
 			 */
 		}
-
-		public SolverB(Scanner sr, bool isLocal = false) { this.sr = sr; this.IsLocal = isLocal; }
-
-		public override void Run()
-		{
-			Init();
-			var _t = 1;
-			if (hasMultipleTestcases) _t = sr.ReadInt();
-			while (_t-- > 0) Solve();
-		}
-	}
-
-	public static class ProgramB
-	{
-		private static bool StartsOnThread = true;
-
-		public static void Main(string[] args)
-		{
-			var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
-			Console.SetOut(sw);
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-			var solver = new SolverB(sr);
-			if (StartsOnThread)
-			{
-				var thread = new Thread(new ThreadStart(() => solver.Run()), 1 << 27);
-				thread.Start();
-				thread.Join();
-			}
-			else solver.Run();
-			Console.Out.Flush();
-		}
-
-		public static void Expand() => SourceExpander.Expander.Expand();
 	}
 }

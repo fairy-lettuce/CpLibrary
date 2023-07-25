@@ -18,6 +18,9 @@ namespace CpLibrary
 	{
 		const string workspacePath = @"../../../Workspace/";
 
+		const string inputPath = "input.txt";
+		const string outputPath = "output.txt";
+
 		private static StreamReader standardStreamReader;
 		private static StreamWriter standardStreamWriter;
 
@@ -25,16 +28,13 @@ namespace CpLibrary
 		{
 			if (args.Length >= 1 && args[0] == "expand")
 			{
-				ProgramA.Expand();
-				ProgramB.Expand();
-				ProgramC.Expand();
-				ProgramD.Expand();
-				ProgramE.Expand();
-				ProgramF.Expand();
-				ProgramG.Expand();
-				ProgramH.Expand();
-				ProgramI.Expand();
-				ProgramJ.Expand();
+				for (char c = 'A'; c <= 'J'; c++)
+				{
+					SourceExpander.Expander.Expand(
+						inputFilePath: $"Contest/{c}/{c}.cs",
+						outputFilePath: $"Contest/{c}/{c}_combined.csx"
+					);
+				}
 				return;
 			}
 
@@ -45,20 +45,19 @@ namespace CpLibrary
 
 			while (true)
 			{
-				Console.SetIn(standardStreamReader);
-				Console.SetOut(standardStreamWriter);
+				standardStreamWriter.Write(">> ");
+				standardStreamWriter.Flush();
 
-				Console.Write(">> ");
-				Console.Out.Flush();
+				var res = standardStreamReader.ReadLine().Trim();
 
 				var regex = new Regex(@"\s\s+");
-				var arg = regex.Replace(Console.ReadLine().Trim(), " ").Split(' ');
+				var arg = regex.Replace(res, " ").Split(' ');
 
 				Parser.Default.ParseArguments<RunCommand, DlCommand, ExitCommand>(arg)
 					.WithParsed<RunCommand>(opt => Run(opt))
 					.WithParsed<DlCommand>(opt => Download(opt))
 					.WithParsed<ExitCommand>(opt => Exit(opt))
-					.WithNotParsed(err => Console.WriteLine("Failed to parse arguments."));
+					.WithNotParsed(err => standardStreamWriter.WriteLine("Failed to parse arguments."));
 			}
 		}
 
@@ -82,46 +81,43 @@ namespace CpLibrary
 			SolverBase solver;
 
 			var program = char.ToUpper(opt.Program) - 'A';
-			if (program < 0) return;
-			if (program >= 10) return;
+			if (program < 0) throw new ArgumentOutOfRangeException();
+			if (program >= 10) throw new ArgumentOutOfRangeException();
 
-			if (opt.DumpResult) sw = new StreamWriter("output.txt");
-			else sw = new StreamWriter(Console.OpenStandardOutput());
+			if (opt.DumpResult) sw = new StreamWriter(outputPath);
+			else sw = standardStreamWriter;
 
-			if (opt.IsInputConsole) sr = new StreamReader(Console.OpenStandardInput());
-			else sr = new StreamReader("input.txt");
+			if (opt.IsInputConsole) sr = standardStreamReader;
+			else sr = new StreamReader(inputPath);
 
 			if (opt.IsSampleTestcases) throw new NotImplementedException();
 
-			Console.SetIn(sr);
-			Console.SetOut(sw);
-
-			var scanner = new Scanner(sr);
-
-			solver = (SolverBase)Activator.CreateInstance(solvers[program], scanner, true);
+			solver = (SolverBase)Activator.CreateInstance(solvers[program]);
 
 			var startTime = DateTime.Now;
 
-			solver.Run();
+			solver.Run(sr, sw);
 
 			var endTime = DateTime.Now;
 
-			sr.Close();
-			sw.Close();
+			sw.Flush();
 
-			sr = new StreamReader(Console.OpenStandardInput());
-			sw = new StreamWriter(Console.OpenStandardOutput());
-			Console.SetIn(sr);
-			Console.SetOut(sw);
+			if (opt.DumpResult) sw.Close();
+			if (!opt.IsInputConsole) sr.Close();
 
-			Console.WriteLine("Program finished.");
-			Console.WriteLine($"Time: {(endTime - startTime).ToString(@"ss\.ffffff")} sec.");
-			Console.Out.Flush();
+			standardStreamWriter.WriteLine("Program finished.");
+			standardStreamWriter.WriteLine($"Time: {(endTime - startTime).ToString(@"ss\.ffffff")} sec.");
+			standardStreamWriter.Flush();
 		}
 
 		static void Download(DlCommand opt) => throw new NotImplementedException();
 
-		static void Exit(ExitCommand opt) => Environment.Exit(0);
+		static void Exit(ExitCommand opt)
+		{
+			standardStreamReader.Close();
+			standardStreamWriter.Close();
+			Environment.Exit(0);
+		}
 	}
 
 	[Verb("run", HelpText = "Run the program.")]
@@ -130,7 +126,7 @@ namespace CpLibrary
 		[Value(0, Required = true)]
 		public char Program { get; set; }
 
-		[Option('d', "dump", Required = false, HelpText = "Outputs the result on X_output.txt if enabled.")]
+		[Option('d', "dump", Required = false, HelpText = "Outputs the result on output.txt if enabled.")]
 		public bool DumpResult { get; set; }
 
 		[Option('c', "console", Required = false, HelpText = "Uses the standard input.")]
