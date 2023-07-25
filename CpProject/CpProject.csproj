@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="SourceExpander" Version="5.0.0" />
-    <ProjectReference Include="..\CpLibrary\CpLibrary.csproj" />
+    <ProjectReference Include="..\CpLibrary\CpLibrary\CpLibrary.csproj" />
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

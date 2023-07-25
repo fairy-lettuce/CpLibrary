@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  WORKFLOW_BUILD_SLN: CpLibrary/CpLibrary.csproj
+  WORKFLOW_BUILD_SLN: CpLibrary/CpLibrary.sln
 
 jobs:
   setup:
@@ -45,7 +45,7 @@ jobs:
         run: dotnet tool install -g CompetitiveVerifierCsResolver
       # required only if you have unit test.
       - name: Unit test
-        run: dotnet test $UNITTEST_CSPROJ --logger "CompetitiveVerifier;OutDirectory=${{runner.temp}}/VerifierCsUnitTestResult" --no-build  -c Release
+        run: dotnet test $UNITTEST_CSPROJ --logger "CompetitiveVerifier;OutDirectory=${{runner.temp}}/VerifierCsUnitTestResult" --no-build -c Release
         env:
           UNITTEST_CSPROJ: CpLibrary.Test/CpLibrary.Test.csproj
       - name: Resolve
