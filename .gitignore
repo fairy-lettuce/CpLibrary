@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 # User defined
-Contest/*/*_Combined.csx
+CpProject/Contest/*/*_Combined.csx
