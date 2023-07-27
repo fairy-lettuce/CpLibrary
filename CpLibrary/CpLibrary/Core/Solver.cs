@@ -15,16 +15,16 @@ namespace CpLibrary
 	{
 		public bool StartsOnThread { get; set; } = false;
 		public int Testcases { get; set; } = 1;
-		public Scanner scanner;
-		public StreamWriter writer;
+		public Scanner sr;
+		public StreamWriter sw;
 
 		public abstract void Init();
 		public abstract void Solve();
 
 		public void Run(StreamReader reader, StreamWriter writer)
 		{
-			this.writer = writer;
-			scanner = new Scanner(reader);
+			this.sw = writer;
+			sr = new Scanner(reader);
 			Console.SetOut(writer);
 			if (StartsOnThread)
 			{
