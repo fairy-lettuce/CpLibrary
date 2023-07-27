@@ -24,7 +24,7 @@ namespace CpLibrary
 
 		static void Main(string[] args)
 		{
-			if (args.Length >= 1 && args[0] == "expand")
+			if (args.Length >= 1 && args[0] == "--expand")
 			{
 				for (char c = 'A'; c <= 'J'; c++)
 				{
