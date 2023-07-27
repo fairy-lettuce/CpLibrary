@@ -1,5 +1,5 @@
 ---
-documentation_of: ../../Judge/Checker/NormalChecker.cs
+documentation_of: //CpLibrary/Judge/Checker/NormalChecker.cs
 ---
 
 ## 概要
