@@ -1,5 +1,5 @@
 ---
-documentation_of: ../../Checker/CheckerBase.cs
+documentation_of: ../../Judge/Checker/CheckerBase.cs
 ---
 
 ## 概要
