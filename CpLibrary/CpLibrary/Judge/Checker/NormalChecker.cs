@@ -16,7 +16,7 @@ namespace CpLibrary.Judge.Checker
 			this.Solution = solution;
 		}
 
-		public override JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual)
+		protected override JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual)
 		{
 			var expectedString = expected
 				.ReadToEnd()

@@ -91,7 +91,7 @@ namespace CpLibrary.Judge.Checker
 
 		public JudgeResult Run(string input, Action<StreamReader, StreamWriter> expectedSolution) => Run(ToMemoryStream(input), expectedSolution);
 
-		public abstract JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual);
+		protected abstract JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual);
 
 		private protected static MemoryStream ToMemoryStream(string str)
 			=> ToMemoryStream(str, Encoding.Default);
