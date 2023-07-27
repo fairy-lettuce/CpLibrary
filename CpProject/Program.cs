@@ -17,7 +17,7 @@ namespace CpLibrary
 	public static class Program
 	{
 		const string inputPath = "input.txt";
-		const string outputPath = "output.txt";
+		const string outputPath = "actual.txt";
 
 		private static StreamReader standardStreamReader;
 		private static StreamWriter standardStreamWriter;
