@@ -40,6 +40,7 @@ namespace CpLibrary.Judge.Checker.Test
 
 			var hacker = new Hacker(new NormalChecker(Actual), Generate, Naive);
 			var res = hacker.FindHackCase();
+			res.Seek(0, SeekOrigin.Begin);
 			var input = new StreamReader(res).ReadToEnd();
 
 			Assert.Equal("2", input.Trim());
