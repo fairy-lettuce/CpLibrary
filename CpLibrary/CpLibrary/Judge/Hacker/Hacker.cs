@@ -28,7 +28,7 @@ namespace CpLibrary.Judge
 		{
 			while (true)
 			{
-				using var input = new MemoryStream();
+				var input = new MemoryStream();
 				using (var inputWriter = new StreamWriter(input, leaveOpen: true))
 				{
 					generator(inputWriter);
