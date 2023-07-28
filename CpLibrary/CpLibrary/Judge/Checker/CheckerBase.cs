@@ -24,7 +24,7 @@ namespace CpLibrary.Judge.Checker
 			this.Solution = Solution;
 		}
 
-		public JudgeResult Run(MemoryStream inputStream, MemoryStream expectedStream, MemoryStream actualStream)
+		public JudgeResult Run(Stream inputStream, Stream expectedStream, Stream actualStream)
 		{
 			inputStream.Seek(0, SeekOrigin.Begin);
 			using (var inputReader = new StreamReader(inputStream, leaveOpen: true))
@@ -50,19 +50,19 @@ namespace CpLibrary.Judge.Checker
 			};
 		}
 
-		public JudgeResult Run(MemoryStream inputStream, MemoryStream expectedStream)
+		public JudgeResult Run(Stream inputStream, Stream expectedStream)
 		{
 			using var actualStream = new MemoryStream();
 			return Run(inputStream, expectedStream, actualStream);
 		}
 
-		public JudgeResult Run(MemoryStream inputStream, string expected) => Run(inputStream, ToMemoryStream(expected));
+		public JudgeResult Run(Stream inputStream, string expected) => Run(inputStream, ToMemoryStream(expected));
 
-		public JudgeResult Run(string input, MemoryStream expectedStream) => Run(ToMemoryStream(input), expectedStream);
+		public JudgeResult Run(string input, Stream expectedStream) => Run(ToMemoryStream(input), expectedStream);
 
 		public JudgeResult Run(string input, string expected) => Run(ToMemoryStream(input), ToMemoryStream(expected));
 
-		public JudgeResult Run(MemoryStream inputStream, Action<StreamReader, StreamWriter> expectedSolution)
+		public JudgeResult Run(Stream inputStream, Action<StreamReader, StreamWriter> expectedSolution)
 		{
 			using var actualStream = new MemoryStream();
 			return Run(inputStream, expectedSolution, actualStream);
@@ -70,7 +70,7 @@ namespace CpLibrary.Judge.Checker
 
 		public JudgeResult Run(string input, Action<StreamReader, StreamWriter> expectedSolution) => Run(ToMemoryStream(input), expectedSolution);
 
-		public JudgeResult Run(MemoryStream inputStream, Action<StreamReader, StreamWriter> expectedSolution, MemoryStream actualStream)
+		public JudgeResult Run(Stream inputStream, Action<StreamReader, StreamWriter> expectedSolution, Stream actualStream)
 		{
 			using var expectedStream = new MemoryStream();
 
