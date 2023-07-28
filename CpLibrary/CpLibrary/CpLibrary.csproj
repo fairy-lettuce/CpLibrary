@@ -10,6 +10,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="ac-library-csharp" Version="2.0.0" />
+		<PackageReference Include="AngleSharp" Version="1.0.4" />
 		<PackageReference Include="AtCoderAnalyzer" Version="2.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
