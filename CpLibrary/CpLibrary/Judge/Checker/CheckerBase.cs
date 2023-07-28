@@ -43,11 +43,8 @@ namespace CpLibrary.Judge.Checker
 				}
 				catch (Exception e)
 				{
-					return new JudgeResult
-					{
-						Status = JudgeStatus.RE,
-						Time = stopwatch.Elapsed
-					};
+					judgeResult.Status = JudgeStatus.RE;
+					return judgeResult;
 				}
 				stopwatch.Stop();
 				judgeResult.Time = stopwatch.Elapsed;
@@ -68,11 +65,18 @@ namespace CpLibrary.Judge.Checker
 			{
 				var stopwatch = new Stopwatch();
 				stopwatch.Start();
-				var runTask = Task.Run(() => Judge(inputReader, expectedReader, actualReader));
-				runTask.Wait();
+				try
+				{
+					var runTask = Task.Run(() => Judge(inputReader, expectedReader, actualReader));
+					runTask.Wait();
+					judgeResult.Status = runTask.Result;
+				}
+				catch(Exception e)
+				{
+					judgeResult.Status = JudgeStatus.IE;
+					return judgeResult;
+				}
 				stopwatch.Stop();
-
-				judgeResult.Status = runTask.Result;
 
 				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
 				{
@@ -112,8 +116,18 @@ namespace CpLibrary.Judge.Checker
 			{
 				var stopwatch = new Stopwatch();
 				stopwatch.Start();
-				var runTask = Task.Run(() => expectedSolution(inputReader, expectedWriter));
-				runTask.Wait();
+				try
+				{
+					var runTask = Task.Run(() => expectedSolution(inputReader, expectedWriter));
+					runTask.Wait();
+				}
+				catch (Exception e)
+				{
+					return new JudgeResult
+					{
+						Status = JudgeStatus.IE
+					};
+				}
 				stopwatch.Stop();
 
 				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
