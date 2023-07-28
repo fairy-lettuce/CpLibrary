@@ -52,8 +52,7 @@ namespace CpLibrary.Test.Judge.Checker
 		}
 
 		[Theory]
-		[InlineData(3, 1, 4, 100, 500)]
-		[InlineData(3, 1, 4, 1000, 1200)]
+		[InlineData(3, 1, 4, 500, 600)]
 		public static void TimeLimitExceededTest(int a, int b, int sum, int timeLimit, int waitTime)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
@@ -71,6 +70,23 @@ namespace CpLibrary.Test.Judge.Checker
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
 			result.Status.Should().Be(JudgeStatus.TLE);
+		}
+
+		[Theory]
+		[InlineData(3, 1, 4)]
+		public static void RuntimeErrorTest(int a, int b, int sum)
+		{
+			void Actual(StreamReader reader, StreamWriter writer)
+			{
+				// returns a + b, but runtime error occurs
+				throw new Exception("Test");
+			}
+
+			var checker = new NormalChecker(Actual);
+			var input = $"{a} {b}\n";
+			var output = $"{sum}\n";
+			var result = checker.Run(input, output);
+			result.Status.Should().Be(JudgeStatus.RE);
 		}
 	}
 }

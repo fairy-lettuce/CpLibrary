@@ -27,27 +27,37 @@ namespace CpLibrary.Judge.Checker
 
 		public JudgeResult Run(Stream inputStream, Stream expectedStream, Stream actualStream)
 		{
+			var judgeResult = new JudgeResult();
+
 			inputStream.Seek(0, SeekOrigin.Begin);
 			using (var inputReader = new StreamReader(inputStream, leaveOpen: true))
 			using (var actualWriter = new StreamWriter(actualStream, leaveOpen: true))
 			{
 				var stopwatch = new Stopwatch();
 				stopwatch.Start();
-				var runTask = Task.Run(() => Solution(inputReader, actualWriter));
-				if (HasTimeLimit) runTask.Wait(TimeLimit * 2);
-				else runTask.Wait();
-				stopwatch.Stop();
-
-				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
+				try
+				{
+					var runTask = Task.Run(() => Solution(inputReader, actualWriter));
+					if (HasTimeLimit) runTask.Wait(TimeLimit * 2);
+					else runTask.Wait();
+				}
+				catch (Exception e)
 				{
 					return new JudgeResult
 					{
-						Status = JudgeStatus.TLE
+						Status = JudgeStatus.RE,
+						Time = stopwatch.Elapsed
 					};
 				}
-			}
+				stopwatch.Stop();
+				judgeResult.Time = stopwatch.Elapsed;
 
-			var result = new JudgeStatus();
+				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
+				{
+					judgeResult.Status = JudgeStatus.TLE;
+					return judgeResult;
+				}
+			}
 
 			inputStream.Seek(0, SeekOrigin.Begin);
 			expectedStream.Seek(0, SeekOrigin.Begin);
@@ -62,20 +72,15 @@ namespace CpLibrary.Judge.Checker
 				runTask.Wait();
 				stopwatch.Stop();
 
-				result = runTask.Result;
+				judgeResult.Status = runTask.Result;
 
 				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
 				{
-					return new JudgeResult
-					{
-						Status = JudgeStatus.IE
-					};
+					judgeResult.Status = JudgeStatus.IE;
+					return judgeResult;
 				}
 			}
-			return new JudgeResult
-			{
-				Status = result
-			};
+			return judgeResult;
 		}
 
 		public JudgeResult Run(Stream inputStream, Stream expectedStream)
