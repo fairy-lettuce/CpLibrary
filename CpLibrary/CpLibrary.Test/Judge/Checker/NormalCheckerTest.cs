@@ -12,9 +12,9 @@ namespace CpLibrary.Test.Judge.Checker
 	public class NormalCheckerTest
 	{
 		[Theory]
-		[InlineData(3, 1, 4)]
-		[InlineData(1, 5, 6)]
-		public static void AcceptedTest(int a, int b, int sum)
+		[InlineData(3, 1, 4, 1000)]
+		[InlineData(1, 5, 6, 1000)]
+		public static void AcceptedTest(int a, int b, int sum, int timeLimit)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -25,6 +25,7 @@ namespace CpLibrary.Test.Judge.Checker
 			}
 
 			var checker = new NormalChecker(Actual);
+			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
@@ -32,9 +33,9 @@ namespace CpLibrary.Test.Judge.Checker
 		}
 
 		[Theory]
-		[InlineData(3, 1, 0)]
-		[InlineData(1, 5, 8)]
-		public static void WrongAnswerTest(int a, int b, int sum)
+		[InlineData(3, 1, 0, 1000)]
+		[InlineData(1, 5, 8, 1000)]
+		public static void WrongAnswerTest(int a, int b, int sum, int timeLimit)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -45,6 +46,7 @@ namespace CpLibrary.Test.Judge.Checker
 			}
 
 			var checker = new NormalChecker(Actual);
+			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
@@ -73,8 +75,8 @@ namespace CpLibrary.Test.Judge.Checker
 		}
 
 		[Theory]
-		[InlineData(3, 1, 4)]
-		public static void RuntimeErrorTest(int a, int b, int sum)
+		[InlineData(3, 1, 4, 1000)]
+		public static void RuntimeErrorTest(int a, int b, int sum, int timeLimit)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -83,6 +85,7 @@ namespace CpLibrary.Test.Judge.Checker
 			}
 
 			var checker = new NormalChecker(Actual);
+			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
