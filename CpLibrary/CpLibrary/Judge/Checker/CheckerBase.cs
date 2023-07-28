@@ -41,7 +41,7 @@ namespace CpLibrary.Judge.Checker
 					if (HasTimeLimit) runTask.Wait(TimeLimit * 2);
 					else runTask.Wait();
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					judgeResult.Status = JudgeStatus.RE;
 					return judgeResult;
@@ -71,7 +71,7 @@ namespace CpLibrary.Judge.Checker
 					runTask.Wait();
 					judgeResult.Status = runTask.Result;
 				}
-				catch(Exception e)
+				catch(Exception)
 				{
 					judgeResult.Status = JudgeStatus.IE;
 					return judgeResult;
@@ -121,7 +121,7 @@ namespace CpLibrary.Judge.Checker
 					var runTask = Task.Run(() => expectedSolution(inputReader, expectedWriter));
 					runTask.Wait();
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					return new JudgeResult
 					{
