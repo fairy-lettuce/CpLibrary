@@ -11,10 +11,7 @@ namespace CpLibrary.Judge.Checker
 
 	public class NormalChecker : CheckerBase
 	{
-		public NormalChecker(Action<StreamReader, StreamWriter> solution)
-		{
-			this.Solution = solution;
-		}
+		public NormalChecker(Action<StreamReader, StreamWriter> solution) : base(solution) { }
 
 		protected override JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual)
 		{

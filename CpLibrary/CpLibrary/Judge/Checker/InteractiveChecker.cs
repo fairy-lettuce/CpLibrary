@@ -9,6 +9,8 @@ namespace CpLibrary.Judge.Checker
 {
 	public class InteractiveChecker : CheckerBase
 	{
+		public InteractiveChecker(Action<StreamReader, StreamWriter> solution) : base(solution) { }
+
 		public new JudgeResult Run(MemoryStream inputStream, MemoryStream expectedStream)
 		{
 			throw new NotImplementedException();

@@ -19,9 +19,10 @@ namespace CpLibrary.Judge.Checker
 
 		protected Action<StreamReader, StreamWriter> Solution;
 
-		public JudgeResult Run(MemoryStream inputStream, MemoryStream expectedStream)
+		protected CheckerBase(Action<StreamReader, StreamWriter> Solution)
 		{
-			using var actualStream = new MemoryStream();
+			this.Solution = Solution;
+		}
 
 			inputStream.Seek(0, SeekOrigin.Begin);
 			using (var inputReader = new StreamReader(inputStream, leaveOpen: true))
