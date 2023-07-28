@@ -2,15 +2,16 @@
 using System.IO;
 using System.Linq;
 using Xunit;
-using CpLibrary.Judge.Checker;
 using CpLibrary.Judge;
+using CpLibrary.Judge.Checker;
+using FluentAssertions;
 
-namespace CpLibrary.Judge.Checker.Test
+namespace CpLibrary.Test.Judge.Checker
 {
 	public class HackerTest
 	{
 		[Fact]
-		public static void Test()
+		public static void EdgeCaseTest()
 		{
 			static void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -43,7 +44,7 @@ namespace CpLibrary.Judge.Checker.Test
 			res.Seek(0, SeekOrigin.Begin);
 			var input = new StreamReader(res).ReadToEnd();
 
-			Assert.Equal("2", input.Trim());
+			input.Trim().Should().Be("2");
 		}
 	}
 }
