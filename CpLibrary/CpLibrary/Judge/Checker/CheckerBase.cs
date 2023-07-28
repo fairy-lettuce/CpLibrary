@@ -13,9 +13,10 @@ namespace CpLibrary.Judge.Checker
 	/// </summary>
 	public abstract class CheckerBase
 	{
-		protected TimeSpan TimeLimit { get; set; } = TimeSpan.Zero;
+		private bool HasTimeLimit { get => TimeLimit != TimeSpan.Zero; }
+		public TimeSpan TimeLimit { get; set; } = TimeSpan.Zero;
 		// Currently not supported because the judge calls C# methods in the same process.
-		protected int MemoryLimitKB { get; set; } = 0;
+		public int MemoryLimitKB { get; set; } = 0;
 
 		protected Action<StreamReader, StreamWriter> Solution;
 
@@ -30,7 +31,20 @@ namespace CpLibrary.Judge.Checker
 			using (var inputReader = new StreamReader(inputStream, leaveOpen: true))
 			using (var actualWriter = new StreamWriter(actualStream, leaveOpen: true))
 			{
-				Solution(inputReader, actualWriter);
+				var stopwatch = new Stopwatch();
+				stopwatch.Start();
+				var runTask = Task.Run(() => Solution(inputReader, actualWriter));
+				if (HasTimeLimit) runTask.Wait(TimeLimit * 2);
+				else runTask.Wait();
+				stopwatch.Stop();
+
+				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
+				{
+					return new JudgeResult
+					{
+						Status = JudgeStatus.TLE
+					};
+				}
 			}
 
 			var result = new JudgeStatus();
@@ -42,7 +56,21 @@ namespace CpLibrary.Judge.Checker
 			using (var expectedReader = new StreamReader(expectedStream, leaveOpen: true))
 			using (var actualReader = new StreamReader(actualStream, leaveOpen: true))
 			{
-				result = Judge(inputReader, expectedReader, actualReader);
+				var stopwatch = new Stopwatch();
+				stopwatch.Start();
+				var runTask = Task.Run(() => Judge(inputReader, expectedReader, actualReader));
+				runTask.Wait();
+				stopwatch.Stop();
+
+				result = runTask.Result;
+
+				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
+				{
+					return new JudgeResult
+					{
+						Status = JudgeStatus.IE
+					};
+				}
 			}
 			return new JudgeResult
 			{
@@ -77,7 +105,19 @@ namespace CpLibrary.Judge.Checker
 			using (var inputReader = new StreamReader(inputStream, leaveOpen: true))
 			using (var expectedWriter = new StreamWriter(expectedStream, leaveOpen: true))
 			{
-				expectedSolution(inputReader, expectedWriter);
+				var stopwatch = new Stopwatch();
+				stopwatch.Start();
+				var runTask = Task.Run(() => expectedSolution(inputReader, expectedWriter));
+				runTask.Wait();
+				stopwatch.Stop();
+
+				if (HasTimeLimit && stopwatch.Elapsed > TimeLimit)
+				{
+					return new JudgeResult
+					{
+						Status = JudgeStatus.IE
+					};
+				}
 			}
 
 			inputStream.Seek(0, SeekOrigin.Begin);
