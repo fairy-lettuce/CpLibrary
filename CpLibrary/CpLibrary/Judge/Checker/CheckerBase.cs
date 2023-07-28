@@ -24,6 +24,8 @@ namespace CpLibrary.Judge.Checker
 			this.Solution = Solution;
 		}
 
+		public JudgeResult Run(MemoryStream inputStream, MemoryStream expectedStream, MemoryStream actualStream)
+		{
 			inputStream.Seek(0, SeekOrigin.Begin);
 			using (var inputReader = new StreamReader(inputStream, leaveOpen: true))
 			using (var actualWriter = new StreamWriter(actualStream, leaveOpen: true))
@@ -48,6 +50,12 @@ namespace CpLibrary.Judge.Checker
 			};
 		}
 
+		public JudgeResult Run(MemoryStream inputStream, MemoryStream expectedStream)
+		{
+			using var actualStream = new MemoryStream();
+			return Run(inputStream, expectedStream, actualStream);
+		}
+
 		public JudgeResult Run(MemoryStream inputStream, string expected) => Run(inputStream, ToMemoryStream(expected));
 
 		public JudgeResult Run(string input, MemoryStream expectedStream) => Run(ToMemoryStream(input), expectedStream);
@@ -55,6 +63,14 @@ namespace CpLibrary.Judge.Checker
 		public JudgeResult Run(string input, string expected) => Run(ToMemoryStream(input), ToMemoryStream(expected));
 
 		public JudgeResult Run(MemoryStream inputStream, Action<StreamReader, StreamWriter> expectedSolution)
+		{
+			using var actualStream = new MemoryStream();
+			return Run(inputStream, expectedSolution, actualStream);
+		}
+
+		public JudgeResult Run(string input, Action<StreamReader, StreamWriter> expectedSolution) => Run(ToMemoryStream(input), expectedSolution);
+
+		public JudgeResult Run(MemoryStream inputStream, Action<StreamReader, StreamWriter> expectedSolution, MemoryStream actualStream)
 		{
 			using var expectedStream = new MemoryStream();
 
@@ -66,10 +82,8 @@ namespace CpLibrary.Judge.Checker
 
 			inputStream.Seek(0, SeekOrigin.Begin);
 			expectedStream.Seek(0, SeekOrigin.Begin);
-			return Run(inputStream, expectedStream);
+			return Run(inputStream, expectedStream, actualStream);
 		}
-
-		public JudgeResult Run(string input, Action<StreamReader, StreamWriter> expectedSolution) => Run(ToMemoryStream(input), expectedSolution);
 
 		protected abstract JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual);
 
