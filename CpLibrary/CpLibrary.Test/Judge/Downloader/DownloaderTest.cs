@@ -1,10 +1,11 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CpLibrary.Judge.Downloader;
 using Xunit;
+using FluentAssertions;
 
 namespace CpLibrary.Test.Judge.Downloader
 {
@@ -36,7 +37,7 @@ namespace CpLibrary.Test.Judge.Downloader
 		[MemberData(nameof(GetData))]
 		public void ABCFetchTest(string url, IEnumerable<(string, string)> testcase)
 		{
-			var dl = new CpLibrary.Judge.Downloader.Downloader().DownloadTestcases(new Uri(url));
+			var dl = CpLibrary.Judge.Downloader.Downloader.DownloadTestcases(new Uri(url));
 
 			dl.Should().Equal(testcase);
 		}

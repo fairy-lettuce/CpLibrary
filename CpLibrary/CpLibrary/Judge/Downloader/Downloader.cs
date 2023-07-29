@@ -12,9 +12,9 @@ using AngleSharp.Html.Parser;
 
 namespace CpLibrary.Judge.Downloader
 {
-	public class Downloader
+	public static class Downloader
 	{
-		public IEnumerable<(string, string)> DownloadTestcases(Uri url)
+		public static IEnumerable<(string Input, string Output)> DownloadTestcases(Uri url)
 		{
 			var atcoderHost = "atcoder.jp";
 			if (url.Host == atcoderHost)
@@ -28,9 +28,9 @@ namespace CpLibrary.Judge.Downloader
 				{
 					html = sr.ReadToEnd();
 				}
-								
+
 				var parser = new HtmlParser();
-				
+
 				var doc = parser.ParseDocument(html);
 
 				var s = doc.GetElementById("task-statement")
@@ -57,6 +57,32 @@ namespace CpLibrary.Judge.Downloader
 			else
 			{
 				throw new NotImplementedException();
+			}
+		}
+
+		public static IEnumerable<(string Input, string Output)> DownloadTestcases(string url) => DownloadTestcases(new Uri(url));
+
+		public static void SaveTo(this IEnumerable<(string Input, string Output)> testcases, string path, string filename)
+		{
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+			var i = 0;
+			foreach (var (input, output) in testcases)
+			{
+				var filenameIn = filename.Replace("%d", i.ToString("000")).Replace("%s", "in");
+				using (var file = File.CreateText(Path.Combine(path, filenameIn)))
+				{
+					file.Write(input);
+				}
+
+				var filenameOut = filename.Replace("%d", i.ToString("000")).Replace("%s", "out");
+				using (var file = File.CreateText(Path.Combine(path, filenameOut)))
+				{
+					file.Write(output);
+				}
+				i++;
 			}
 		}
 	}
