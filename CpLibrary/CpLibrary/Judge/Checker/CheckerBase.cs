@@ -71,7 +71,7 @@ namespace CpLibrary.Judge.Checker
 					runTask.Wait();
 					judgeResult.Status = runTask.Result;
 				}
-				catch(Exception)
+				catch (Exception)
 				{
 					judgeResult.Status = JudgeStatus.IE;
 					return judgeResult;
@@ -144,12 +144,42 @@ namespace CpLibrary.Judge.Checker
 			return Run(inputStream, expectedStream, actualStream);
 		}
 
+		public TotalJudgeResult Run(IEnumerable<(Stream Input, Stream OutPut)> streams)
+		{
+			var resultTotal = new TotalJudgeResult();
+			foreach (var (Input, Output) in streams)
+			{
+				var resultIter = Run(Input, Output);
+				resultTotal.AddResult(resultIter);
+			}
+			return resultTotal;
+		}
+
+		public TotalJudgeResult Run(IEnumerable<(string Input, string Output)> testcases)
+		{
+			return Run(testcases.Select(p => (Input: ToMemoryStream(p.Input) as Stream, Output: ToMemoryStream(p.Output) as Stream)));
+		}
+
+		public TotalJudgeResult Run(IEnumerable<Stream> inputStreams, Action<StreamReader, StreamWriter> expectedSolution)
+		{
+			var resultTotal = new TotalJudgeResult();
+			foreach (var input in inputStreams)
+			{
+				var resultIter = Run(input, expectedSolution);
+				resultTotal.AddResult(resultIter);
+			}
+			return resultTotal;
+		}
+
+		public TotalJudgeResult Run(IEnumerable<string> inputs, Action<StreamReader, StreamWriter> expectedSolution)
+			=> Run(inputs.Select(p => ToMemoryStream(p)), expectedSolution);
+
 		protected abstract JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual);
 
-		private protected static MemoryStream ToMemoryStream(string str)
+		internal static MemoryStream ToMemoryStream(string str)
 			=> ToMemoryStream(str, Encoding.Default);
 
-		private protected static MemoryStream ToMemoryStream(string str, Encoding encoding)
+		internal static MemoryStream ToMemoryStream(string str, Encoding encoding)
 			=> new MemoryStream(encoding.GetBytes(str));
 	}
 }

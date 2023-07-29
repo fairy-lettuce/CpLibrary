@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using Xunit;
-using CpLibrary.Judge;
+using CpLibrary.Judge.Hacker;
 using CpLibrary.Judge.Checker;
 using FluentAssertions;
 
