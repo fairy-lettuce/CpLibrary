@@ -33,16 +33,16 @@ namespace CpLibrary.Test.Judge.Checker
 		}
 
 		[Theory]
-		[InlineData(3, 1, 0, 1000)]
-		[InlineData(1, 5, 8, 1000)]
+		[InlineData(3, 1, 4, 1000)]
+		[InlineData(1, 5, 6, 1000)]
 		public static void WrongAnswerTest(int a, int b, int sum, int timeLimit)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
-				// returns a + b
+				// returns a + b, but wrong answer
 				var sr = new Scanner(reader);
 				var (a, b) = sr.ReadValue<int, int>();
-				writer.WriteLine(a + b);
+				writer.WriteLine(a + b + 1);
 			}
 
 			var checker = new NormalChecker(Actual);
