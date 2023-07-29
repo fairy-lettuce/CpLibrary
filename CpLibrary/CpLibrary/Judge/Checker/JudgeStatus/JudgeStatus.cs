@@ -9,14 +9,13 @@ namespace CpLibrary.Judge.Checker
 	/// <summary>
 	/// Indicates the final result of the judge.
 	/// </summary>
-	[Flags]
 	public enum JudgeStatus
 	{
-		AC = 1 << 0,
-		WA = 1 << 1,
-		TLE = 1 << 2,
-		RE = 1 << 3,
-		PE = 1 << 4,
-		IE = 1 << 5
+		AC = 1,
+		WA = 2,
+		TLE = 3,
+		RE = 4,
+		PE = 5,
+		IE = 6
 	}
 }
