@@ -6,6 +6,7 @@ using Xunit;
 using CpLibrary.Judge.Checker;
 using FluentAssertions;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CpLibrary.Test.Judge.Checker
 {
@@ -90,6 +91,64 @@ namespace CpLibrary.Test.Judge.Checker
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
 			result.Status.Should().Be(JudgeStatus.RE);
+		}
+
+		public static IEnumerable<object[]> GetData()
+		{
+			yield return new object[]
+			{
+				new List<(int a, int b, int sum, JudgeStatus status)>
+				{
+					(3, 1, 4, JudgeStatus.AC),
+					(1, 4, 5, JudgeStatus.WA),
+					(1, 1, 2, JudgeStatus.RE),
+					(10, 10, 100, JudgeStatus.TLE)
+				},
+				new Dictionary<JudgeStatus, int>
+				{
+					{ JudgeStatus.AC, 1 },
+					{ JudgeStatus.WA, 1 },
+					{ JudgeStatus.RE, 1 },
+					{ JudgeStatus.TLE, 1 }
+				},
+				500
+			};
+		}
+
+		[Theory]
+		[MemberData(nameof(GetData))]
+		public static void MultipleTestcasesTest(
+			IEnumerable<(int a, int b, int sum, JudgeStatus status)> testcases,
+			Dictionary<JudgeStatus, int> expectedDictionary,
+			int timeLimit)
+		{
+			void Actual(StreamReader reader, StreamWriter writer)
+			{
+				// returns a + b, but sometimes wrong...
+				var sr = new Scanner(reader);
+				var (a, b) = sr.ReadValue<int, int>();
+				if (a < b)
+				{
+					writer.WriteLine(a + b + 1);
+					return;
+				}
+				if (a == 1 && b == 1)
+				{
+					throw new Exception("edge case runtime error");
+				}
+				if (a >= 10 && b >= 10)
+				{
+					Thread.Sleep(timeLimit * 2);
+				}
+				writer.WriteLine(a + b);
+			}
+
+			var checker = new NormalChecker(Actual);
+			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
+			var tc = testcases.Select(p => ($"{p.a} {p.b}\n", $"{p.sum}\n"));
+			var result = checker.Run(tc);
+			result.Status.Should().Be(testcases.Select(p => p.status).Max());
+			result.StatusCount.Should().Equal(expectedDictionary);
 		}
 	}
 }
