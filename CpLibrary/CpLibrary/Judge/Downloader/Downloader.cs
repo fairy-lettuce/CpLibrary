@@ -62,23 +62,25 @@ namespace CpLibrary.Judge.Downloader
 
 		public static IEnumerable<(string Input, string Output)> DownloadTestcases(string url) => DownloadTestcases(new Uri(url));
 
-		public static void SaveTo(this IEnumerable<(string Input, string Output)> testcases, string path, string filename)
+		public static void SaveTo(this IEnumerable<(string Input, string Output)> testcases, string path)
 		{
 			if (!Directory.Exists(path))
 			{
 				Directory.CreateDirectory(path);
+				Directory.CreateDirectory(Path.Combine(path, "in"));
+				Directory.CreateDirectory(Path.Combine(path, "out"));
 			}
 			var i = 0;
 			foreach (var (input, output) in testcases)
 			{
-				var filenameIn = filename.Replace("%d", i.ToString("000")).Replace("%s", "in");
-				using (var file = File.CreateText(Path.Combine(path, filenameIn)))
+				var filenameIn = i.ToString("000") + ".in";
+				using (var file = File.CreateText(Path.Combine(path, "in", filenameIn)))
 				{
 					file.Write(input);
 				}
 
-				var filenameOut = filename.Replace("%d", i.ToString("000")).Replace("%s", "out");
-				using (var file = File.CreateText(Path.Combine(path, filenameOut)))
+				var filenameOut = i.ToString("000") + ".out";
+				using (var file = File.CreateText(Path.Combine(path, "out", filenameOut)))
 				{
 					file.Write(output);
 				}
