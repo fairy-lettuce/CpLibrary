@@ -33,11 +33,11 @@ namespace CpLibrary.Test.Judge.Downloader
 			};
 		}
 
-		[Theory]
+		[Theory(Skip = "To reduce traffic to AtCoder.jp, Downloader should not be used frequently.")]
 		[MemberData(nameof(GetData))]
-		public void ABCFetchTest(string url, IEnumerable<(string, string)> testcase)
+		public async void ABCFetchTest(string url, IEnumerable<(string, string)> testcase)
 		{
-			var dl = CpLibrary.Judge.Downloader.Downloader.DownloadTestcases(new Uri(url));
+			var dl = await CpLibrary.Judge.Downloader.Downloader.DownloadTestcases(new Uri(url));
 
 			dl.Should().Equal(testcase);
 		}
