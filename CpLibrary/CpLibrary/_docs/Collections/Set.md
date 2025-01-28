@@ -48,4 +48,4 @@ documentation_of: //CpLibrary/Collections/Set.cs
 
 ## 参考
 
-- https://learn.microsoft.com/ja-jp/dotnet/api/system.collections.generic.sortedset-1
+- [https://learn.microsoft.com/ja-jp/dotnet/api/system.collections.generic.sortedset-1](https://learn.microsoft.com/ja-jp/dotnet/api/system.collections.generic.sortedset-1)
