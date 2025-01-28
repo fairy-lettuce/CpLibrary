@@ -12,16 +12,26 @@ namespace CpLibrary.Lib
 		Node root;
 		readonly IComparer<T> comparer;
 		readonly Node nil;
-		public bool IsMultiSet { get; set; }
+		public bool IsMultiSet { get; }
 
-		public Set() : this(Comparer<T>.Default) { }
-		public Set(IComparer<T> comparer)
+		public Set(bool isMultiSet = false) : this(Comparer<T>.Default, isMultiSet) { }
+		public Set(IComparer<T> comparer, bool isMultiSet = false)
 		{
 			nil = new Node(default);
 			root = nil;
 			this.comparer = comparer;
+			this.IsMultiSet = isMultiSet;
 		}
-		public Set(Comparison<T> comparison) : this(Comparer<T>.Create(comparison)) { }
+		public Set(IEnumerable<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
+		public Set(IEnumerable<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
+		{
+			foreach (var item in list)
+			{
+				Add(item);
+			}
+		}
+		public Set(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
+		public Set(IEnumerable<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
 
 		public T this[int index]
 		{
@@ -252,11 +262,12 @@ namespace CpLibrary.Lib
 
 	public class MultiSet<T> : Set<T> where T : IComparable<T>
 	{
-		public bool IsMultiSet { get; set; }
-
-		public MultiSet() : base() => IsMultiSet = true;
-		public MultiSet(IComparer<T> comparer) : base(comparer) => IsMultiSet = true;
-		public MultiSet(Comparison<T> comparison) : base(comparison) => IsMultiSet = true;
+		public MultiSet() : base(isMultiSet: true) {}
+		public MultiSet(IComparer<T> comparer) : base(comparer, true) { }
+		public MultiSet(Comparison<T> comparison) : base(comparison, true) { }
+		public MultiSet(IEnumerable<T> list) : base(list, true) { }
+		public MultiSet(IEnumerable<T> list, IComparer<T> comparer) : base(comparer, true) { }
+		public MultiSet(IEnumerable<T> list, Comparison<T> comparison) : base(list, comparison, true) { }
 	}
 
 	public interface IProdSetOperator<T>
