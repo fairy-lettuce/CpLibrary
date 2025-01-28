@@ -253,7 +253,7 @@ namespace CpLibrary.Collections
 			public void Update()
 			{
 				Count = Left.Count + Right.Count + 1;
-				Height = Math.Max(Left.Height, Right.Height) + 1;
+				Height = System.Math.Max(Left.Height, Right.Height) + 1;
 			}
 
 			public override string ToString() => $"Count = {Count}, Value = {Value}";
@@ -526,7 +526,7 @@ namespace CpLibrary.Collections
 			public void Update()
 			{
 				Count = Left.Count + Right.Count + 1;
-				Height = Math.Max(Left.Height, Right.Height) + 1;
+				Height = System.Math.Max(Left.Height, Right.Height) + 1;
 				Prod = op.Operate(Value, op.Operate(Left.Prod, Right.Prod));
 			}
 
