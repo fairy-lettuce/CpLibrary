@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ namespace CpLibrary.Math
 {
 	public static class PrimeEnumerator
 	{
-		public static bool[] EnumeratePrime(int max, List<int> prime = null)
+		public static BitArray EnumeratePrime(int max, List<int> prime = null)
 		{
-			var ret = new bool[max + 1];
+			var ret = new BitArray(max + 1);
 			for (int i = 2; i < max + 1; i++)
 			{
 				ret[i] = true;
