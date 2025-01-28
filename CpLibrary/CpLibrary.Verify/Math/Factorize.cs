@@ -13,7 +13,6 @@ namespace CpLibrary.Verify.Math
 		public override void Solve()
 		{
 			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-			var sw = new StreamWriter(Console.OpenStandardOutput());
 			var q = sr.ReadInt();
 			for (int i = 0; i < q; i++)
 			{
@@ -27,7 +26,7 @@ namespace CpLibrary.Verify.Math
 						ans.Add(key);
 					}
 				}
-				sw.WriteLine($"{ans.Count} {ans.Join(" ")}");
+				Console.WriteLine($"{ans.Count} {ans.Join(" ")}");
 			}
 		}
 	}
