@@ -58,6 +58,11 @@ namespace CpLibrary.Math
 		{
 			if (n == 1) return false;
 			if (n == 2) return true;
+			if (n == 3) return true;
+			if (n == 5) return true;
+			if (n % 2 == 0) return false;
+			if (n % 3 == 0) return false;
+			if (n % 5 == 0) return false;
 
 			if (n > int.MaxValue) return IsPrimeLong(n);
 
@@ -110,6 +115,7 @@ namespace CpLibrary.Math
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static bool MillerRabinTest(long e, long d, long n, long s)
 		{
+			if (e % n == 0) return true;
 			long pow = ModPow(e, d, n);
 			if (pow == 1) return true;
 			for (int i = 0; i < s; i++)
