@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -14,20 +15,19 @@ namespace CpLibrary.Judge.Downloader
 {
 	public static class Downloader
 	{
-		public static IEnumerable<(string Input, string Output)> DownloadTestcases(Uri url)
+		public static async Task<IEnumerable<(string Input, string Output)>> DownloadTestcases(Uri url)
 		{
 			var atcoderHost = "atcoder.jp";
 			if (url.Host == atcoderHost)
 			{
-				var req = WebRequest.Create(url);
-				var html = string.Empty;
-
-				using (var res = req.GetResponse())
-				using (var resString = res.GetResponseStream())
-				using (var sr = new StreamReader(resString, Encoding.Default))
+				var client = new HttpClient();
+				var req = new HttpRequestMessage
 				{
-					html = sr.ReadToEnd();
-				}
+					Method = HttpMethod.Post,
+					RequestUri = url
+				};
+				var res = await client.SendAsync(req);
+				var html = await res.Content.ReadAsStringAsync();
 
 				var parser = new HtmlParser();
 
@@ -60,7 +60,7 @@ namespace CpLibrary.Judge.Downloader
 			}
 		}
 
-		public static IEnumerable<(string Input, string Output)> DownloadTestcases(string url) => DownloadTestcases(new Uri(url));
+		public static async Task<IEnumerable<(string Input, string Output)>> DownloadTestcases(string url) => await DownloadTestcases(new Uri(url));
 
 		public static void SaveTo(this IEnumerable<(string Input, string Output)> testcases, string path, string filename)
 		{
