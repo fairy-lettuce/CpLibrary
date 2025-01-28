@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,10 +11,14 @@ namespace CpLibrary.Math
 	public static class Factorizer
 	{
 		// http://miller-rabin.appspot.com/
-		static readonly long[] baseSingle = { 126401071349994536 };                 // <= 291,831
-		static readonly long[] baseDouble = { 336781006125, 9639812373923155 };     // <= 1,050,535,501
-		static readonly long[] baseQuad = { 2, 2570940, 211991001, 3749873356 };    // <= 47,636,622,961,201
+		static readonly long[] baseSingle = { 126401071349994536 };
+		static readonly long[] baseDouble = { 336781006125, 9639812373923155 };
+		static readonly long[] baseQuad = { 2, 2570940, 211991001, 3749873356 };
 		static readonly long[] baseBig = { 2, 325, 9375, 28178, 450775, 9780504, 1795265022 };
+
+		static readonly long baseSingleMax = 291831;
+		static readonly long baseDoubleMax = 1050535501;
+		static readonly long baseQuadMax = 47636622961201;
 
 		/// <summary>
 		/// Factorizes n.
@@ -54,6 +59,8 @@ namespace CpLibrary.Math
 			if (n == 1) return false;
 			if (n == 2) return true;
 
+			if (n > int.MaxValue) return IsPrimeLong(n);
+
 			long d = n - 1;
 			int s = 0;
 			while (d % 2 == 0)
@@ -63,9 +70,9 @@ namespace CpLibrary.Math
 			}
 
 			long[] bases;
-			if (n < 291831) bases = baseSingle;
-			else if (n < 1050535501) bases = baseDouble;
-			else if (n < 47636622961201) bases = baseQuad;
+			if (n < baseSingleMax) bases = baseSingle;
+			else if (n < baseDoubleMax) bases = baseDouble;
+			else if (n < baseQuadMax) bases = baseQuad;
 			else bases = baseBig;
 
 			foreach (var e in bases)
@@ -75,6 +82,32 @@ namespace CpLibrary.Math
 			return true;
 		}
 
+		private static bool IsPrimeLong(long n)
+		{
+			long d = n - 1;
+			int s = 0;
+			while (d % 2 == 0)
+			{
+				d /= 2;
+				s++;
+			}
+
+			long[] bases;
+			if (n < baseSingleMax) bases = baseSingle;
+			else if (n < baseDoubleMax) bases = baseDouble;
+			else if (n < baseQuadMax) bases = baseQuad;
+			else bases = baseBig;
+
+			var montgomery = new MontgomeryReduction((ulong)n);
+
+			foreach (var e in bases)
+			{
+				if (!MillerRabinTestMontgomery(e, d, n, s, montgomery)) return false;
+			}
+			return true;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static bool MillerRabinTest(long e, long d, long n, long s)
 		{
 			long pow = ModPow(e, d, n);
@@ -87,42 +120,38 @@ namespace CpLibrary.Math
 			return false;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static long ModPow(long a, long p, long mod)
 		{
-			if (mod <= int.MaxValue)
+			a %= mod;
+			long ret = 1;
+			for (int i = 0; (1L << i) <= p; i++)
 			{
+				if ((p & (1L << i)) > 0)
+				{
+					ret *= a;
+					ret %= mod;
+				}
+
+				a *= a;
 				a %= mod;
-				long ret = 1;
-				for (long i = 1; i <= p; i *= 2)
-				{
-					if (p / i % 2 == 1)
-					{
-						ret *= a;
-						ret %= mod;
-					}
-
-					a *= a;
-					a %= mod;
-				}
-				return ret;
 			}
-			else
+			return ret;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static bool MillerRabinTestMontgomery(long e, long d, long n, long s, MontgomeryReduction montgomery)
+		{
+			var pow = montgomery.Reduce((ulong)e);
+			pow = montgomery.Pow(pow, d);
+			if (montgomery.ToInteger(pow) == 1) return true;
+			for (int i = 0; i < s; i++)
 			{
-				BigInteger retbig = 1;
-				BigInteger abig = a % mod;
-				for (BigInteger i = 1; i <= p; i *= 2)
-				{
-					if (p / i % 2 == 1)
-					{
-						retbig *= abig;
-						retbig %= mod;
-					}
-
-					abig *= abig;
-					abig %= mod;
-				}
-				return (long)retbig;
+				if (montgomery.ToInteger(pow) == (ulong)n - 1)
+					return true;
+				pow = montgomery.Mult(pow, pow);
 			}
+			return false;
 		}
 
 		/// <summary>
@@ -130,6 +159,7 @@ namespace CpLibrary.Math
 		/// </summary>
 		/// <param name="n">The number to get a factor.</param>
 		/// <returns>A prime factor of n.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static long FindFactor(long n)
 		{
 			if (n % 2 == 0) return 2;
@@ -138,28 +168,29 @@ namespace CpLibrary.Math
 			{
 				i++;
 				long x = i;
-				long y = Next(i, n);
+				long y = Next(i, i, n);
 				while (true)
 				{
 					long g = GCD(x - y, n);
 					if (g >= n) break;
 					if (1 < g) return g;
-					x = Next(x, n);
-					y = Next(y, n);
-					y = Next(y, n);
+					x = Next(x, i, n);
+					y = Next(y, i, n);
+					y = Next(y, i, n);
 				}
 			}
 		}
 
-		private static long Next(long x, long mod)
+		private static long Next(long x, long step, long mod)
 		{
-			BigInteger tmp = x;
+			Int128 tmp = x;
 			tmp *= tmp;
-			tmp++;
+			tmp += step;
 			tmp %= mod;
 			return (long)tmp;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static long GCD(long a, long b)
 		{
 			a = System.Math.Abs(a);
