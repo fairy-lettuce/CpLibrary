@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CpLibrary.Lib
+namespace CpLibrary.Collections
 {
 	public class MultiSet<T> : Set<T> where T : IComparable<T>
 	{

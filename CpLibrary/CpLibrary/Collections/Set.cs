@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-namespace CpLibrary.Lib
+namespace CpLibrary.Collections
 {
 	public class Set<T> : IEnumerable<T> where T : IComparable<T>
 	{

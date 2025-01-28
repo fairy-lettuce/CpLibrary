@@ -1,4 +1,4 @@
-﻿using CpLibrary.Lib;
+﻿using CpLibrary.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
