@@ -10,7 +10,7 @@ documentation_of: //CpLibrary/Judge/Hacker/Hacker.cs
 
 ## コンストラクター
 
-- `Hacker(CheckerBase, Action<StreamWriter), Action<StreamReader, StreamWriter>)`: ハック対象となる解法やジャッジ等を保持するチェッカー、入力生成器、想定解を与えてインスタンスを初期化します。
+- `Hacker(CheckerBase, Action<StreamWriter>, Action<StreamReader, StreamWriter>)`: ハック対象となる解法やジャッジ等を保持するチェッカー、入力生成器、想定解を与えてインスタンスを初期化します。
 
 ## メソッド
 
