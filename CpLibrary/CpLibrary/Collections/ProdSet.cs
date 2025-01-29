@@ -1,37 +1,31 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace CpLibrary.Collections
 {
-	public class Set<T> : IEnumerable<T> where T : IComparable<T>
+	public interface IProdSetOperator<T>
 	{
+		public T Identity { get; }
+		public T Operate(T x, T y);
+	}
+
+	public class ProdSet<T, TOp> : IEnumerable<T> where T : IComparable<T> where TOp : struct, IProdSetOperator<T>
+	{
+		private static readonly TOp op = default;
 		Node root;
 		readonly IComparer<T> comparer;
 		readonly Node nil;
-		public bool IsMultiSet { get; }
+		public bool IsMultiSet { get; set; }
 
-		public Set(bool isMultiSet = false) : this(Comparer<T>.Default, isMultiSet) { }
-		public Set(IComparer<T> comparer, bool isMultiSet = false)
+		public ProdSet() : this(Comparer<T>.Default) { }
+		public ProdSet(IComparer<T> comparer)
 		{
 			nil = new Node(default);
 			root = nil;
 			this.comparer = comparer;
-			this.IsMultiSet = isMultiSet;
 		}
-		public Set(IEnumerable<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
-		public Set(IEnumerable<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
-		{
-			foreach (var item in list)
-			{
-				Add(item);
-			}
-		}
-		public Set(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
-		public Set(IEnumerable<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
+		public ProdSet(Comparison<T> comparison) : this(Comparer<T>.Create(comparison)) { }
 
 		public T this[int index]
 		{
@@ -58,6 +52,24 @@ namespace CpLibrary.Collections
 
 		public T Min() => root.Min.Value;
 		public T Max() => root.Max.Value;
+
+		public T Prod(int l, int r)
+		{
+			if (0 > l || r > Count) throw new ArgumentException($"The range [{l}, {r}) should be within the range [0, {Count}).");
+			if (l >= r) return op.Identity;
+			return Prod(root, root.Left.Count, 0, Count, l, r);
+		}
+
+		private T Prod(Node cur, int x, int a, int b, int l, int r)
+		{
+			if (cur.Count == 0) return op.Identity;
+			if (r <= a || b <= l) return op.Identity;
+			if (l <= a && b <= r) return cur.Prod;
+			var ret = l <= x && x < r ? cur.Value : op.Identity;
+			if (cur.Left.Count > 0) ret = op.Operate(Prod(cur.Left, x - cur.Left.Right.Count - 1, a, x, l, r), ret);
+			if (cur.Right.Count > 0) ret = op.Operate(ret, Prod(cur.Right, x + cur.Right.Left.Count + 1, x + 1, b, l, r));
+			return ret;
+		}
 
 		public T[] Items
 		{
@@ -226,6 +238,7 @@ namespace CpLibrary.Collections
 		{
 			public Node Left, Right;
 			public T Value { get; set; }
+			public T Prod { get; set; }
 
 			public int Count { get; private set; }
 			public int Height { get; private set; }
@@ -248,12 +261,17 @@ namespace CpLibrary.Collections
 				}
 			}
 
-			public Node(T value) => Value = value;
+			public Node(T value)
+			{
+				Value = value;
+				Prod = value;
+			}
 
 			public void Update()
 			{
 				Count = Left.Count + Right.Count + 1;
 				Height = System.Math.Max(Left.Height, Right.Height) + 1;
+				Prod = op.Operate(Value, op.Operate(Left.Prod, Right.Prod));
 			}
 
 			public override string ToString() => $"Count = {Count}, Value = {Value}";
