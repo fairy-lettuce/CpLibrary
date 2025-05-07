@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v1
+        uses: competitive-verifier/actions/setup@v2
         with:
           python-version: "3.9"
           cache-pip: true
@@ -57,7 +57,7 @@ jobs:
         env:
           VERIFY_CSPROJ: CpLibrary.Verify/CpLibrary.Verify.csproj
       - name: cs-resolve
-        uses: competitive-verifier/actions/cs-resolve@v1
+        uses: competitive-verifier/actions/cs-resolve@v2
         with:
           working-directory: CpLibrary
           solution: ${{ env.WORKFLOW_BUILD_SLN }}
@@ -70,7 +70,7 @@ jobs:
           problems: ${{runner.temp}}/problems.json
 
       - name: Upload verify_files.json
-        uses: competitive-verifier/actions/upload-verify-artifact@v1
+        uses: competitive-verifier/actions/upload-verify-artifact@v2
         with:
           file: ${{ runner.temp }}/verify_files.json
 
@@ -104,10 +104,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download verify_files.json
-        uses: competitive-verifier/actions/download-verify-artifact@v1
+        uses: competitive-verifier/actions/download-verify-artifact@v2
 
       - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v1
+        uses: competitive-verifier/actions/setup@v2
         with:
           python-version: "3.9"
           cache-pip: true
@@ -123,7 +123,7 @@ jobs:
       - name: Build
         run: dotnet build $WORKFLOW_BUILD_SLN -c Release
       - name: Verify
-        uses: competitive-verifier/actions/verify@v1
+        uses: competitive-verifier/actions/verify@v2
         with:
           destination: ${{runner.temp}}/result.json
           split-size: ${{ env.SPLIT_SIZE }}
@@ -154,7 +154,7 @@ jobs:
 
       - name: Download verify_files.json and all artifacts
         id: all-artifacts
-        uses: competitive-verifier/actions/download-verify-artifact@v1
+        uses: competitive-verifier/actions/download-verify-artifact@v2
         with:
           working-directory: CpLibrary
           download-all: true
@@ -174,13 +174,13 @@ jobs:
           SRCDIR: .artifacts/Bundled-${{ runner.os }}
 
       - name: Set up competitive-verifier
-        uses: competitive-verifier/actions/setup@v1
+        uses: competitive-verifier/actions/setup@v2
         with:
           python-version: "3.9"
           cache-pip: true
 
       - name: Docs
-        uses: competitive-verifier/actions/docs@v1
+        uses: competitive-verifier/actions/docs@v2
         with:
           working-directory: CpLibrary
           verify-result: ${{ steps.all-artifacts.outputs.artifacts-root }}/Result-*/result.json
@@ -196,12 +196,12 @@ jobs:
           destination: _site
       - name: Upload artifact
         id: upload-pages
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
       - name: Check
-        uses: competitive-verifier/actions/check@v1
+        uses: competitive-verifier/actions/check@v2
         with:
           verify-result: ${{ steps.all-artifacts.outputs.artifacts-root }}/Result-*/result.json
   deploy:
