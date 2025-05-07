@@ -8,8 +8,8 @@ using System.Text;
 using System.Globalization;
 using System.Threading;
 using System.Diagnostics;
-using ModInt = AtCoder.StaticModInt<AtCoder.Mod1000000007>;
-//using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
+//using ModInt = AtCoder.StaticModInt<AtCoder.Mod1000000007>;
+using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 using static System.Math;
 using static CpLibrary.StaticItems;
 
