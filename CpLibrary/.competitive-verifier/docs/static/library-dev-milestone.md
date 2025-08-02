@@ -40,31 +40,31 @@ title: 2023/07 大規模ライブラリ改築 仕様書
 
 ### FertiLib から未移植のライブラリ
 
-- BinarySarch
-- PriorityQueue
+- [ ] BinarySarch
+- [ ] PriorityQueue
   - ただし PriorityQueue は .NET 6 から標準ライブラリに入ったので、移植しなくてもいいかも？
   - でも自作の方が改造しやすいので移植するかも
-- Segtree
-- LazySegtree
+- [ ] Segtree
+- [ ] LazySegtree
   - ac-library-csharp があるからいらないかも？
-- SWAG
-- UnionFind
-- Retroactive UnionFind
+- [x] SWAG
+- [ ] UnionFind
+- [ ] Retroactive UnionFind
   - どの問題かで書いたことがある (忘れた)
-- Geometry
-- GraphBase
+- [ ] Geometry
+- [ ] GraphBase
   - グラフ周りはもうちょっと賢い構成のクラスにしたいなあ
-- HeavyLightDecomposition
-- LowestCommonAncestor
-- Relooting
-- ShortestPaths
+- [ ] HeavyLightDecomposition
+- [ ] LowestCommonAncestor
+- [ ] Relooting
+- [ ] ShortestPaths
   - Dijkstra と BellmanFord が同じファイルにあるので、別ファイルに分ける必要がある
-- TopologicalSort
-- 数学関連の細々したやつ
-- ExtGcd
-- Matrix
+- [ ] TopologicalSort
+- [ ] 数学関連の細々したやつ
+- [ ] ExtGcd
+- [ ] Matrix
   - .NET 7 の Generic Math に対応させる
-- Rational
+- [ ] Rational
   - .NET 7 の Generic Math に対応させる
-- KMPSearch
-- Trie
+- [ ] KMPSearch
+- [ ] Trie
