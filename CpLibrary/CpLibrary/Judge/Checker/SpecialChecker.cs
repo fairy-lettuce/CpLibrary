@@ -9,18 +9,18 @@ namespace CpLibrary.Judge.Checker
 {
 	public class SpecialChecker : CheckerBase
 	{
-		private Action<StreamReader, StreamWriter> judge;
+		private Func<StreamReader, StreamReader, StreamReader, JudgeStatus> judge;
 
 		public SpecialChecker(Action<StreamReader, StreamWriter> solution) : base(solution) { }
 
-		public SpecialChecker(Action<StreamReader, StreamWriter> solution, Action<StreamReader, StreamWriter> judge) : this(solution)
+		public SpecialChecker(Action<StreamReader, StreamWriter> solution, Func<StreamReader, StreamReader, StreamReader, JudgeStatus> judge) : this(solution)
 		{
 			this.judge = judge;
 		}
 
 		protected override JudgeStatus Judge(StreamReader input, StreamReader expected, StreamReader actual)
 		{
-			throw new NotImplementedException();
+			return this.judge(input, expected, actual);
 		}
 	}
 }
