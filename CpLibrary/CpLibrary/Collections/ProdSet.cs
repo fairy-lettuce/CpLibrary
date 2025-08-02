@@ -21,7 +21,7 @@ namespace CpLibrary.Collections
 		public ProdSet() : this(Comparer<T>.Default) { }
 		public ProdSet(IComparer<T> comparer)
 		{
-			nil = new Node(default);
+			nil = new Node(op.Identity);
 			root = nil;
 			this.comparer = comparer;
 		}
@@ -214,7 +214,7 @@ namespace CpLibrary.Collections
 
 			while (p.Count != 0)
 			{
-				var cmp = p.Value.CompareTo(x);
+				var cmp = comparer.Compare(p.Value, x);
 				if (cmp > 0 || (!isUpperBound && cmp == 0))
 				{
 					p = p.Left;
