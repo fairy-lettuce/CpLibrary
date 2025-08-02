@@ -10,7 +10,7 @@ namespace CpLibrary.Verify.Collections
 	// competitive-verifier: document_title Set<T> (Library Checker: OrderedSet)
 	internal class SetTestOrderedSet : CompetitiveVerifier.ProblemSolver
 	{
-		public override string Url => "https://judge.yosupo.jp/submission/304690";
+		public override string Url => "https://judge.yosupo.jp/problem/ordered_set";
 		public override void Solve()
 		{
 			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
