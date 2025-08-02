@@ -9,8 +9,8 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 
 namespace CpLibrary.Verify.Collections
 {
-	// competitive-verifier: document_title Set<T> (Library Checker: Double-Ended Priority Queue)
-	internal class ProdSet : CompetitiveVerifier.ProblemSolver
+	// competitive-verifier: document_title ProdSet<T> (Library Checker: Point Set Range Composite (Large Array))
+	internal class ProdSetTest : CompetitiveVerifier.ProblemSolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/point_set_range_composite_large_array";
 		public override void Solve()
