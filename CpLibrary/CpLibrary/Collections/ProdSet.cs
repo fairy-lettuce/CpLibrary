@@ -271,7 +271,9 @@ namespace CpLibrary.Collections
 			{
 				Count = Left.Count + Right.Count + 1;
 				Height = System.Math.Max(Left.Height, Right.Height) + 1;
-				Prod = op.Operate(Value, op.Operate(Left.Prod, Right.Prod));
+				Prod = Value;
+				if (Left.Count > 0) Prod = op.Operate(Left.Prod, Prod);
+				if (Right.Count > 0) Prod = op.Operate(Prod, Right.Prod);
 			}
 
 			public override string ToString() => $"Count = {Count}, Value = {Value}";
