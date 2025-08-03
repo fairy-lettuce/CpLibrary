@@ -13,6 +13,7 @@ using AngleSharp.Html.Parser;
 
 namespace CpLibrary.Judge.Downloader
 {
+	[Obsolete("Scraping pages on atcoder.jp is now restricted; this class should not be used.")]
 	public static class Downloader
 	{
 		public static async Task<IEnumerable<(string Input, string Output)>> DownloadTestcases(Uri url)
