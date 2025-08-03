@@ -12,7 +12,6 @@ using System.Diagnostics;
 using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 using static System.Math;
 using static CpLibrary.StaticItems;
-using AtCoder;
 
 namespace CpLibrary.Contest
 {
@@ -22,30 +21,9 @@ namespace CpLibrary.Contest
 
 		public override void Solve()
 		{
-			var (n, m) = sr.ReadValue<int, int>();
-			var (a, b, c) = sr.ReadValueArray<int, int, int>(m);
-			var twosat = new TwoSat(2 * n);
-			for (int i = 0; i < m; i++)
-			{
-				if (c[i] == 0)
-				{
-					twosat.AddClause(a[i] - 1, true, n + b[i] - 1, true);
-					twosat.AddClause(a[i] - 1, false, n + b[i] - 1, false);
-				}
-				else
-				{
-					twosat.AddClause(a[i] - 1, true, n + b[i] - 1, false);
-					twosat.AddClause(a[i] - 1, false, n + b[i] - 1, true);
-				}
-			}
-			var ok = twosat.Satisfiable();
-			if (!ok)
-			{
-				sw.WriteLine(-1);
-				return;
-			}
-			var ans = twosat.Answer();
-			sw.WriteLine(Enumerable.Range(0, n).Select(p => (ans[p] ^ ans[n + p]) ? 0 : 1).Join());
+			/*
+			 * Write your code here!
+			 */
 		}
 
 		public override void Init()
