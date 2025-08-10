@@ -9,7 +9,7 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 
 namespace CpLibrary.Verify.Collections
 {
-	// competitive-verifier: document_title ProdSet<T> (Library Checker: Deque)
+	// competitive-verifier: document_title Deque<T> (Library Checker: Deque)
 	internal class DequeTest : CompetitiveVerifier.ProblemSolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/deque";
