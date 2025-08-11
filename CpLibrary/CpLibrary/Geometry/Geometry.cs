@@ -68,5 +68,5 @@ public static partial class Geometry2D
 	public static int AngleType(Complex a, Complex b, Complex c) => Sign((a - b).Dot(c - b));
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static double Pow2(double x) => x * x;
+	public static double Pow2(this double x) => x * x;
 }

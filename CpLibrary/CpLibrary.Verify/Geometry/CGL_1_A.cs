@@ -22,7 +22,7 @@ namespace CpLibrary.Verify.Collections
 			var (x1, y1, x2, y2) = sr.ReadValue<int, int, int, int>();
 			var p1 = new Complex(x1, y1);
 			var p2 = new Complex(x2, y2);
-			var l = new Geometry2D.Line2D(p1, p2);
+			var l = new Line2D(p1, p2);
 			var q = sr.ReadInt();
 			for (int i = 0; i < q; i++)
 			{
