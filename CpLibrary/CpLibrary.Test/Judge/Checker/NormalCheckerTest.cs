@@ -3,12 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Xunit;
-using CpLibrary.Judge.Checker;
+using CpLibrary.Judge;
 using FluentAssertions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace CpLibrary.Test.Judge.Checker
+namespace CpLibrary.Test.Judge
 {
 	public class NormalCheckerTest
 	{

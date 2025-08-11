@@ -11,7 +11,7 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 
 
-namespace CpLibrary.Judge.Downloader
+namespace CpLibrary.Judge
 {
 	[Obsolete("Scraping pages on atcoder.jp is now restricted; this class should not be used.")]
 	public static class Downloader

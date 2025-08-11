@@ -1,4 +1,4 @@
-﻿using CpLibrary.Judge.Checker;
+﻿using CpLibrary.Judge;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CpLibrary.Judge.Hacker
+namespace CpLibrary.Judge
 {
 	public class Hacker
 	{
