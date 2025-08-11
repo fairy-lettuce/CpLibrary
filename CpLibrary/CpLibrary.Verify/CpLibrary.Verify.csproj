@@ -1,18 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <StartupObject>Program</StartupObject>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<StartupObject>Program</StartupObject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Configurations>Debug;Release;Verify</Configurations>
+		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CompetitiveVerifierProblem" Version="1.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CompetitiveVerifierProblem" Version="1.4.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CpLibrary\CpLibrary.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\CpLibrary\CpLibrary.csproj" />
+	</ItemGroup>
+	
+	<Target Name="Local Verify" AfterTargets="Build" Condition="'$(Configuration)' == 'Verify'">
+		<Exec Command="dotnet run --project &quot;$(ProjectPath)&quot; --no-build --no-launch-profile --verbosity quiet -c &quot;$(ConfigurationName)&quot; > &quot;$(ProjectDir)problems.json&quot; 2>NUL" />
+		<Exec Command="competitive-verifier verify --verify-json &quot;$(ProjectDir)verify_files.json&quot; --check-error" />
+	</Target>
 
 </Project>
