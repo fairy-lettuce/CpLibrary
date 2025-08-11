@@ -351,3 +351,4 @@ MigrationBackup/
 
 # User defined
 CpProject/Contest/*/*_Combined.csx
+CpLibrary/.competitive-verifier/cache/*
