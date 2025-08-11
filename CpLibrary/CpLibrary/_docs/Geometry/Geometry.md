@@ -8,6 +8,8 @@ documentation_of: //CpLibrary/Geometry/Geometry.cs
 
 現在二次元の点を扱う際に `System.Numerics.Complex` を使用していますが、generic math に対応した自作 struct にする予定です。
 
+TODO: 書く
+
 ## コンストラクタ
 
 WIP
