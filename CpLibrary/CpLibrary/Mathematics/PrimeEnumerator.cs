@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CpLibrary.Math
+namespace CpLibrary.Mathematics
 {
 	public static class PrimeEnumerator
 	{

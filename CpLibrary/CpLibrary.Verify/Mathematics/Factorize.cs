@@ -1,11 +1,11 @@
-﻿using CpLibrary.Math;
+﻿using CpLibrary.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CpLibrary.Verify.Math
+namespace CpLibrary.Verify.Mathematics
 {   // competitive-verifier: document_title Factorize (Library Checker: Factorize)
 	internal class Factorize : CompetitiveVerifier.ProblemSolver
 	{
