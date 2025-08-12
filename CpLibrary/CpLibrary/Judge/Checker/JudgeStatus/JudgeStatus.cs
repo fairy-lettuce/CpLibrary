@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CpLibrary.Judge.Checker
+namespace CpLibrary.Judge
 {
 	/// <summary>
 	/// Indicates the final result of the judge.

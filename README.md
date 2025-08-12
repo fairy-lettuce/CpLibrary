@@ -13,3 +13,10 @@ Visual Studio でクローンして動かせば多分上手く行きます。
 
 [kzrnm さん](https://github.com/kzrnm) の作成した [competitive-verifier](https://github.com/competitive-verifier/competitive-verifier) および数多くの C# ライブラリを使用しており、また氏よりたくさんの助言を頂きました。ありがとうございます。
 
+## License
+
+このリポジトリのコードは [CC0 1.0 Universal](LICENSE) でライセンスされています。
+
+ただし、一部のコードは MIT でライセンスされています。ライセンスの詳細は、各ファイルに記載されています。
+
+また、内部で使用しているいくつかのパッケージは、独自のライセンスを持っています。これらのパッケージのライセンスは、各パッケージのドキュメントやリポジトリで確認できます。

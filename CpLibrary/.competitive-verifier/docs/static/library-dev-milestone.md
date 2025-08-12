@@ -2,7 +2,6 @@
 title: 2023/07 大規模ライブラリ改築 仕様書
 ---
 
-
 以下は自分用の覚書です。改築が終わり次第この内容は消えます。
 
 ### 動機
@@ -20,13 +19,15 @@ title: 2023/07 大規模ライブラリ改築 仕様書
 ### CpProject
 
 - [**DONE!!**] A.cs とかのソースコードをキレイにして共通部分をくくりだす
-	- どうせ現状 SourceExpander がよしなにやってくれてるので共通処理を書く必要もない
+  - どうせ現状 SourceExpander がよしなにやってくれてるので共通処理を書く必要もない
 - いろんな動作をちゃんと拡充する
-    - [**DONE!!**] 手元ジャッジの実装
-	- サンプルテストケースのダウンロード
-	- [**DONE!!**] ランダムテスト
-	- 特殊ジャッジへの対応 (誤差ジャッジ / スペシャルジャッジ / インタラクティブジャッジ)
-	- ベンチマークできるようにする
+  - [**DONE!!**] 手元ジャッジの実装
+  - ~~サンプルテストケースのダウンロード~~
+    - AtCoder が困るので deprecated
+  - [**DONE!!**] ランダムテスト
+  - 特殊ジャッジへの対応 (誤差ジャッジ / [**DONE!!**] スペシャルジャッジ / インタラクティブジャッジ)
+  - ベンチマークできるようにする
+- あまり A.cs とかで分割するの面倒になってきたし、いい感じにしたい
 
 ### CpLibrary
 
@@ -36,3 +37,34 @@ title: 2023/07 大規模ライブラリ改築 仕様書
 
 - [**DONE!**] competitive-verifier の導入
 - ベンチマークできるようにする
+
+### FertiLib から未移植のライブラリ
+
+- [ ] BinarySarch
+- [ ] PriorityQueue
+  - ただし PriorityQueue は .NET 6 から標準ライブラリに入ったので、移植しなくてもいいかも？
+  - でも自作の方が改造しやすいので移植するかも
+- [ ] Segtree
+- [ ] LazySegtree
+  - ac-library-csharp があるからいらないかも？
+- [x] SWAG
+- [ ] UnionFind
+- [ ] Retroactive UnionFind
+  - どの問題かで書いたことがある (忘れた)
+- [ ] Geometry
+- [ ] GraphBase
+  - グラフ周りはもうちょっと賢い構成のクラスにしたいなあ
+- [ ] HeavyLightDecomposition
+- [ ] LowestCommonAncestor
+- [ ] Relooting
+- [ ] ShortestPaths
+  - Dijkstra と BellmanFord が同じファイルにあるので、別ファイルに分ける必要がある
+- [ ] TopologicalSort
+- [ ] 数学関連の細々したやつ
+- [ ] ExtGcd
+- [ ] Matrix
+  - .NET 7 の Generic Math に対応させる
+- [ ] Rational
+  - .NET 7 の Generic Math に対応させる
+- [ ] KMPSearch
+- [ ] Trie

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CpLibrary.Math
+namespace CpLibrary.Mathematics
 {
 	public static class Factorizer
 	{

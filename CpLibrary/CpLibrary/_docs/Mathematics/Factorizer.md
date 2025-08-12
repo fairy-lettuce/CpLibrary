@@ -1,5 +1,5 @@
 ---
-documentation_of: //CpLibrary/Math/Factorizer.cs
+documentation_of: //CpLibrary/Mathematics/Factorizer.cs
 ---
 
 ## 概要

@@ -1,16 +1,17 @@
-﻿using System;
+﻿using CpLibrary.Judge;
+using FluentAssertions;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
-using Xunit;
-using CpLibrary.Judge;
-using FluentAssertions;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Xunit;
 
 namespace CpLibrary.Test.Judge
 {
-	public class NormalCheckerTest
+	public class RunOnlyCheckerTest
 	{
 		[Theory]
 		[InlineData(3, 1, 4, 1000, JudgeStatus.AC)]
@@ -25,7 +26,7 @@ namespace CpLibrary.Test.Judge
 				writer.WriteLine(a + b);
 			}
 
-			var checker = new NormalChecker(Actual);
+			var checker = new RunOnlyChecker(Actual);
 			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
@@ -34,8 +35,8 @@ namespace CpLibrary.Test.Judge
 		}
 
 		[Theory]
-		[InlineData(3, 1, 4, 1000, JudgeStatus.WA)]
-		[InlineData(1, 5, 6, 1000, JudgeStatus.WA)]
+		[InlineData(3, 1, 4, 1000, JudgeStatus.AC)]
+		[InlineData(1, 5, 6, 1000, JudgeStatus.AC)]
 		public static void WrongAnswerTest(int a, int b, int sum, int timeLimit, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
@@ -46,7 +47,7 @@ namespace CpLibrary.Test.Judge
 				writer.WriteLine(a + b + 1);
 			}
 
-			var checker = new NormalChecker(Actual);
+			var checker = new RunOnlyChecker(Actual);
 			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
@@ -67,7 +68,7 @@ namespace CpLibrary.Test.Judge
 				writer.WriteLine(a + b);
 			}
 
-			var checker = new NormalChecker(Actual);
+			var checker = new RunOnlyChecker(Actual);
 			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
@@ -85,7 +86,7 @@ namespace CpLibrary.Test.Judge
 				throw new Exception("Test");
 			}
 
-			var checker = new NormalChecker(Actual);
+			var checker = new RunOnlyChecker(Actual);
 			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
@@ -100,14 +101,13 @@ namespace CpLibrary.Test.Judge
 				new List<(int a, int b, int sum, JudgeStatus status)>
 				{
 					(3, 1, 4, JudgeStatus.AC),
-					(1, 4, 5, JudgeStatus.WA),
+					(1, 4, 5, JudgeStatus.AC),
 					(1, 1, 2, JudgeStatus.RE),
 					(10, 10, 100, JudgeStatus.TLE)
 				},
 				new Dictionary<JudgeStatus, int>
 				{
-					{ JudgeStatus.AC, 1 },
-					{ JudgeStatus.WA, 1 },
+					{ JudgeStatus.AC, 2 },
 					{ JudgeStatus.RE, 1 },
 					{ JudgeStatus.TLE, 1 }
 				},
@@ -143,7 +143,7 @@ namespace CpLibrary.Test.Judge
 				writer.WriteLine(a + b);
 			}
 
-			var checker = new NormalChecker(Actual);
+			var checker = new RunOnlyChecker(Actual);
 			checker.TimeLimit = TimeSpan.FromMilliseconds(timeLimit);
 			var tc = testcases.Select(p => ($"{p.a} {p.b}\n", $"{p.sum}\n"));
 			var result = checker.Run(tc);

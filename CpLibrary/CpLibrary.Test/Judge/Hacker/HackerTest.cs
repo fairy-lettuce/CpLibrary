@@ -2,11 +2,10 @@
 using System.IO;
 using System.Linq;
 using Xunit;
-using CpLibrary.Judge.Hacker;
-using CpLibrary.Judge.Checker;
+using CpLibrary.Judge;
 using FluentAssertions;
 
-namespace CpLibrary.Test.Judge.Checker
+namespace CpLibrary.Test.Judge
 {
 	public class HackerTest
 	{

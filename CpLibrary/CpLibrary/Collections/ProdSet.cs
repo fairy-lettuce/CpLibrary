@@ -21,7 +21,7 @@ namespace CpLibrary.Collections
 		public ProdSet() : this(Comparer<T>.Default) { }
 		public ProdSet(IComparer<T> comparer)
 		{
-			nil = new Node(default);
+			nil = new Node(op.Identity);
 			root = nil;
 			this.comparer = comparer;
 		}
@@ -214,7 +214,7 @@ namespace CpLibrary.Collections
 
 			while (p.Count != 0)
 			{
-				var cmp = p.Value.CompareTo(x);
+				var cmp = comparer.Compare(p.Value, x);
 				if (cmp > 0 || (!isUpperBound && cmp == 0))
 				{
 					p = p.Left;
@@ -271,7 +271,9 @@ namespace CpLibrary.Collections
 			{
 				Count = Left.Count + Right.Count + 1;
 				Height = System.Math.Max(Left.Height, Right.Height) + 1;
-				Prod = op.Operate(Value, op.Operate(Left.Prod, Right.Prod));
+				Prod = Value;
+				if (Left.Count > 0) Prod = op.Operate(Left.Prod, Prod);
+				if (Right.Count > 0) Prod = op.Operate(Prod, Right.Prod);
 			}
 
 			public override string ToString() => $"Count = {Count}, Value = {Value}";

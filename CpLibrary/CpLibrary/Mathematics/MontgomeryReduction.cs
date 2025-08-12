@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-namespace CpLibrary.Math
+namespace CpLibrary.Mathematics
 {
 	public readonly struct MontgomeryReduction
 	{

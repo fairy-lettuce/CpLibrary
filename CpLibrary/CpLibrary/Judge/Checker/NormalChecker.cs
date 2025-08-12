@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CpLibrary.Judge.Checker
+namespace CpLibrary.Judge
 {
 
 	public class NormalChecker : CheckerBase
