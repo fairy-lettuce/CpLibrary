@@ -17,9 +17,9 @@ public static partial class Graph
 		int To { get; }
 	}
 
-	public interface IWeightedEdge : IEdge
+	public interface IWeightedEdge<T> : IEdge where T : INumber<T>
 	{
-		long Weight { get; }
+		T Weight { get; }
 	}
 
 	public interface IGraph<TEdge> where TEdge : IEdge
@@ -29,7 +29,7 @@ public static partial class Graph
 		public List<TEdge> Next(int x);
 	}
 
-	public interface IWeightedGraph<TEdge> : IGraph<TEdge> where TEdge : IWeightedEdge { }
+	public interface IWeightedGraph<TEdge, TWeight> : IGraph<TEdge> where TWeight : INumber<TWeight> where TEdge : IWeightedEdge<TWeight> { }
 
 	public struct BasicEdge : IEdge
 	{
@@ -45,21 +45,21 @@ public static partial class Graph
 		public static implicit operator int(BasicEdge edge) => edge.To;
 	}
 
-	public struct WeightedEdge : IWeightedEdge
+	public struct WeightedEdge<T> : IWeightedEdge<T> where T : INumber<T>
 	{
 		public int To { get; private set; }
-		public long Weight { get; private set; }
+		public T Weight { get; private set; }
 
-		public WeightedEdge(int to, long weight)
+		public WeightedEdge(int to, T weight)
 		{
 			To = to;
 			Weight = weight;
 		}
 
-		public WeightedEdge(int to) : this(to, 1) { }
+		public WeightedEdge(int to) : this(to, default(T)) { }
 
 		public override string ToString() => $"[{Weight}] -> {To}";
-		public void Deconstruct(out int to, out long weight) => (to, weight) = (To, Weight);
+		public void Deconstruct(out int to, out T weight) => (to, weight) = (To, Weight);
 	}
 
 	public class UndirectedGraph : IGraph<BasicEdge>
@@ -113,16 +113,16 @@ public static partial class Graph
 		public List<BasicEdge> Next(int x) => g[x];
 	}
 
-	public class UndirectedWeightedGraph : IWeightedGraph<WeightedEdge>
+	public class UndirectedWeightedGraph<T> : IWeightedGraph<WeightedEdge<T>, T> where T : INumber<T>
 	{
-		public readonly List<List<WeightedEdge>> g;
+		public readonly List<List<WeightedEdge<T>>> g;
 
-		public List<WeightedEdge> this[int index] => g[index];
+		public List<WeightedEdge<T>> this[int index] => g[index];
 		public int NodeCount => g.Count;
 
-		public UndirectedWeightedGraph(int nodeCount) => g = Enumerable.Repeat(0, nodeCount).Select(_ => new List<WeightedEdge>()).ToList();
+		public UndirectedWeightedGraph(int nodeCount) => g = Enumerable.Repeat(0, nodeCount).Select(_ => new List<WeightedEdge<T>>()).ToList();
 
-		public UndirectedWeightedGraph(int nodeCount, int[] u, int[] v, long[] weight) : this(nodeCount)
+		public UndirectedWeightedGraph(int nodeCount, int[] u, int[] v, T[] weight) : this(nodeCount)
 		{
 			if (u.Length != v.Length) throw new ArgumentException($"The arrays {nameof(u)} and {nameof(v)} must have the same length.");
 			if (u.Length != weight.Length) throw new ArgumentException($"The arrays {nameof(u)} and {nameof(weight)} must have the same length.");
@@ -133,25 +133,25 @@ public static partial class Graph
 			}
 		}
 
-		public void AddEdge(int u, int v, long w)
+		public void AddEdge(int u, int v, T w)
 		{
-			g[u].Add(new WeightedEdge(v, w));
-			g[v].Add(new WeightedEdge(u, w));
+			g[u].Add(new WeightedEdge<T>(v, w));
+			g[v].Add(new WeightedEdge<T>(u, w));
 		}
-		public void AddNode() => g.Add(new List<WeightedEdge>());
-		public List<WeightedEdge> Next(int x) => g[x];
+		public void AddNode() => g.Add(new List<WeightedEdge<T>>());
+		public List<WeightedEdge<T>> Next(int x) => g[x];
 	}
 
-	public class DirectedWeightedGraph : IWeightedGraph<WeightedEdge>
+	public class DirectedWeightedGraph<T> : IWeightedGraph<WeightedEdge<T>, T> where T : INumber<T>
 	{
-		public readonly List<List<WeightedEdge>> g;
+		public readonly List<List<WeightedEdge<T>>> g;
 
-		public List<WeightedEdge> this[int index] => g[index];
+		public List<WeightedEdge<T>> this[int index] => g[index];
 		public int NodeCount => g.Count;
 
-		public DirectedWeightedGraph(int nodeCount) => g = Enumerable.Repeat(0, nodeCount).Select(_ => new List<WeightedEdge>()).ToList();
+		public DirectedWeightedGraph(int nodeCount) => g = Enumerable.Repeat(0, nodeCount).Select(_ => new List<WeightedEdge<T>>()).ToList();
 
-		public DirectedWeightedGraph(int nodeCount, int[] from, int[] to, long[] weight) : this(nodeCount)
+		public DirectedWeightedGraph(int nodeCount, int[] from, int[] to, T[] weight) : this(nodeCount)
 		{
 			if (from.Length != to.Length) throw new ArgumentException($"The arrays {nameof(from)} and {nameof(to)} must have the same length.");
 			if (from.Length != weight.Length) throw new ArgumentException($"The arrays {nameof(from)} and {nameof(weight)} must have the same length.");
@@ -162,11 +162,11 @@ public static partial class Graph
 			}
 		}
 
-		public void AddEdge(int from, int to, long w)
+		public void AddEdge(int from, int to, T w)
 		{
-			g[from].Add(new WeightedEdge(to, w));
+			g[from].Add(new WeightedEdge<T>(to, w));
 		}
-		public void AddNode() => g.Add(new List<WeightedEdge>());
-		public List<WeightedEdge> Next(int x) => g[x];
+		public void AddNode() => g.Add(new List<WeightedEdge<T>>());
+		public List<WeightedEdge<T>> Next(int x) => g[x];
 	}
 }
