@@ -14,7 +14,7 @@ namespace CpLibrary.Verify.Geometry
 	// competitive-verifier: document_title Cross Points of a Circe and a Line (Aizu Online Judge: CGL_7_D)
 	internal class CrossPointsOfCircleAndLineTest : CompetitiveVerifier.ProblemSolver
 	{
-		public override string Url => "https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/1/CGL_7_D";
+		public override string Url => "https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/7/CGL_7_D";
 		public override double? Error => 1e-5;
 		public override void Solve()
 		{

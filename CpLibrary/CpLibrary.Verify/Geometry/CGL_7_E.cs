@@ -14,7 +14,7 @@ namespace CpLibrary.Verify.Geometry
 	// competitive-verifier: document_title Cross Points of Circles (Aizu Online Judge: CGL_7_E)
 	internal class CrossPointsOfCirclesTest : CompetitiveVerifier.ProblemSolver
 	{
-		public override string Url => "https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/1/CGL_7_E";
+		public override string Url => "https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/7/CGL_7_E";
 		public override double? Error => 1e-5;
 		public override void Solve()
 		{
