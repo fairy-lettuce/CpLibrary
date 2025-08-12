@@ -4,7 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 
 		<IsPackable>false</IsPackable>
-
+		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release;Verify</Configurations>
 		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 	</PropertyGroup>

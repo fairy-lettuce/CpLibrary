@@ -5,6 +5,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<StartupObject>Program</StartupObject>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release;Verify</Configurations>
 		<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
 	</PropertyGroup>
