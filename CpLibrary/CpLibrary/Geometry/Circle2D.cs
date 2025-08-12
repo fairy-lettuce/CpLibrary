@@ -45,7 +45,7 @@ public readonly struct Circle2D
 	{
 		var dist = (this.center).Distance(other.center);
 		var comp = dist.Compare(this.radius + other.radius);
-		if (comp > 0) return null;
+		if (comp > 0) return new Complex[0];
 		else
 		{
 			var x = (dist.Pow2() + this.radius.Pow2() - other.radius.Pow2()) / (2 * dist);
