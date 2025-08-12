@@ -25,6 +25,7 @@ namespace CpLibrary.Verify.Geometry
 			var c2 = new Circle2D(new Complex(c2x, c2y), c2r);
 			var ans = c1.Intersection(c2);
 			if (ans.Length == 1) ans = ans.Append(ans[0]).ToArray();
+			ans = ans.OrderBy(p => p.Real).ThenBy(p => p.Imaginary).ToArray();
 			Console.WriteLine($"{ans[0].Real} {ans[0].Imaginary} {ans[1].Real} {ans[1].Imaginary}");
 		}
 	}
