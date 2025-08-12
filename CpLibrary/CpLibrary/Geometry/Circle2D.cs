@@ -21,7 +21,7 @@ public readonly struct Circle2D
 	public Complex[] Intersection(Line2D other)
 	{
 		var comp = other.Distance(center).Compare(radius);
-		if (comp > 0) return null;
+		if (comp > 0) return new Complex[0];
 		else if (comp == 0)
 		{
 			var ret = new Complex[1];
