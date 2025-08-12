@@ -21,7 +21,7 @@ public readonly struct Circle2D
 	public Complex[] Intersection(Line2D other)
 	{
 		var comp = other.Distance(center).Compare(radius);
-		if (comp < 0) return null;
+		if (comp > 0) return null;
 		else if (comp == 0)
 		{
 			var ret = new Complex[1];
@@ -33,10 +33,9 @@ public readonly struct Circle2D
 			var ret = new Complex[2];
 			var h = other.Projection(center);
 			var ohLen = (h - center).Magnitude;
-			var vec = (h - center).RotateDegree(90);
 			var len = Math.Sqrt(Math.Max(0, radius * radius - ohLen * ohLen));
-			ret[0] = h + vec.Normalize() * len;
-			ret[1] = h - vec.Normalize() * len;
+			ret[0] = h + other.Vector.Normalize() * len;
+			ret[1] = h - other.Vector.Normalize() * len;
 			return ret;
 		}
 	}

@@ -31,6 +31,7 @@ namespace CpLibrary.Verify.Geometry
 				var line = new Line2D(p1, p2);
 				var ans = c.Intersection(line);
 				if (ans.Length == 1) ans = ans.Append(ans[0]).ToArray();
+				ans = ans.OrderBy(p => p.Real).ThenBy(p => p.Imaginary).ToArray();
 				Console.WriteLine($"{ans[0].Real} {ans[0].Imaginary} {ans[1].Real} {ans[1].Imaginary}");
 			}
 		}
