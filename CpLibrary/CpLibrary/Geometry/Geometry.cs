@@ -46,13 +46,14 @@ public static partial class Geometry2D
 	/// <para>-2 if they are on a line in the order BAC or CAB.</para></returns>
 	public static int ISP(Complex a, Complex b, Complex c)
 	{
-		var cross = Sign((b - a).Cross(c - b));
-		if (cross > 0) return 1;
-		else if (cross < 0) return -1;
+		var cross = Sign((a - b).Cross(c - b));
+		if (cross < 0) return +1;
+		else if (cross > 0) return -1;
 		else
 		{
-			var dot = Sign((b - a).Dot(c - a));
-			return dot * 2;
+			if (Sign((a - b).Dot(c - b)) == -1) return +2;
+			if (Sign((b - a).Dot(c - a)) == -1) return -2;
+			return 0;
 		}
 	}
 

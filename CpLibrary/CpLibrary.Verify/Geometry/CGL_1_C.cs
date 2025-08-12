@@ -29,8 +29,8 @@ namespace CpLibrary.Verify.Geometry
 				var p = new Complex(x, y);
 				var ans = Geometry2D.ISP(p2, p1, p);
 				var msg = "";
-				if (ans == +1) msg = "COUNTER_CLOCKWISE";
-				if (ans == -1) msg = "CLOCKWISE";
+				if (ans == +1) msg = "CLOCKWISE";
+				if (ans == -1) msg = "COUNTER_CLOCKWISE";
 				if (ans == +2) msg = "ONLINE_BACK";
 				if (ans ==  0) msg = "ON_SEGMENT";
 				if (ans == -2) msg = "ONLINE_FRONT";
