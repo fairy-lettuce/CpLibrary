@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 
-namespace CpLibrary.Verify.Collections
+namespace CpLibrary.Verify.Geometry
 {
 	// competitive-verifier: document_title Reflection (Aizu Online Judge: CGL_1_B)
 	internal class ReflectionTest : CompetitiveVerifier.ProblemSolver

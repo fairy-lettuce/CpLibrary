@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 
-namespace CpLibrary.Verify.Collections
+namespace CpLibrary.Verify.Geometry
 {
 	// competitive-verifier: document_title Counter-Clockwise (Aizu Online Judge: CGL_1_C)
 	internal class CounterClockwiseTest : CompetitiveVerifier.ProblemSolver
@@ -34,7 +34,7 @@ namespace CpLibrary.Verify.Collections
 				if (ans == +2) msg = "ONLINE_BACK";
 				if (ans ==  0) msg = "ON_SEGMENT";
 				if (ans == -2) msg = "ONLINE_FRONT";
-				Console.WriteLine(ans);
+				Console.WriteLine(msg);
 			}
 		}
 	}
