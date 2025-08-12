@@ -7,14 +7,16 @@ using System.Runtime.CompilerServices;
 
 namespace CpLibrary.Mathematics;
 
-public struct Rational<T> : IComparable<Rational<T>>, IEquatable<Rational<T>> where T : IBinaryInteger<T>, ISignedNumber<T>
+public struct Rational<T>
+	: IComparable<Rational<T>>, IEquatable<Rational<T>>, ISignedNumber<Rational<T>>
+	where T : IBinaryInteger<T>, ISignedNumber<T>
 {
-	public T numerator { get; set; }
-	public T denominator { get; set; }
+	public T Numerator { get; set; }
+	public T Denominator { get; set; }
 
 	public Rational(T numerator, T denominator)
 	{
-		if (T.IsNegative(denominator))
+		if (denominator < T.Zero)
 		{
 			numerator *= T.NegativeOne;
 			denominator *= T.NegativeOne;
@@ -24,7 +26,7 @@ public struct Rational<T> : IComparable<Rational<T>>, IEquatable<Rational<T>> wh
 		{
 			a = T.Abs(a);
 			b = T.Abs(b);
-			while (T.IsPositive(a))
+			while (a > T.Zero)
 			{
 				b %= a;
 				var x = a;
@@ -38,14 +40,14 @@ public struct Rational<T> : IComparable<Rational<T>>, IEquatable<Rational<T>> wh
 		numerator /= gcd;
 		denominator /= gcd;
 
-		this.numerator = numerator;
-		this.denominator = denominator;
+		this.Numerator = numerator;
+		this.Denominator = denominator;
 	}
 
 	public Rational(T integer)
 	{
-		numerator = integer;
-		denominator = T.One;
+		Numerator = integer;
+		Denominator = T.One;
 	}
 
 	public static Rational<T> Parse(string s, IFormatProvider? provider = null)
@@ -58,10 +60,10 @@ public struct Rational<T> : IComparable<Rational<T>>, IEquatable<Rational<T>> wh
 		throw new ArgumentException("Invalid argument input.");
 	}
 
-	public static Rational<T> operator +(Rational<T> l, Rational<T> r) => new Rational<T>(l.numerator * r.denominator + l.denominator * r.numerator, l.denominator * r.denominator);
-	public static Rational<T> operator -(Rational<T> l, Rational<T> r) => new Rational<T>(l.numerator * r.denominator - l.denominator * r.numerator, l.denominator * r.denominator);
-	public static Rational<T> operator *(Rational<T> l, Rational<T> r) => new Rational<T>(l.numerator * r.numerator, l.denominator * r.denominator);
-	public static Rational<T> operator /(Rational<T> l, Rational<T> r) => new Rational<T>(l.numerator * r.denominator, l.denominator * r.numerator);
+	public static Rational<T> operator +(Rational<T> l, Rational<T> r) => new Rational<T>(l.Numerator * r.Denominator + l.Denominator * r.Numerator, l.Denominator * r.Denominator);
+	public static Rational<T> operator -(Rational<T> l, Rational<T> r) => new Rational<T>(l.Numerator * r.Denominator - l.Denominator * r.Numerator, l.Denominator * r.Denominator);
+	public static Rational<T> operator *(Rational<T> l, Rational<T> r) => new Rational<T>(l.Numerator * r.Numerator, l.Denominator * r.Denominator);
+	public static Rational<T> operator /(Rational<T> l, Rational<T> r) => new Rational<T>(l.Numerator * r.Denominator, l.Denominator * r.Numerator);
 
 	public static Rational<T> operator ++(Rational<T> x)
 	{
@@ -83,22 +85,22 @@ public struct Rational<T> : IComparable<Rational<T>>, IEquatable<Rational<T>> wh
 
 	public static implicit operator Rational<T>(T x) => new Rational<T>(x);
 
-	public override string ToString() => $"{numerator}/{denominator}";
+	public override string ToString() => $"{Numerator}/{Denominator}";
 
 	public int CompareTo(Rational<T> x)
 	{
 		var diff = this - x;
-		if (T.IsPositive(diff.numerator)) return 1;
-		if (T.IsNegative(diff.numerator)) return -1;
+		if (diff.Numerator > T.Zero) return 1;
+		if (diff.Numerator < T.Zero) return -1;
 		return 0;
 	}
 
-	public bool Equals(Rational<T> item) => denominator == item.denominator && numerator == item.numerator;
+	public bool Equals(Rational<T> item) => Denominator == item.Denominator && Numerator == item.Numerator;
 
-	public override bool Equals(object? obj) => obj is Rational<T> r && numerator == r.numerator && denominator == r.denominator;
+	public override bool Equals(object? obj) => obj is Rational<T> r && Numerator == r.Numerator && Denominator == r.Denominator;
 
 	public override int GetHashCode()
 	{
-		return HashCode.Combine(numerator, denominator);
+		return HashCode.Combine(Numerator, Denominator);
 	}
 }
