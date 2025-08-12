@@ -9,12 +9,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace CpLibrary.Mathematics;
 
-public struct Rational<T>
+public readonly struct Rational<T>
 	: IComparable<Rational<T>>, IEquatable<Rational<T>>, INumber<Rational<T>>, ISignedNumber<Rational<T>>
 	where T : IBinaryInteger<T>, ISignedNumber<T>
 {
-	public T Numerator { get; set; }
-	public T Denominator { get; set; }
+	public T Numerator { get; }
+	public T Denominator { get; }
 
 	public static int Radix => 2;
 	public static Rational<T> One => new Rational<T>(T.One);
