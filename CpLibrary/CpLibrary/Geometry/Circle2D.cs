@@ -48,7 +48,7 @@ public readonly struct Circle2D
 		else
 		{
 			var x = (dist.Pow2() + this.radius.Pow2() - other.radius.Pow2()) / (2 * dist);
-			var h = (other.center - this.center).Normalize() * x;
+			var h = this.center + (other.center - this.center).Normalize() * x;
 			if (comp == 1)
 			{
 				var ret = new Complex[1];
