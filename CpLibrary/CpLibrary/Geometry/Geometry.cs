@@ -16,7 +16,7 @@ public static partial class Geometry2D
 	/// Returns whether <paramref name="x"/> is plus, minus, or zero.
 	/// </summary>
 	/// <returns>1 if plus, 0 if zero, or -1 if minus.</returns>
-	public static int Sign(this double x) => (x < EPS ? -1 : (x > EPS ? 1 : 0));
+	public static int Sign(this double x) => (x < -EPS ? -1 : (x > EPS ? 1 : 0));
 	public static int Compare(this double x, double y) => Sign(x - y);
 
 	public static int ComplexCompare(this Complex x, Complex y)
