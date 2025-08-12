@@ -13,9 +13,9 @@ namespace CpLibrary.Test.Judge
 	public class NormalCheckerTest
 	{
 		[Theory]
-		[InlineData(3, 1, 4, 1000)]
-		[InlineData(1, 5, 6, 1000)]
-		public static void AcceptedTest(int a, int b, int sum, int timeLimit)
+		[InlineData(3, 1, 4, 1000, JudgeStatus.AC)]
+		[InlineData(1, 5, 6, 1000, JudgeStatus.AC)]
+		public static void AcceptedTest(int a, int b, int sum, int timeLimit, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -30,13 +30,13 @@ namespace CpLibrary.Test.Judge
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.AC);
+			result.Status.Should().Be(status);
 		}
 
 		[Theory]
-		[InlineData(3, 1, 4, 1000)]
-		[InlineData(1, 5, 6, 1000)]
-		public static void WrongAnswerTest(int a, int b, int sum, int timeLimit)
+		[InlineData(3, 1, 4, 1000, JudgeStatus.WA)]
+		[InlineData(1, 5, 6, 1000, JudgeStatus.WA)]
+		public static void WrongAnswerTest(int a, int b, int sum, int timeLimit, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -51,12 +51,12 @@ namespace CpLibrary.Test.Judge
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.WA);
+			result.Status.Should().Be(status);
 		}
 
 		[Theory]
-		[InlineData(3, 1, 4, 500, 600)]
-		public static void TimeLimitExceededTest(int a, int b, int sum, int timeLimit, int waitTime)
+		[InlineData(3, 1, 4, 500, 600, JudgeStatus.TLE)]
+		public static void TimeLimitExceededTest(int a, int b, int sum, int timeLimit, int waitTime, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -72,12 +72,12 @@ namespace CpLibrary.Test.Judge
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.TLE);
+			result.Status.Should().Be(status);
 		}
 
 		[Theory]
-		[InlineData(3, 1, 4, 1000)]
-		public static void RuntimeErrorTest(int a, int b, int sum, int timeLimit)
+		[InlineData(3, 1, 4, 1000, JudgeStatus.RE)]
+		public static void RuntimeErrorTest(int a, int b, int sum, int timeLimit, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -90,7 +90,7 @@ namespace CpLibrary.Test.Judge
 			var input = $"{a} {b}\n";
 			var output = $"{sum}\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.RE);
+			result.Status.Should().Be(status);
 		}
 
 		public static IEnumerable<object[]> GetData()

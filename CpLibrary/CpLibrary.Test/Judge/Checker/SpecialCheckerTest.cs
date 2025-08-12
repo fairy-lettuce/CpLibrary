@@ -38,9 +38,9 @@ namespace CpLibrary.Test.Judge
 		}
 
 		[Theory]
-		[InlineData(10, 1000)]
-		[InlineData(1, 1000)]
-		public static void AcceptedTest(int x, int timeLimit)
+		[InlineData(10, 1000, JudgeStatus.AC)]
+		[InlineData(1, 1000, JudgeStatus.AC)]
+		public static void AcceptedTest(int x, int timeLimit, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -55,12 +55,12 @@ namespace CpLibrary.Test.Judge
 			var input = $"{x}\n";
 			var output = $"\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.AC);
+			result.Status.Should().Be(status);
 		}
 
 		[Theory]
-		[InlineData(1, 1000)]
-		public static void WrongAnswerTest(int x, int timeLimit)
+		[InlineData(1, 1000, JudgeStatus.WA)]
+		public static void WrongAnswerTest(int x, int timeLimit, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -74,12 +74,12 @@ namespace CpLibrary.Test.Judge
 			var input = $"{x}\n";
 			var output = $"\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.WA);
+			result.Status.Should().Be(status);
 		}
 
 		[Theory]
-		[InlineData(1, 500, 600)]
-		public static void TimeLimitExceededTest(int x, int timeLimit, int waitTime)
+		[InlineData(1, 500, 600, JudgeStatus.TLE)]
+		public static void TimeLimitExceededTest(int x, int timeLimit, int waitTime, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -95,12 +95,12 @@ namespace CpLibrary.Test.Judge
 			var input = $"{x}\n";
 			var output = $"\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.TLE);
+			result.Status.Should().Be(status);
 		}
 
 		[Theory]
-		[InlineData(1, 1000)]
-		public static void RuntimeErrorTest(int x, int timeLimit)
+		[InlineData(1, 1000, JudgeStatus.RE)]
+		public static void RuntimeErrorTest(int x, int timeLimit, JudgeStatus status)
 		{
 			void Actual(StreamReader reader, StreamWriter writer)
 			{
@@ -112,7 +112,7 @@ namespace CpLibrary.Test.Judge
 			var input = $"{x}\n";
 			var output = $"\n";
 			var result = checker.Run(input, output);
-			result.Status.Should().Be(JudgeStatus.RE);
+			result.Status.Should().Be(status);
 		}
 	}
 }
