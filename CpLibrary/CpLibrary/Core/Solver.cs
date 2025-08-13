@@ -47,15 +47,12 @@ namespace CpLibrary
 				Solve();
 			}
 		}
-	}
 
-	public static partial class OnlineJudge
-	{
-		public static void Run(SolverBase solver)
+		protected void RunOnline()
 		{
 			var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
 			var sr = new StreamReader(Console.OpenStandardInput());
-			solver.Run(sr, sw);
+			Run(sr, sw);
 			Console.Out.Flush();
 		}
 	}

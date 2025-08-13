@@ -17,7 +17,7 @@ namespace CpLibrary.Contest
 {
 	public class SolverE : SolverBase
 	{
-		static void Main() => OnlineJudge.Run(new SolverE());
+		static void Main() => new SolverE().RunOnline();
 
 		public override void Solve()
 		{
