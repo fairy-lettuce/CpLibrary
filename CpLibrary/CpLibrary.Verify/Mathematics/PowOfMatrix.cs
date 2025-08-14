@@ -18,7 +18,7 @@ internal class PowOfMatrixTest : CompetitiveVerifier.ProblemSolver
 	{
 		var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 
-		var (n, k) = sr.ReadValue<int, int>();
+		var (n, k) = sr.ReadValue<int, long>();
 		var _a = StaticItems.CreateArray(n, i => sr.ReadIntArray(n).Select(x => new ModInt(x)).ToArray());
 		var a = new Matrix<ModInt>(_a);
 		var b = a.Pow(k);
