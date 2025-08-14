@@ -24,7 +24,7 @@ internal class PowOfMatrixTest : CompetitiveVerifier.ProblemSolver
 		var b = a.Pow(k);
 		for (int i = 0; i < n; i++)
 		{
-			Console.WriteLine(Enumerable.Range(0, k).Select(j => b[i, j]).Join(" "));
+			Console.WriteLine(Enumerable.Range(0, n).Select(j => b[i, j]).Join(" "));
 		}
 	}
 }
