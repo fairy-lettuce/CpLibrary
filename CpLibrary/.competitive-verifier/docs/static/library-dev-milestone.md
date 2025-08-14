@@ -51,20 +51,20 @@ title: 2023/07 大規模ライブラリ改築 仕様書
 - [ ] UnionFind
 - [ ] Retroactive UnionFind
   - どの問題かで書いたことがある (忘れた)
-- [ ] Geometry
+- [x] Geometry
 - [ ] GraphBase
   - グラフ周りはもうちょっと賢い構成のクラスにしたいなあ
 - [ ] HeavyLightDecomposition
 - [ ] LowestCommonAncestor
-- [ ] Relooting
+- [ ] Rerooting
 - [ ] ShortestPaths
   - Dijkstra と BellmanFord が同じファイルにあるので、別ファイルに分ける必要がある
 - [ ] TopologicalSort
 - [ ] 数学関連の細々したやつ
 - [ ] ExtGcd
-- [ ] Matrix
+- [x] Matrix
   - .NET 7 の Generic Math に対応させる
-- [ ] Rational
+- [x] Rational
   - .NET 7 の Generic Math に対応させる
 - [ ] KMPSearch
 - [ ] Trie
