@@ -42,18 +42,21 @@ public class Matrix<T> where T : INumberBase<T>
 	public static Matrix<T> operator *(Matrix<T> l, Matrix<T> r)
 	{
 		if (l.column != r.row) throw new ArgumentException();
+		var rt = r.Transpose();
 		var lv = l.value;
-		var rv = r.value;
+		var rtv = rt.value;
 		var ret = new T[l.row * r.column];
-		// i,k,j loop
+		// ijk loop is somehow faster (why???)
 		for (int i = 0; i < l.row; i++)
 		{
-			for (int k = 0; k < l.column; k++)
+			for (int j = 0; j < r.column; j++)
 			{
-				for (int j = 0; j < r.column; j++)
+				var sum = T.Zero;
+				for (int k = 0; k < l.column; k++)
 				{
-					ret[i * r.column + j] += lv[i * l.column + k] * rv[k * r.column + j];
+					sum += lv[i * l.column + k] * rtv[j * rt.column + k];
 				}
+				ret[i * r.column + j] = sum;
 			}
 		}
 		return new Matrix<T>(l.row, r.column, ret);
@@ -76,5 +79,18 @@ public class Matrix<T> where T : INumberBase<T>
 		}
 
 		return ret;
+	}
+
+	public Matrix<T> Transpose()
+	{
+		var res = new Matrix<T>(this.column, this.row);
+		for (int i = 0; i < this.row; i++)
+		{
+			for (int j = 0; j < this.column; j++)
+			{
+				res[j, i] = this[i, j];
+			}
+		}
+		return res;
 	}
 }
