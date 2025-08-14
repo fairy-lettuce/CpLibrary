@@ -33,25 +33,30 @@ public class Matrix<T> where T : INumberBase<T>
 
 	public T this[int r, int c]
 	{
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		get => this.value[r * column + c];
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		set => this.value[r * column + c] = value;
 	}
 
 	public static Matrix<T> operator *(Matrix<T> l, Matrix<T> r)
 	{
 		if (l.column != r.row) throw new ArgumentException();
-		var ret = new Matrix<T>(l.row, r.column);
+		var lv = l.value;
+		var rv = r.value;
+		var ret = new T[l.row * r.column];
+		// i,k,j loop
 		for (int i = 0; i < l.row; i++)
 		{
-			for (int j = 0; j < r.column; j++)
+			for (int k = 0; k < l.column; k++)
 			{
-				for (int k = 0; k < l.column; k++)
+				for (int j = 0; j < r.column; j++)
 				{
-					ret[i, j] += l[i, k] * r[k, j];
+					ret[i * r.column + j] += lv[i * l.column + k] * rv[k * r.column + j];
 				}
 			}
 		}
-		return ret;
+		return new Matrix<T>(l.row, r.column, ret);
 	}
 
 	public Matrix<T> Pow(long n) => Pow(this, n);
