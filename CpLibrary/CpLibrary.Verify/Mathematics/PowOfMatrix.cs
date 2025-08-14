@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
+using ModInt = CpLibrary.Mathematics.MontgomeryModInt<AtCoder.Mod998244353>;
 
 namespace CpLibrary.Verify.Mathematics;
 
@@ -19,7 +19,8 @@ internal class PowOfMatrixTest : CompetitiveVerifier.ProblemSolver
 		var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 
 		var (n, k) = sr.ReadValue<int, long>();
-		var _a = StaticItems.CreateArray(n, i => sr.ReadIntArray(n).Select(x => new ModInt(x)).ToArray());
+		var p = StaticItems.CreateArray(n, i => sr.ReadIntArray(n));
+		var _a = StaticItems.CreateArray(n, n, (i, j) => new ModInt(p[i][j]));
 		var a = new Matrix<ModInt>(_a);
 		var b = a.Pow(k);
 		for (int i = 0; i < n; i++)
