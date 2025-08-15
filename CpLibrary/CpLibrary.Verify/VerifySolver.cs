@@ -12,9 +12,12 @@ internal abstract class VerifySolver : ProblemSolver
 	internal Scanner sr;
 	internal StreamWriter sw;
 
-	public VerifySolver() : base()
+	public override sealed void Solve()
 	{
 		sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 		sw = new StreamWriter(Console.OpenStandardOutput());
+		Run();
 	}
+
+	public abstract void Run();
 }

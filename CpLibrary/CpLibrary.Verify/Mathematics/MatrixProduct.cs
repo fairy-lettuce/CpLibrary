@@ -14,7 +14,7 @@ namespace CpLibrary.Verify.Mathematics;
 internal class MatrixProductTest : VerifySolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/matrix_product";
-	public override void Solve()
+	public override void Run()
 	{
 		var (n, m, k) = sr.ReadValue<int, int, int>();
 		var a = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(n, m));

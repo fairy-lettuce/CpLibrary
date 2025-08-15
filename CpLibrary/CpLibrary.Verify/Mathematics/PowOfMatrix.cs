@@ -15,8 +15,9 @@ namespace CpLibrary.Verify.Mathematics;
 internal class PowOfMatrixTest : VerifySolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/pow_of_matrix";
-	public override void Solve()
+	public override void Run()
 	{
+		base.Solve();
 		var (n, k) = sr.ReadValue<int, long>();
 		var a = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(n, n));
 		var b = a.Pow(k);
