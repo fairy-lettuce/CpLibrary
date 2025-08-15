@@ -298,7 +298,7 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 	static bool INumberBase<MontgomeryModInt<T>>.TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider, out MontgomeryModInt<T> result) => TryParse(s, out result);
 	static bool INumberBase<MontgomeryModInt<T>>.TryParse(string s, NumberStyles style, IFormatProvider provider, out MontgomeryModInt<T> result) => TryParse(s, out result);
 
-	bool ISpanFormattable.TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider) => _v.TryFormat(destination, out charsWritten, format, provider);
+	bool ISpanFormattable.TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider) => Value.TryFormat(destination, out charsWritten, format, provider);
 
 
 	static bool INumberBase<MontgomeryModInt<T>>.TryConvertFromChecked<TOther>(TOther v, out MontgomeryModInt<T> r)
