@@ -50,7 +50,7 @@ public readonly struct MontgomeryReduction
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public ulong Mult(ulong x, ulong y)
+	public ulong Multiply(ulong x, ulong y)
 	{
 		return Reduce((UInt128)x * y);
 	}
@@ -63,10 +63,10 @@ public readonly struct MontgomeryReduction
 		{
 			if ((p & (1L << i)) > 0)
 			{
-				ret = Mult(ret, a);
+				ret = Multiply(ret, a);
 			}
 
-			a = Mult(a, a);
+			a = Multiply(a, a);
 		}
 		return ret;
 	}

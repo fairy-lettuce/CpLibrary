@@ -140,7 +140,7 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 	}
 
 	[MethodImpl(256)]
-	public static MontgomeryModInt<T> operator *(MontgomeryModInt<T> lhs, MontgomeryModInt<T> rhs) => new MontgomeryModInt<T>((uint)mr.Mult(lhs._v, rhs._v));
+	public static MontgomeryModInt<T> operator *(MontgomeryModInt<T> lhs, MontgomeryModInt<T> rhs) => new MontgomeryModInt<T>((uint)mr.Multiply(lhs._v, rhs._v));
 	/// <summary>
 	/// 除算を行います。
 	/// </summary>
@@ -198,9 +198,9 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 		{
 			if ((n & 1) > 0)
 			{
-				r = mr.Mult(r, x);
+				r = mr.Multiply(r, x);
 			}
-			x = mr.Mult(x, x);
+			x = mr.Multiply(x, x);
 			n >>= 1;
 		}
 

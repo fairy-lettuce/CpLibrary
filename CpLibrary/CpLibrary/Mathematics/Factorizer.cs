@@ -155,7 +155,7 @@ namespace CpLibrary.Mathematics
 			{
 				if (montgomery.ToInteger(pow) == (ulong)n - 1)
 					return true;
-				pow = montgomery.Mult(pow, pow);
+				pow = montgomery.Multiply(pow, pow);
 			}
 			return false;
 		}

@@ -58,7 +58,7 @@ public readonly struct StaticMontgomeryReduction<T> where T: IStaticMod
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public uint Mult(uint x, uint y)
+	public uint Multiply(uint x, uint y)
 	{
 		return Reduce((ulong)x * y);
 	}
