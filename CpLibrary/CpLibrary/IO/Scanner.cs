@@ -69,16 +69,52 @@ namespace CpLibrary
 
 		public BigInteger ReadBigInteger() => BigInteger.Parse(ReadString());
 
-		public T1 ReadValue<T1>() => (T1)Convert.ChangeType(ReadString(), typeof(T1));
+		public T1 ReadValue<T1>()
+			where T1 : IParsable<T1>
+			=> T1.Parse(ReadString(), CultureInfo.InvariantCulture);
 
-		public (T1, T2) ReadValue<T1, T2>() => (ReadValue<T1>(), ReadValue<T2>());
-		public (T1, T2, T3) ReadValue<T1, T2, T3>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>());
-		public (T1, T2, T3, T4) ReadValue<T1, T2, T3, T4>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>());
-		public (T1, T2, T3, T4, T5) ReadValue<T1, T2, T3, T4, T5>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>());
-		public (T1, T2, T3, T4, T5, T6) ReadValue<T1, T2, T3, T4, T5, T6>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>());
-		public (T1, T2, T3, T4, T5, T6, T7) ReadValue<T1, T2, T3, T4, T5, T6, T7>() => (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>(), ReadValue<T7>());
+		public (T1, T2) ReadValue<T1, T2>()
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			=> (ReadValue<T1>(), ReadValue<T2>());
+		public (T1, T2, T3) ReadValue<T1, T2, T3>()
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>());
+		public (T1, T2, T3, T4) ReadValue<T1, T2, T3, T4>()
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>());
+		public (T1, T2, T3, T4, T5) ReadValue<T1, T2, T3, T4, T5>()
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
+			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>());
+		public (T1, T2, T3, T4, T5, T6) ReadValue<T1, T2, T3, T4, T5, T6>()
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
+			where T6 : IParsable<T6>
+			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>());
+		public (T1, T2, T3, T4, T5, T6, T7) ReadValue<T1, T2, T3, T4, T5, T6, T7>()
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
+			where T6 : IParsable<T6>
+			where T7 : IParsable<T7>
+			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>(), ReadValue<T7>());
 
 		public T1[] ReadValueArray<T1>(int n)
+			where T1 : IParsable<T1>
 		{
 			var arr = new T1[n];
 			for (int i = 0; i < n; i++)
@@ -88,6 +124,8 @@ namespace CpLibrary
 			return arr;
 		}
 		public (T1[], T2[]) ReadValueArray<T1, T2>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
 		{
 			var (v1, v2) = (new T1[n], new T2[n]);
 			for (int i = 0; i < n; i++)
@@ -97,6 +135,9 @@ namespace CpLibrary
 			return (v1, v2);
 		}
 		public (T1[], T2[], T3[]) ReadValueArray<T1, T2, T3>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
 		{
 			var (v1, v2, v3) = (new T1[n], new T2[n], new T3[n]);
 			for (int i = 0; i < n; i++)
@@ -106,6 +147,10 @@ namespace CpLibrary
 			return (v1, v2, v3);
 		}
 		public (T1[], T2[], T3[], T4[]) ReadValueArray<T1, T2, T3, T4>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
 		{
 			var (v1, v2, v3, v4) = (new T1[n], new T2[n], new T3[n], new T4[n]);
 			for (int i = 0; i < n; i++)
@@ -115,6 +160,11 @@ namespace CpLibrary
 			return (v1, v2, v3, v4);
 		}
 		public (T1[], T2[], T3[], T4[], T5[]) ReadValueArray<T1, T2, T3, T4, T5>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
 		{
 			var (v1, v2, v3, v4, v5) = (new T1[n], new T2[n], new T3[n], new T4[n], new T5[n]);
 			for (int i = 0; i < n; i++)
@@ -124,6 +174,12 @@ namespace CpLibrary
 			return (v1, v2, v3, v4, v5);
 		}
 		public (T1[], T2[], T3[], T4[], T5[], T6[]) ReadValueArray<T1, T2, T3, T4, T5, T6>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
+			where T6 : IParsable<T6>
 		{
 			var (v1, v2, v3, v4, v5, v6) = (new T1[n], new T2[n], new T3[n], new T4[n], new T5[n], new T6[n]);
 			for (int i = 0; i < n; i++)
@@ -133,6 +189,13 @@ namespace CpLibrary
 			return (v1, v2, v3, v4, v5, v6);
 		}
 		public (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) ReadValueArray<T1, T2, T3, T4, T5, T6, T7>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
+			where T6 : IParsable<T6>
+			where T7 : IParsable<T7>
 		{
 			var (v1, v2, v3, v4, v5, v6, v7) = (new T1[n], new T2[n], new T3[n], new T4[n], new T5[n], new T6[n], new T7[n]);
 			for (int i = 0; i < n; i++)
@@ -143,6 +206,8 @@ namespace CpLibrary
 		}
 
 		public (T1, T2)[] ReadTupleArray<T1, T2>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
 		{
 			var ret = new (T1, T2)[n];
 			for (int i = 0; i < n; i++)
@@ -152,6 +217,9 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3)[] ReadTupleArray<T1, T2, T3>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
 		{
 			var ret = new (T1, T2, T3)[n];
 			for (int i = 0; i < n; i++)
@@ -161,6 +229,10 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4)[] ReadTupleArray<T1, T2, T3, T4>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
 		{
 			var ret = new (T1, T2, T3, T4)[n];
 			for (int i = 0; i < n; i++)
@@ -170,6 +242,11 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4, T5)[] ReadTupleArray<T1, T2, T3, T4, T5>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
 		{
 			var ret = new (T1, T2, T3, T4, T5)[n];
 			for (int i = 0; i < n; i++)
@@ -179,6 +256,12 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4, T5, T6)[] ReadTupleArray<T1, T2, T3, T4, T5, T6>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
+			where T6 : IParsable<T6>
 		{
 			var ret = new (T1, T2, T3, T4, T5, T6)[n];
 			for (int i = 0; i < n; i++)
@@ -188,6 +271,13 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4, T5, T6, T7)[] ReadTupleArray<T1, T2, T3, T4, T5, T6, T7>(int n)
+			where T1 : IParsable<T1>
+			where T2 : IParsable<T2>
+			where T3 : IParsable<T3>
+			where T4 : IParsable<T4>
+			where T5 : IParsable<T5>
+			where T6 : IParsable<T6>
+			where T7 : IParsable<T7>
 		{
 			var ret = new (T1, T2, T3, T4, T5, T6, T7)[n];
 			for (int i = 0; i < n; i++)
