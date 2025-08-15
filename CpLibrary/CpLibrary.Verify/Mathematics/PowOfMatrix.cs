@@ -10,7 +10,7 @@ using ModInt = CpLibrary.Mathematics.MontgomeryModInt<AtCoder.Mod998244353>;
 
 namespace CpLibrary.Verify.Mathematics;
 
-// competitive-verifier: document_title Matrix<T> (Library Checker: PowOfMatrix)
+// competitive-verifier: document_title Matrix<T> (Library Checker: Pow of Matrix)
 internal class PowOfMatrixTest : CompetitiveVerifier.ProblemSolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/pow_of_matrix";
