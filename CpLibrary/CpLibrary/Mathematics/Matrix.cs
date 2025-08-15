@@ -1,12 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace CpLibrary.Mathematics;
 
+[DebuggerDisplay("{ToString(), nq}")]
 public class Matrix<T> where T : INumberBase<T>
 {
 	int row;
@@ -15,9 +18,9 @@ public class Matrix<T> where T : INumberBase<T>
 
 	public Matrix(int r, int c) : this(r, c, new T[r * c]) { }
 
-	public Matrix(int r, int c, T[] a)
+	public Matrix(int r, int c, IEnumerable<T> a)
 	{
-		value = a;
+		value = a.ToArray();
 		row = r;
 		column = c;
 	}
@@ -31,13 +34,21 @@ public class Matrix<T> where T : INumberBase<T>
 		value = a.SelectMany(x => x).ToArray();
 	}
 
+	public Span<T> this[int r]
+	{
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		get => value.AsSpan(r * column, column);
+	}
+
 	public T this[int r, int c]
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		get => this.value[r * column + c];
+		get => value[r * column + c];
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		set => this.value[r * column + c] = value;
 	}
+
+	public T[][] Rows => ToRowArray();
 
 	public static Matrix<T> operator *(Matrix<T> l, Matrix<T> r)
 	{
@@ -135,5 +146,38 @@ public class Matrix<T> where T : INumberBase<T>
 			det *= a[p[i] * row + i];
 		}
 		return det;
+	}
+
+	public T[][] ToRowArray()
+	{
+		var ret = new T[row][];
+		for (int i = 0; i < row; i++)
+		{
+			ret[i] = this[i].ToArray();
+		}
+		return ret;
+	}
+
+	public override string ToString()
+	{
+		var sb = new StringBuilder();
+		for (int i = 0; i < row; i++)
+		{
+			sb.Append("{ ");
+			for (int j = 0; j < column; j++)
+			{
+				sb.Append(this[i, j]);
+				if (j < column - 1)
+				{
+					sb.Append(", ");
+				}
+			}
+			sb.Append(" }");
+			if (i < row - 1)
+			{
+				sb.AppendLine();
+			}
+		}
+		return sb.ToString();
 	}
 }
