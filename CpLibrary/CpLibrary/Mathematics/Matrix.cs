@@ -41,6 +41,14 @@ public class Matrix<T> : IEquatable<Matrix<T>> where T : INumberBase<T>
 		value = a.SelectMany(x => x).ToArray();
 	}
 
+	public Matrix(T[,] a)
+	{
+		if (a is null || a.Length == 0) throw new ArgumentException("Input array cannot be null or empty.", nameof(a));
+		row = a.GetLength(0);
+		column = a.GetLength(1);
+		value = a.Cast<T>().ToArray();
+	}
+
 	public Span<T> this[int r]
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
