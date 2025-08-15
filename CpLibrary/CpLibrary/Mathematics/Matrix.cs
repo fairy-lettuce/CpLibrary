@@ -10,7 +10,7 @@ using System.Text;
 namespace CpLibrary.Mathematics;
 
 [DebuggerDisplay("{ToString(), nq}")]
-public class Matrix<T> where T : INumberBase<T>
+public class Matrix<T> : IEquatable<Matrix<T>> where T : INumberBase<T>
 {
 	int row;
 	int column;
@@ -21,6 +21,13 @@ public class Matrix<T> where T : INumberBase<T>
 	public Matrix(int r, int c, IEnumerable<T> a)
 	{
 		value = a.ToArray();
+		row = r;
+		column = c;
+	}
+
+	public Matrix(int r, int c, T[] a)
+	{
+		value = a;
 		row = r;
 		column = c;
 	}
@@ -50,6 +57,42 @@ public class Matrix<T> where T : INumberBase<T>
 
 	public T[][] Rows => ToRowArray();
 
+	public static Matrix<T> operator +(Matrix<T> lhs, Matrix<T> rhs)
+	{
+		if (lhs.row != rhs.row) throw new ArgumentException();
+		if (lhs.column != rhs.column) throw new ArgumentException();
+		var ret = new T[lhs.row * lhs.column];
+		for (int i = 0; i < lhs.row * lhs.column; i++)
+		{
+			ret[i] = lhs.value[i] + rhs.value[i];
+		}
+		return new Matrix<T>(lhs.row, lhs.column, ret);
+	}
+
+	public static Matrix<T> operator -(Matrix<T> lhs, Matrix<T> rhs)
+	{
+		if (lhs.row != rhs.row) throw new ArgumentException();
+		if (lhs.column != rhs.column) throw new ArgumentException();
+		var ret = new T[lhs.row * lhs.column];
+		for (int i = 0; i < lhs.row * lhs.column; i++)
+		{
+			ret[i] = lhs.value[i] - rhs.value[i];
+		}
+		return new Matrix<T>(lhs.row, lhs.column, ret);
+	}
+
+	public static Matrix<T> operator *(T k, Matrix<T> x)
+	{
+		var ret = new T[x.row * x.column];
+		for (int i = 0; i < x.row * x.column; i++)
+		{
+			ret[i] = k * x.value[i];
+		}
+		return new Matrix<T>(x.row, x.column, ret);
+	}
+
+	public static Matrix<T> operator *(Matrix<T> x, T k) => k * x;
+
 	public static Matrix<T> operator *(Matrix<T> l, Matrix<T> r)
 	{
 		if (l.column != r.row) throw new ArgumentException();
@@ -72,6 +115,9 @@ public class Matrix<T> where T : INumberBase<T>
 		}
 		return new Matrix<T>(l.row, r.column, ret);
 	}
+
+	public static bool operator ==(Matrix<T> lhs, Matrix<T> rhs) => lhs.Equals(rhs);
+	public static bool operator !=(Matrix<T> lhs, Matrix<T> rhs) => !(lhs == rhs);
 
 	public Matrix<T> Pow(long n) => Pow(this, n);
 
@@ -157,6 +203,20 @@ public class Matrix<T> where T : INumberBase<T>
 		}
 		return ret;
 	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public override bool Equals(object? obj) => obj is Matrix<T> x && Equals(x);
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public bool Equals(Matrix<T> other)
+	{
+		if (row != other.row) return false;
+		if (column != other.column) return false;
+		return value.AsSpan().SequenceEqual(other.value);
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public override int GetHashCode() => HashCode.Combine(row, value);
 
 	public override string ToString()
 	{
