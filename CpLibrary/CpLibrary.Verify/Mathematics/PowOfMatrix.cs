@@ -18,7 +18,6 @@ internal class PowOfMatrixTest : VerifySolver
 	public override double? Tle => 5.0;
 	public override void Run()
 	{
-		base.Solve();
 		var (n, k) = sr.ReadValue<int, long>();
 		var a = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(n, n));
 		var b = a.Pow(k);
