@@ -97,6 +97,8 @@ public class Matrix<T> where T : INumberBase<T>
 	public T Determinant()
 	{
 		if (column != row) throw new ArgumentException();
+		var a = new T[row * column];
+		value.AsSpan().CopyTo(a);
 		var swap = false;
 		var p = Enumerable.Range(0, row).ToArray();
 		for (int i = 0; i < row; i++)
@@ -104,7 +106,7 @@ public class Matrix<T> where T : INumberBase<T>
 			var ok = false;
 			for (int j = i; j < row; j++)
 			{
-				if (value[p[j] * row + i] != T.Zero)
+				if (a[p[j] * row + i] != T.Zero)
 				{
 					ok = true;
 					if (i != j)
@@ -116,13 +118,13 @@ public class Matrix<T> where T : INumberBase<T>
 				}
 			}
 			if (!ok) return T.AdditiveIdentity;
-			var t = value[p[i] * row + i];
+			var t = a[p[i] * row + i];
 			for (int j = i + 1; j < row; j++)
 			{
-				var c = value[p[j] * row + i] / t;
+				var c = a[p[j] * row + i] / t;
 				for (int k = 0; k < row; k++)
 				{
-					value[p[j] * row + k] -= c * value[p[i] * row + k];
+					a[p[j] * row + k] -= c * a[p[i] * row + k];
 				}
 			}
 		}
@@ -130,7 +132,7 @@ public class Matrix<T> where T : INumberBase<T>
 		if (swap) det = -det;
 		for (int i = 0; i < row; i++)
 		{
-			det *= value[p[i] * row + i];
+			det *= a[p[i] * row + i];
 		}
 		return det;
 	}
