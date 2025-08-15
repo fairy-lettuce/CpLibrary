@@ -11,22 +11,15 @@ using ModInt = CpLibrary.Mathematics.MontgomeryModInt<AtCoder.Mod998244353>;
 namespace CpLibrary.Verify.Mathematics;
 
 // competitive-verifier: document_title Matrix<T> (Library Checker: Matrix Product)
-internal class MatrixProductTest : CompetitiveVerifier.ProblemSolver
+internal class MatrixProductTest : VerifySolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/matrix_product";
 	public override void Solve()
 	{
-		var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-
 		var (n, m, k) = sr.ReadValue<int, int, int>();
-		var _a = StaticItems.CreateArray(n, i => sr.ReadIntArray(m).Select(x => new ModInt(x)).ToArray());
-		var _b = StaticItems.CreateArray(m, i => sr.ReadIntArray(k).Select(x => new ModInt(x)).ToArray());
-		var a = new Matrix<ModInt>(_a);
-		var b = new Matrix<ModInt>(_b);
+		var a = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(n, m));
+		var b = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(m, k));
 		var c = a * b;
-		for (int i = 0; i < n; i++)
-		{
-			Console.WriteLine(Enumerable.Range(0, k).Select(j => c[i, j]).Join(" "));
-		}
+		sw.WriteMatrix(c);
 	}
 }
