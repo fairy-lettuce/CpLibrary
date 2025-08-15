@@ -223,7 +223,7 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 		}
 		else
 		{
-			var (g, x) = ModCalc.InvGcd(_v, op.Mod);
+			var (g, x) = ModCalc.InvGcd(Value, op.Mod);
 			Contract.Assert(g == 1, reason: $"gcd({nameof(x)}, {nameof(Mod)}) must be 1.");
 			return new MontgomeryModInt<T>(x);
 		}
