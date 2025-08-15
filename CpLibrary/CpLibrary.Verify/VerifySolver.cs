@@ -15,7 +15,7 @@ internal abstract class VerifySolver : ProblemSolver
 	public override sealed void Solve()
 	{
 		sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-		sw = new StreamWriter(Console.OpenStandardOutput());
+		sw = (StreamWriter)Console.Out;
 		Run();
 	}
 
