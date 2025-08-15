@@ -35,4 +35,8 @@
 		<ProjectReference Include="..\CpLibrary\CpLibrary.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Util\" />
+	</ItemGroup>
+
 </Project>
