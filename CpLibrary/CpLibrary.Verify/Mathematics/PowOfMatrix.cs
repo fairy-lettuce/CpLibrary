@@ -15,6 +15,7 @@ namespace CpLibrary.Verify.Mathematics;
 internal class PowOfMatrixTest : VerifySolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/pow_of_matrix";
+	public override double? Tle => 5.0;
 	public override void Run()
 	{
 		base.Solve();
