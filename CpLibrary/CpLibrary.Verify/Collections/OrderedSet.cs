@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 namespace CpLibrary.Verify.Collections
 {
 	// competitive-verifier: document_title Set<T> (Library Checker: OrderedSet)
-	internal class SetTestOrderedSet : CompetitiveVerifier.ProblemSolver
+	internal class SetTestOrderedSet : VerifySolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/ordered_set";
-		public override void Solve()
+		public override double? Tle => 10.0;
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-
 			var (n, q) = sr.ReadValue<int, int>();
 			var a = sr.ReadIntArray(n);
 			var s = new Set<int>(a);
@@ -32,45 +31,45 @@ namespace CpLibrary.Verify.Collections
 				}
 				if (query == 2)
 				{
-					if (s.Count < x) Console.WriteLine(-1);
-					else Console.WriteLine(s[x - 1]);
+					if (s.Count < x) sw.WriteLine(-1);
+					else sw.WriteLine(s[x - 1]);
 				}
 				if (query == 3)
 				{
 					if (s.Count == 0)
 					{
-						Console.WriteLine(0);
+						sw.WriteLine(0);
 						continue;
 					}
 					var idx = s.UpperBound(x);
-					Console.WriteLine(idx);
+					sw.WriteLine(idx);
 				}
 				if (query == 4)
 				{
 					if (s.Count == 0)
 					{
-						Console.WriteLine(-1);
+						sw.WriteLine(-1);
 						continue;
 					}
 					var idx = s.UpperBound(x);
-					if (idx <= 0) Console.WriteLine(-1);
+					if (idx <= 0) sw.WriteLine(-1);
 					else
 					{
-						Console.WriteLine(s[idx - 1]);
+						sw.WriteLine(s[idx - 1]);
 					}
 				}
 				if (query == 5)
 				{
 					if (s.Count == 0)
 					{
-						Console.WriteLine(-1);
+						sw.WriteLine(-1);
 						continue;
 					}
 					var idx = s.LowerBound(x);
-					if (idx >= s.Count) Console.WriteLine(-1);
+					if (idx >= s.Count) sw.WriteLine(-1);
 					else
 					{
-						Console.WriteLine(s[idx]);
+						sw.WriteLine(s[idx]);
 					}
 				}
 			}

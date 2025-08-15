@@ -10,13 +10,12 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 namespace CpLibrary.Verify.Collections
 {
 	// competitive-verifier: document_title ProdSet<T> (Library Checker: Point Set Range Composite (Large Array))
-	internal class ProdSetTest : CompetitiveVerifier.ProblemSolver
+	internal class ProdSetTest : VerifySolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/point_set_range_composite_large_array";
-		public override void Solve()
+		public override double? Tle => 10.0;
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-
 			var (n, q) = sr.ReadValue<long, int>();
 
 			var ps = new ProdSet<(long index, (ModInt a, ModInt b) f), IOp>(new TupleComparer<long, (ModInt a, ModInt b)>());
@@ -46,7 +45,7 @@ namespace CpLibrary.Verify.Collections
 					var r2 = ps.LowerBound((r, (0, 0)));
 					var prod = ps.Prod(l2, r2);
 					var ans = prod.f.a * x + prod.f.b;
-					Console.WriteLine(ans);
+					sw.WriteLine(ans);
 				}
 			}
 		}

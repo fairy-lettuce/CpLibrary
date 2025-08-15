@@ -10,12 +10,12 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 namespace CpLibrary.Verify.Collections
 {
 	// competitive-verifier: document_title Deque<T> (Library Checker: Deque)
-	internal class DequeTest : CompetitiveVerifier.ProblemSolver
+	internal class DequeTest : VerifySolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/deque";
-		public override void Solve()
+		public override double? Tle => 5.0;
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 			var q = sr.ReadInt();
 			var deque = new CpLibrary.Collections.Deque<int>();
 			for (int i = 0; i < q; i++)
@@ -42,7 +42,7 @@ namespace CpLibrary.Verify.Collections
 				if (query == 4)
 				{
 					var k = sr.ReadInt();
-					Console.WriteLine(deque[k]);
+					sw.WriteLine(deque[k]);
 				}
 			}
 		}

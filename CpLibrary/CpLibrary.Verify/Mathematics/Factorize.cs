@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace CpLibrary.Verify.Mathematics
 {   // competitive-verifier: document_title Factorize (Library Checker: Factorize)
-	internal class Factorize : CompetitiveVerifier.ProblemSolver
+	internal class Factorize : VerifySolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/factorize";
-		public override void Solve()
+		public override double? Tle => 10.0;
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 			var q = sr.ReadInt();
 			for (int i = 0; i < q; i++)
 			{
@@ -26,7 +26,7 @@ namespace CpLibrary.Verify.Mathematics
 						ans.Add(key);
 					}
 				}
-				Console.WriteLine($"{ans.Count} {ans.Join(" ")}");
+				sw.WriteLine($"{ans.Count} {ans.Join(" ")}");
 			}
 		}
 	}

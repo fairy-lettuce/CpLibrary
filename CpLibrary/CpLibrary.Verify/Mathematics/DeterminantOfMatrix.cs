@@ -11,17 +11,16 @@ using ModInt = CpLibrary.Mathematics.MontgomeryModInt<AtCoder.Mod998244353>;
 namespace CpLibrary.Verify.Mathematics;
 
 // competitive-verifier: document_title Matrix<T> (Library Checker: Determinant of Matrix)
-internal class DeterminantOfMatrixTest : CompetitiveVerifier.ProblemSolver
+internal class DeterminantOfMatrixTest : VerifySolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/matrix_det";
-	public override void Solve()
+	public override double? Tle => 5.0;
+	public override void Run()
 	{
-		var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-
 		var n = sr.ReadInt();
 		var _a = StaticItems.CreateArray(n, i => sr.ReadIntArray(n).Select(p => new ModInt(p)).ToArray());
 		var a = new Matrix<ModInt>(_a);
 		var det = a.Determinant();
-		Console.WriteLine(det);
+		sw.WriteLine(det);
 	}
 }

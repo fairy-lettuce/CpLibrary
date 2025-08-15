@@ -10,13 +10,12 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 namespace CpLibrary.Verify.Collections
 {
 	// competitive-verifier: document_title SlidingWindowAggregation<T> (Library Checker: Queue Operate All Composite)
-	internal class SlidingWindowAggregationTest : CompetitiveVerifier.ProblemSolver
+	internal class SlidingWindowAggregationTest : VerifySolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/queue_operate_all_composite";
-		public override void Solve()
+		public override double? Tle => 5.0;
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-
 			var swag = new SlidingWindowAggregation<(ModInt a, ModInt b)>((x, y) => (x.a * y.a, y.a * x.b + y.b));
 
 			var q = sr.ReadInt();
@@ -37,11 +36,11 @@ namespace CpLibrary.Verify.Collections
 					var x = sr.ReadInt();
 					if (swag.Count == 0)
 					{
-						Console.WriteLine(x);
+						sw.WriteLine(x);
 						continue;
 					}
 					var ret = swag.Prod();
-					Console.WriteLine(ret.a * x + ret.b);
+					sw.WriteLine(ret.a * x + ret.b);
 				}
 			}
 		}
