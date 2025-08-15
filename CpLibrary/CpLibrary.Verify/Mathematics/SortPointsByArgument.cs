@@ -8,12 +8,12 @@ using Rational = CpLibrary.Mathematics.Rational<long>;
 namespace CpLibrary.Verify.Mathematics;
 
 // competitive-verifier: document_title Rational<T> [comparison] (Library Checker: Sort Points by Argument)
-internal class SortPointsByArgumentRationalTest : CompetitiveVerifier.ProblemSolver
+internal class SortPointsByArgumentRationalTest : VerifySolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/sort_points_by_argument";
-	public override void Solve()
+	public override double? Tle => 5.0;
+	public override void Run()
 	{
-		var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 		int n = sr.ReadInt();
 		var (x, y) = sr.ReadValueArray<long, long>(n);
 		var p1 = new List<(Rational, (long, long))>();
@@ -51,16 +51,16 @@ internal class SortPointsByArgumentRationalTest : CompetitiveVerifier.ProblemSol
 		var p2plus = p2.Where(x => x.Item1 > Rational.Zero);
 		foreach (var e in p2plus)
 		{
-			Console.WriteLine($"{e.Item2.Item1} {e.Item2.Item2}");
+			sw.WriteLine($"{e.Item2.Item1} {e.Item2.Item2}");
 		}
 		foreach (var e in p1)
 		{
-			Console.WriteLine($"{e.Item2.Item1} {e.Item2.Item2}");
+			sw.WriteLine($"{e.Item2.Item1} {e.Item2.Item2}");
 		}
 		var p2minus = p2.Where(x => x.Item1 <= Rational.Zero);
 		foreach (var e in p2minus)
 		{
-			Console.WriteLine($"{e.Item2.Item1} {e.Item2.Item2}");
+			sw.WriteLine($"{e.Item2.Item1} {e.Item2.Item2}");
 		}
 	}
 }

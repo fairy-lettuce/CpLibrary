@@ -12,12 +12,12 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 namespace CpLibrary.Verify.Geometry
 {
 	// competitive-verifier: document_title Counter-Clockwise (Aizu Online Judge: CGL_1_C)
-	internal class CounterClockwiseTest : CompetitiveVerifier.ProblemSolver
+	internal class CounterClockwiseTest : VerifySolver
 	{
 		public override string Url => "https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/1/CGL_1_C";
-		public override void Solve()
+		public override double? Tle => 2.0;
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 			var (x1, y1, x2, y2) = sr.ReadValue<int, int, int, int>();
 			var p1 = new Complex(x1, y1);
 			var p2 = new Complex(x2, y2);
@@ -32,9 +32,9 @@ namespace CpLibrary.Verify.Geometry
 				if (ans == +1) msg = "CLOCKWISE";
 				if (ans == -1) msg = "COUNTER_CLOCKWISE";
 				if (ans == +2) msg = "ONLINE_BACK";
-				if (ans ==  0) msg = "ON_SEGMENT";
+				if (ans == 0) msg = "ON_SEGMENT";
 				if (ans == -2) msg = "ONLINE_FRONT";
-				Console.WriteLine(msg);
+				sw.WriteLine(msg);
 			}
 		}
 	}

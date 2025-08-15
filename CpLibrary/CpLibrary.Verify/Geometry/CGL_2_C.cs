@@ -12,14 +12,13 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 namespace CpLibrary.Verify.Geometry
 {
 	// competitive-verifier: document_title Cross Point (Aizu Online Judge: CGL_2_C)
-	internal class CrossPointTest : CompetitiveVerifier.ProblemSolver
+	internal class CrossPointTest : VerifySolver
 	{
 		public override string Url => "https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/2/CGL_2_C";
+		public override double? Tle => 2.0;
 		public override double? Error => 1e-5;
-		public override void Solve()
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
-
 			var q = sr.ReadInt();
 			for (int i = 0; i < q; i++)
 			{
@@ -33,7 +32,7 @@ namespace CpLibrary.Verify.Geometry
 				var line1 = new Line2D(p[0], p[1]);
 				var line2 = new Line2D(p[2], p[3]);
 				var ans = line1.Intersection(line2);
-				Console.WriteLine($"{ans.Real} {ans.Imaginary}");
+				sw.WriteLine($"{ans.Real} {ans.Imaginary}");
 			}
 		}
 	}

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace CpLibrary.Verify.Mathematics
 {
 	// competitive-verifier: document_title EnumeratePrime (Library Checker: Enumerate Primes)
-	internal class EnumeratePrimes : CompetitiveVerifier.ProblemSolver
+	internal class EnumeratePrimes : VerifySolver
 	{
 		public override string Url => "https://judge.yosupo.jp/problem/enumerate_primes";
-		public override void Solve()
+		public override double? Tle => 10.0;
+		public override void Run()
 		{
-			var sr = new Scanner(new StreamReader(Console.OpenStandardInput()));
 			var (n, a, b) = sr.ReadValue<int, int, int>();
 			var prime = new List<int>();
 			PrimeEnumerator.EnumeratePrime(n, prime);
@@ -24,8 +24,8 @@ namespace CpLibrary.Verify.Mathematics
 				if (i >= b && (i - b) % a == 0) ans.Add(prime[i]);
 			}
 
-			Console.WriteLine($"{prime.Count} {ans.Count}");
-			Console.WriteLine(ans.Join(" "));
+			sw.WriteLine($"{prime.Count} {ans.Count}");
+			sw.WriteLine(ans.Join(" "));
 		}
 	}
 }
