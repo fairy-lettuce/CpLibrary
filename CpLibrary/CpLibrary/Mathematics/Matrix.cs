@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,7 +11,7 @@ using System.Text;
 namespace CpLibrary.Mathematics;
 
 [DebuggerDisplay("{ToString(), nq}")]
-public class Matrix<T> : IEquatable<Matrix<T>> where T : INumberBase<T>
+public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnumerable<T>> where T : INumberBase<T>
 {
 	int row;
 	int column;
@@ -247,5 +248,26 @@ public class Matrix<T> : IEquatable<Matrix<T>> where T : INumberBase<T>
 			}
 		}
 		return sb.ToString();
+	}
+
+	public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)value).GetEnumerator();
+
+	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+	IEnumerator<IEnumerable<T>> IEnumerable<IEnumerable<T>>.GetEnumerator()
+	{
+		for (int i = 0; i < row; i++)
+		{
+			yield return GetRow(i);
+		}
+	}
+
+	IEnumerable<T> GetRow(int idx)
+	{
+		if (idx < 0 || row <= idx) throw new ArgumentException();
+		for (int i = 0; i < column; i++)
+		{
+			yield return value[idx * column + i];
+		}
 	}
 }
