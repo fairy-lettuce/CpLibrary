@@ -93,4 +93,45 @@ public class Matrix<T> where T : INumberBase<T>
 		}
 		return res;
 	}
+
+	public T Determinant()
+	{
+		if (column != row) throw new ArgumentException();
+		var swap = false;
+		var p = Enumerable.Range(0, row).ToArray();
+		for (int i = 0; i < row; i++)
+		{
+			var ok = false;
+			for (int j = i; j < row; j++)
+			{
+				if (value[p[j] * row + i] != T.Zero)
+				{
+					ok = true;
+					if (i != j)
+					{
+						(p[i], p[j]) = (p[j], p[i]);
+						swap = !swap;
+					}
+					break;
+				}
+			}
+			if (!ok) return T.AdditiveIdentity;
+			var t = value[p[i] * row + i];
+			for (int j = i + 1; j < row; j++)
+			{
+				var c = value[p[j] * row + i] / t;
+				for (int k = 0; k < row; k++)
+				{
+					value[p[j] * row + k] -= c * value[p[i] * row + k];
+				}
+			}
+		}
+		var det = T.MultiplicativeIdentity;
+		if (swap) det = -det;
+		for (int i = 0; i < row; i++)
+		{
+			det *= value[p[i] * row + i];
+		}
+		return det;
+	}
 }
