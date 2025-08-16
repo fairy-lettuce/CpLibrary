@@ -49,9 +49,9 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 	public static MontgomeryModInt<T> One => new MontgomeryModInt<T>(1L);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static int Normalize(int v)
+	private static uint Normalize(uint v)
 	{
-		return v >= Mod ? v - Mod : v;
+		return v >= Mod ? v - (uint)Mod : v;
 	}
 
 	/// <summary>
@@ -93,26 +93,10 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 	private MontgomeryModInt(uint v) => _v = v;
 
 	[MethodImpl(256)]
-	public static MontgomeryModInt<T> operator ++(MontgomeryModInt<T> v)
-	{
-		var x = v._v + One._v;
-		if (x == op.Mod)
-		{
-			x = 0;
-		}
-		return new MontgomeryModInt<T>(x);
-	}
+	public static MontgomeryModInt<T> operator ++(MontgomeryModInt<T> v) => v + One;
 
 	[MethodImpl(256)]
-	public static MontgomeryModInt<T> operator --(MontgomeryModInt<T> v)
-	{
-		var x = v._v;
-		if (x == 0)
-		{
-			x = op.Mod;
-		}
-		return new MontgomeryModInt<T>(x - One._v);
-	}
+	public static MontgomeryModInt<T> operator --(MontgomeryModInt<T> v) => v - One;
 
 	[MethodImpl(256)]
 	public static MontgomeryModInt<T> operator +(MontgomeryModInt<T> lhs, MontgomeryModInt<T> rhs)
@@ -131,7 +115,7 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 		unchecked
 		{
 			var v = lhs._v - rhs._v;
-			if ((int)v < 0)
+			if (v >= 2 * op.Mod)
 			{
 				v += 2 * op.Mod;
 			}
@@ -155,9 +139,9 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 	[MethodImpl(256)]
 	public static MontgomeryModInt<T> operator -(MontgomeryModInt<T> v) => new MontgomeryModInt<T>(v._v == 0 ? 0 : op.Mod - v._v);
 	[MethodImpl(256)]
-	public static bool operator ==(MontgomeryModInt<T> lhs, MontgomeryModInt<T> rhs) => Normalize((int)lhs._v) == Normalize((int)rhs._v);
+	public static bool operator ==(MontgomeryModInt<T> lhs, MontgomeryModInt<T> rhs) => Normalize(lhs._v) == Normalize(rhs._v);
 	[MethodImpl(256)]
-	public static bool operator !=(MontgomeryModInt<T> lhs, MontgomeryModInt<T> rhs) => Normalize((int)lhs._v) != Normalize((int)rhs._v);
+	public static bool operator !=(MontgomeryModInt<T> lhs, MontgomeryModInt<T> rhs) => Normalize(lhs._v) != Normalize(rhs._v);
 	[MethodImpl(256)]
 	public static implicit operator MontgomeryModInt<T>(int v) => new MontgomeryModInt<T>(v);
 	[MethodImpl(256)]
@@ -232,12 +216,12 @@ public readonly struct MontgomeryModInt<T> : IEquatable<MontgomeryModInt<T>>, IF
 	public override string ToString() => Value.ToString();
 	public string ToString(string format, IFormatProvider formatProvider) => Value.ToString(format, formatProvider);
 	public override bool Equals(object obj) => obj is MontgomeryModInt<T> m && Equals(m);
-	[MethodImpl(256)] public bool Equals(MontgomeryModInt<T> other) => _v == other._v;
+	[MethodImpl(256)] public bool Equals(MontgomeryModInt<T> other) => this == other;
 	public override int GetHashCode() => _v.GetHashCode();
 	public static bool TryParse(ReadOnlySpan<char> s, out MontgomeryModInt<T> result)
 	{
 		result = Zero;
-		MontgomeryModInt<T> ten = 10u;
+		MontgomeryModInt<T> ten = 10;
 		s = s.Trim();
 		bool minus = false;
 		if (s.Length > 0 && s[0] == '-')
