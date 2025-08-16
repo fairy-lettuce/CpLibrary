@@ -13,10 +13,10 @@ public readonly struct StaticMontgomeryReduction<T> where T: IStaticMod
 {
 	static readonly uint mod = default(T).Mod;
 	static readonly uint r2 = (uint)((1UL << 32) % mod * ((1UL << 32) % mod) % mod);
-	static readonly uint modinv = CalculateRneginv();
+	static readonly uint modinv = CalculateModInv();
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	static uint CalculateRneginv()
+	static uint CalculateModInv()
 	{
 		var mod = default(T).Mod;
 		uint rinv = mod;
