@@ -15,16 +15,16 @@ namespace CpLibrary
 		public static int LowerBound<T>(this IList<T> list, T value) => list.BinarySearch(value, false, 0, list.Count, Comparer<T>.Default);
 		public static int BinarySearch<T>(this IList<T> list, T value, bool isUpperBound, int index, int length, Comparer<T> comparer)
 		{
-			var ng = index - 1;
-			var ok = index + length;
-			while (ok - ng > 1)
+			var low = index - 1;
+			var high = index + length;
+			while (high - low > 1)
 			{
-				var mid = ng + (ok - ng) / 2;
+				var mid = low + (high - low) / 2;
 				var res = comparer.Compare(list[mid], value);
-				if (res < 0 || (isUpperBound && res == 0)) ng = mid;
-				else ok = mid;
+				if (res < 0 || (isUpperBound && res == 0)) low = mid;
+				else high = mid;
 			}
-			return ok;
+			return high;
 		}
 
 		public static bool Chmax<T>(ref this T a, T b) where T : struct, IComparable<T>
