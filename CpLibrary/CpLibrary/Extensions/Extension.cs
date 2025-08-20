@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CpLibrary
 {
-	public static class Extention
+	public static class Extension
 	{
 		public static string Join<T>(this IEnumerable<T> x, string separator = "") => string.Join(separator, x);
 		public static string Join<T>(this IEnumerable<T> x, char separator) => string.Join(separator, x);
