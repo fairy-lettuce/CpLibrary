@@ -1,4 +1,5 @@
 ---
+title: Multiset
 documentation_of: //CpLibrary/Collections/MultiSet.cs
 ---
 

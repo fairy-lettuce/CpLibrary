@@ -1,4 +1,5 @@
 ---
+title: Set
 documentation_of: //CpLibrary/Collections/Set.cs
 ---
 

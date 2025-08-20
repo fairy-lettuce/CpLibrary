@@ -1,4 +1,5 @@
 ---
+title: 通常ジャッジ用チェッカー
 documentation_of: //CpLibrary/Judge/Checker/NormalChecker.cs
 ---
 

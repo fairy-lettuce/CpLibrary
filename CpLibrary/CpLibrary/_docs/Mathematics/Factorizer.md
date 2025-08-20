@@ -1,4 +1,5 @@
 ---
+title: 素因数分解
 documentation_of: //CpLibrary/Mathematics/Factorizer.cs
 ---
 

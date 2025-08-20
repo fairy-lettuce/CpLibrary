@@ -1,4 +1,5 @@
 ---
+title: スペシャルジャッジ用チェッカー
 documentation_of: //CpLibrary/Judge/Checker/SpecialChecker.cs
 ---
 

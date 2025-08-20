@@ -1,4 +1,5 @@
 ---
+title: "Montgomery reduction (static mod)"
 documentation_of: //CpLibrary/Mathematics/StaticMontgomeryReduction.cs
 ---
 

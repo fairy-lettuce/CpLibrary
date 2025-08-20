@@ -1,4 +1,5 @@
 ---
+title: ハックケース探索器
 documentation_of: //CpLibrary/Judge/Hacker/Hacker.cs
 ---
 

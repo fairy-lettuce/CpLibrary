@@ -1,4 +1,5 @@
 ---
+title: Sliding window aggregation
 documentation_of: //CpLibrary/Collections/SlidingWindowAggregation.cs
 ---
 

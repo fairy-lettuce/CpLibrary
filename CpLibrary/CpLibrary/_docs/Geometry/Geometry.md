@@ -1,4 +1,5 @@
 ---
+title: Geometry (2D)
 documentation_of: //CpLibrary/Geometry/Geometry.cs
 ---
 
