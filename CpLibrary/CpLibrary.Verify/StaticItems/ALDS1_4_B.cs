@@ -25,7 +25,7 @@ namespace CpLibrary.Verify.Geometry
 			var ans = 0;
 			for (int i = 0; i < q; i++)
 			{
-				ans += s.UpperBound(t[i]) - s.LowerBound(t[i]);
+				if (s.UpperBound(t[i]) > s.LowerBound(t[i])) ans++;
 			}
 			sw.WriteLine(ans);
 		}
