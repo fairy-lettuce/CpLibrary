@@ -9,6 +9,7 @@ namespace CpLibrary.Verify
 		public override double? Tle => 5.0;
 		public override void Run()
 		{
+			var q = sr.ReadInt();
 			var (a, b) = sr.ReadValue<int, int>();
 			sw.WriteLine(a + b);
 		}
