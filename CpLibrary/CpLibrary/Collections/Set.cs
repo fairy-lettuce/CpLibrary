@@ -45,7 +45,7 @@ namespace CpLibrary.Collections
 		{
 			get
 			{
-				if (index < 0 || root.Count < index) throw new ArgumentOutOfRangeException();
+				if (index < 0 || root.Count <= index) throw new ArgumentOutOfRangeException();
 				return Find(root, index);
 			}
 		}
@@ -54,7 +54,7 @@ namespace CpLibrary.Collections
 		public bool Remove(T x) => Erase(ref root, x);
 		public void RemoveAt(int index)
 		{
-			if (index < 0 || Count < index) throw new ArgumentOutOfRangeException();
+			if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException();
 			EraseAt(ref root, index);
 		}
 		public bool Contains(T x) => this.Count == 0 ? false : EqualRange(x) > 0;
@@ -208,7 +208,7 @@ namespace CpLibrary.Collections
 
 			while (p.Count != 0)
 			{
-				var cmp = p.Value.CompareTo(x);
+				var cmp = comparer.Compare(p.Value, x);
 				if (cmp > 0 || (!isUpperBound && cmp == 0))
 				{
 					p = p.Left;
