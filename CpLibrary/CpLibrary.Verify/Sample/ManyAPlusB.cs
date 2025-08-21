@@ -10,8 +10,11 @@ namespace CpLibrary.Verify
 		public override void Run()
 		{
 			var q = sr.ReadInt();
-			var (a, b) = sr.ReadValue<int, int>();
-			sw.WriteLine(a + b);
+			for (int i = 0; i < q; i++)
+			{
+				var (x, y) = sr.ReadValue<long, long>();
+				sw.WriteLine(x + y);
+			}
 		}
 	}
 }
