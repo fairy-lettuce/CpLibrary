@@ -11,7 +11,7 @@ namespace CpLibrary.Util;
 
 public class Xoshiro256StarStar : IRandom
 {
-	private ulong[] s;
+	private ulong s0, s1, s2, s3;
 
 	public Xoshiro256StarStar() : this(new Random()) { }
 
@@ -19,8 +19,11 @@ public class Xoshiro256StarStar : IRandom
 
 	public Xoshiro256StarStar(ulong s0, ulong s1, ulong s2, ulong s3)
 	{
-		s = new[] { s0, s1, s2, s3 };
-		if ((s[0] | s[1] | s[2] | s[3]) == 0)
+		this.s0 = s0;
+		this.s1 = s1;
+		this.s2 = s2;
+		this.s3 = s3;
+		if ((s0 | s1 | s2 | s3) == 0)
 		{
 			throw new ArgumentException();
 		}
@@ -32,27 +35,34 @@ public class Xoshiro256StarStar : IRandom
 		do
 		{
 			rand.NextBytes(MemoryMarshal.AsBytes(b));
-			s = b.ToArray();
-		} while ((s[0] | s[1] | s[2] | s[3]) == 0);
+			s0 = b[0];
+			s1 = b[1];
+			s2 = b[2];
+			s3 = b[3];
+		} while ((s0 | s1 | s2 | s3) == 0);
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public ulong NextULong()
 	{
-		ulong res = BitOperations.RotateLeft(s[1] * 5, 7) * 9;
-		ulong t = s[1] << 17;
-		s[2] ^= s[0];
-		s[3] ^= s[1];
-		s[1] ^= s[2];
-		s[0] ^= s[3];
-		s[2] ^= t;
-		s[3] = BitOperations.RotateLeft(s[3], 45);
+		ulong res = BitOperations.RotateLeft(s1 * 5, 7) * 9;
+		ulong t = s1 << 17;
+		s2 ^= s0;
+		s3 ^= s1;
+		s1 ^= s2;
+		s0 ^= s3;
+		s2 ^= t;
+		s3 = BitOperations.RotateLeft(s3, 45);
 		return res;
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public uint NextUInt() => (uint)(NextULong() >> 32);
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public int Next() => (int)(NextUInt() >> 1);
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public int Next(int b)
 	{
 		if (b < 0) throw new ArgumentOutOfRangeException();
@@ -63,14 +73,17 @@ public class Xoshiro256StarStar : IRandom
 		return (int)(r % (uint)b);
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public int Next(int a, int b)
 	{
 		if (a > b) throw new ArgumentException();
 		return Next(b - a) + a;
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public void NextBytes(byte[] b) => NextBytes((Span<byte>)b);
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public void NextBytes(Span<byte> b)
 	{
 		int i = 0;
@@ -90,10 +103,13 @@ public class Xoshiro256StarStar : IRandom
 		}
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public double NextDouble() => (NextULong() >> 11) * (1.0 / (1UL << 53));
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public long NextLong() => (long)(NextULong() >> 1);
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public long NextLong(long b)
 	{
 		if (b < 0) throw new ArgumentOutOfRangeException();
@@ -104,6 +120,7 @@ public class Xoshiro256StarStar : IRandom
 		return (long)(r % (ulong)b);
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public long NextLong(long a, long b)
 	{
 		if (a > b) throw new ArgumentException();
