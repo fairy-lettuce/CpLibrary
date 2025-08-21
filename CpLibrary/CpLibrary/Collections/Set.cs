@@ -202,8 +202,6 @@ namespace CpLibrary.Collections
 
 		int BinarySearch(Node p, T x, bool isUpperBound)
 		{
-			if (p.Count == 0) throw new NullReferenceException();
-
 			var node = p;
 
 			var ret = 0;
