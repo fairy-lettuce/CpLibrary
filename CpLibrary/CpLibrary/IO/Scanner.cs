@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace CpLibrary
 {
-	public class Scanner
+	public class Scanner : IDisposable
 	{
 		public StreamReader sr { get; private set; }
 
@@ -133,7 +133,15 @@ namespace CpLibrary
 
 		public string ReadString() => Read();
 
-		public string[] ReadStringArray(int n) => ReadValueArray<string>(n);
+		public string[] ReadStringArray(int n)
+		{
+			var arr = GC.AllocateUninitializedArray<string>(n);
+			for (int i = 0; i < n; i++)
+			{
+				arr[i] = ReadString();
+			}
+			return arr;
+		}
 
 		public int ReadInt() => ReadValue<int>();
 
