@@ -1,268 +1,280 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 
-namespace CpLibrary.Collections
+namespace CpLibrary.Collections;
+
+public class Set<T> : IEnumerable<T> where T : IComparable<T>
 {
-	public class Set<T> : IEnumerable<T> where T : IComparable<T>
+	Node root;
+	readonly IComparer<T> comparer;
+	readonly Node nil;
+	public bool IsMultiSet { get; }
+
+	public Set(bool isMultiSet = false) : this(Comparer<T>.Default, isMultiSet) { }
+	public Set(IComparer<T> comparer, bool isMultiSet = false)
 	{
-		Node root;
-		readonly IComparer<T> comparer;
-		readonly Node nil;
-		public bool IsMultiSet { get; }
+		nil = new Node(default);
+		root = nil;
+		this.comparer = comparer;
+		this.IsMultiSet = isMultiSet;
+	}
+	public Set(IList<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
+	public Set(IList<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
+	{
+		root = Build(list, 0, list.Count);
+	}
+	public Set(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
+	public Set(IList<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
 
-		public Set(bool isMultiSet = false) : this(Comparer<T>.Default, isMultiSet) { }
-		public Set(IComparer<T> comparer, bool isMultiSet = false)
-		{
-			nil = new Node(default);
-			root = nil;
-			this.comparer = comparer;
-			this.IsMultiSet = isMultiSet;
-		}
-		public Set(IList<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
-		public Set(IList<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
-		{
-			root = Build(list, 0, list.Count);
-		}
-		public Set(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
-		public Set(IList<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
+	Node Build(IList<T> a, int l, int r)
+	{
+		if (l >= r) return nil;
+		var m = (l + r) >> 1;
+		var p = new Node(a[m]);
+		p.Left = Build(a, l, m);
+		p.Right = Build(a, m + 1, r);
+		p.Update();
+		return p;
+	}
 
-		Node Build(IList<T> a, int l, int r)
+	public T this[int index]
+	{
+		get
 		{
-			if (l >= r) return nil;
-			var m = (l + r) >> 1;
-			var p = new Node(a[m]);
-			p.Left = Build(a, l, m);
-			p.Right = Build(a, m + 1, r);
+			if (index < 0 || root.Count <= index) throw new ArgumentOutOfRangeException();
+			return Find(root, index);
+		}
+	}
+
+	public bool Add(T x) => Insert(ref root, x);
+	public bool Remove(T x) => Erase(ref root, x);
+	public void RemoveAt(int index)
+	{
+		if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException();
+		EraseAt(ref root, index);
+	}
+
+	public bool Contains(T x)
+	{
+		if (this.Count == 0) return false;
+		var (idx, val) = LowerBound(x);
+		if (idx >= this.Count) return false;
+		return val.CompareTo(x) == 0;
+	}
+
+	public (int Index, T Value) LowerBound(T x) => FindFirstGreaterOrEqual(x);
+	public (int Index, T Value) UpperBound(T x) => FindFirstGreaterThan(x);
+	public (int Index, T Value) FindFirstGreaterOrEqual(T x) => BinarySearch(root, x, false, true);
+	public (int Index, T Value) FindFirstGreaterThan(T x) => BinarySearch(root, x, true, true);
+	public (int Index, T Value) FindLastLessOrEqual(T x) => BinarySearch(root, x, true, false);
+	public (int Index, T Value) FindLastLessThan(T x) => BinarySearch(root, x, false, false);
+
+	public int EqualRange(T x) => FindFirstGreaterOrEqual(x).Index - FindFirstGreaterThan(x).Index;
+
+	public void Clear() => root = nil;
+
+	public T Min() => root.Min.Value;
+	public T Max() => root.Max.Value;
+
+	public T[] Items
+	{
+		get
+		{
+			var a = new T[root.Count];
+			var k = 0;
+			Walk(root, a, ref k);
+			return a;
+		}
+	}
+	public int Count => root.Count;
+	public int Height => root.Height;
+
+	public IEnumerator<T> GetEnumerator() { return Items.AsEnumerable().GetEnumerator(); }
+	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+
+	bool Insert(ref Node p, T x)
+	{
+		if (p.Count == 0)
+		{
+			p = new Node(x);
+			p.Left = p.Right = nil;
 			p.Update();
-			return p;
+			return true;
+		}
+		bool ret;
+		var t = comparer.Compare(p.Value, x);
+		if (t > 0)
+		{
+			ret = Insert(ref p.Left, x);
+		}
+		else if (t < 0)
+		{
+			ret = Insert(ref p.Right, x);
+		}
+		else
+		{
+			if (IsMultiSet == true) ret = Insert(ref p.Left, x);
+			else return false;
+		}
+		Balance(ref p);
+		return ret;
+	}
+
+	bool Erase(ref Node p, T x)
+	{
+		if (p.Count == 0) return false;
+		var t = comparer.Compare(p.Value, x);
+		bool ret;
+		if (t < 0) ret = Erase(ref p.Right, x);
+		else if (t > 0) ret = Erase(ref p.Left, x);
+		else
+		{
+			ret = true;
+			if (p.Right.Count == 0) { p = p.Left; return true; }
+			if (p.Left.Count == 0) { p = p.Right; return true; }
+
+			p.Value = p.Left.Max.Value;
+			Erase(ref p.Left, p.Left.Max.Value);
+		}
+		Balance(ref p);
+
+		return ret;
+	}
+
+	void EraseAt(ref Node p, int index)
+	{
+		var count = p.Left.Count;
+		if (index < count) EraseAt(ref p.Left, index);
+		else if (index > count) EraseAt(ref p.Right, index - count - 1);
+		else
+		{
+			if (p.Left.Count == 0) { p = p.Right; return; }
+			if (p.Right.Count == 0) { p = p.Left; return; }
+
+			p.Value = p.Left.Max.Value;
+			EraseAt(ref p.Left, index - 1);
 		}
 
-		public T this[int index]
+		Balance(ref p);
+	}
+
+	void Walk(Node t, T[] a, ref int k)
+	{
+		if (t.Count == 0) return;
+		Walk(t.Left, a, ref k);
+		a[k++] = t.Value;
+		Walk(t.Right, a, ref k);
+	}
+
+	void Balance(ref Node p)
+	{
+		var balance = p.Left.Height - p.Right.Height;
+		if (balance < -1)
+		{
+			if (p.Right.Left.Height - p.Right.Right.Height > 0) RotateR(ref p.Right);
+			RotateL(ref p);
+		}
+		else if (balance > 1)
+		{
+			if (p.Left.Left.Height - p.Left.Right.Height < 0) RotateL(ref p.Left);
+			RotateR(ref p);
+		}
+		else p.Update();
+	}
+
+	T Find(Node p, int index)
+	{
+		if (index < p.Left.Count) return Find(p.Left, index);
+		if (index > p.Left.Count) return Find(p.Right, index - p.Left.Count - 1);
+		return p.Value;
+	}
+
+	void RotateL(ref Node p)
+	{
+		var r = p.Right;
+		p.Right = r.Left;
+		r.Left = p;
+		p.Update();
+		r.Update();
+		p = r;
+	}
+
+	void RotateR(ref Node p)
+	{
+		var l = p.Left;
+		p.Left = l.Right;
+		l.Right = p;
+		p.Update();
+		l.Update();
+		p = l;
+	}
+
+	(int Index, T Value) BinarySearch(Node p, T x, bool isUpperBound, bool returnHigh)
+	{
+		var node = p;
+		var low = p;
+		var high = p;
+		var ret = 0;
+
+		while (p.Count != 0)
+		{
+			var cmp = comparer.Compare(p.Value, x);
+			if (cmp > 0 || (!isUpperBound && cmp == 0))
+			{
+				high = p;
+				p = p.Left;
+			}
+			else
+			{
+				low = p;
+				ret += p.Left.Count + 1;
+				p = p.Right;
+			}
+		}
+
+		return (ret, returnHigh ? high.Value : low.Value);
+	}
+
+	public override string ToString()
+	{
+		return string.Join(", ", Items);
+	}
+
+	class Node
+	{
+		public Node Left, Right;
+		public T Value { get; set; }
+
+		public int Count { get; private set; }
+		public int Height { get; private set; }
+
+		public Node Min
 		{
 			get
 			{
-				if (index < 0 || root.Count <= index) throw new ArgumentOutOfRangeException();
-				return Find(root, index);
+				if (Left.Count == 0) return this;
+				else return Left.Min;
 			}
 		}
 
-		public bool Add(T x) => Insert(ref root, x);
-		public bool Remove(T x) => Erase(ref root, x);
-		public void RemoveAt(int index)
-		{
-			if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException();
-			EraseAt(ref root, index);
-		}
-		public bool Contains(T x) => this.Count == 0 ? false : EqualRange(x) > 0;
-		public int LowerBound(T x) => BinarySearch(root, x, false);
-		public int UpperBound(T x) => BinarySearch(root, x, true);
-		public int EqualRange(T x) => UpperBound(x) - LowerBound(x);
-
-		public void Clear() => root = nil;
-
-		public T Min() => root.Min.Value;
-		public T Max() => root.Max.Value;
-
-		public T[] Items
+		public Node Max
 		{
 			get
 			{
-				var a = new T[root.Count];
-				var k = 0;
-				Walk(root, a, ref k);
-				return a;
+				if (Right.Count == 0) return this;
+				else return Right.Max;
 			}
 		}
-		public int Count => root.Count;
-		public int Height => root.Height;
 
-		public IEnumerator<T> GetEnumerator() { return Items.AsEnumerable().GetEnumerator(); }
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+		public Node(T value) => Value = value;
 
-		bool Insert(ref Node p, T x)
+		public void Update()
 		{
-			if (p.Count == 0)
-			{
-				p = new Node(x);
-				p.Left = p.Right = nil;
-				p.Update();
-				return true;
-			}
-			bool ret;
-			var t = comparer.Compare(p.Value, x);
-			if (t > 0)
-			{
-				ret = Insert(ref p.Left, x);
-			}
-			else if (t < 0)
-			{
-				ret = Insert(ref p.Right, x);
-			}
-			else
-			{
-				if (IsMultiSet == true) ret = Insert(ref p.Left, x);
-				else return false;
-			}
-			Balance(ref p);
-			return ret;
+			Count = Left.Count + Right.Count + 1;
+			Height = System.Math.Max(Left.Height, Right.Height) + 1;
 		}
 
-		bool Erase(ref Node p, T x)
-		{
-			if (p.Count == 0) return false;
-			var t = comparer.Compare(p.Value, x);
-			bool ret;
-			if (t < 0) ret = Erase(ref p.Right, x);
-			else if (t > 0) ret = Erase(ref p.Left, x);
-			else
-			{
-				ret = true;
-				if (p.Right.Count == 0) { p = p.Left; return true; }
-				if (p.Left.Count == 0) { p = p.Right; return true; }
-
-				p.Value = p.Left.Max.Value;
-				Erase(ref p.Left, p.Left.Max.Value);
-			}
-			Balance(ref p);
-
-			return ret;
-		}
-
-		void EraseAt(ref Node p, int index)
-		{
-			var count = p.Left.Count;
-			if (index < count) EraseAt(ref p.Left, index);
-			else if (index > count) EraseAt(ref p.Right, index - count - 1);
-			else
-			{
-				if (p.Left.Count == 0) { p = p.Right; return; }
-				if (p.Right.Count == 0) { p = p.Left; return; }
-
-				p.Value = p.Left.Max.Value;
-				EraseAt(ref p.Left, index - 1);
-			}
-
-			Balance(ref p);
-		}
-
-		void Walk(Node t, T[] a, ref int k)
-		{
-			if (t.Count == 0) return;
-			Walk(t.Left, a, ref k);
-			a[k++] = t.Value;
-			Walk(t.Right, a, ref k);
-		}
-
-		void Balance(ref Node p)
-		{
-			var balance = p.Left.Height - p.Right.Height;
-			if (balance < -1)
-			{
-				if (p.Right.Left.Height - p.Right.Right.Height > 0) RotateR(ref p.Right);
-				RotateL(ref p);
-			}
-			else if (balance > 1)
-			{
-				if (p.Left.Left.Height - p.Left.Right.Height < 0) RotateL(ref p.Left);
-				RotateR(ref p);
-			}
-			else p.Update();
-		}
-
-		T Find(Node p, int index)
-		{
-			if (index < p.Left.Count) return Find(p.Left, index);
-			if (index > p.Left.Count) return Find(p.Right, index - p.Left.Count - 1);
-			return p.Value;
-		}
-
-		void RotateL(ref Node p)
-		{
-			var r = p.Right;
-			p.Right = r.Left;
-			r.Left = p;
-			p.Update();
-			r.Update();
-			p = r;
-		}
-
-		void RotateR(ref Node p)
-		{
-			var l = p.Left;
-			p.Left = l.Right;
-			l.Right = p;
-			p.Update();
-			l.Update();
-			p = l;
-		}
-
-		int BinarySearch(Node p, T x, bool isUpperBound)
-		{
-			var node = p;
-
-			var ret = 0;
-
-			while (p.Count != 0)
-			{
-				var cmp = comparer.Compare(p.Value, x);
-				if (cmp > 0 || (!isUpperBound && cmp == 0))
-				{
-					p = p.Left;
-				}
-				else
-				{
-					ret += p.Left.Count + 1;
-					p = p.Right;
-				}
-			}
-
-			return ret;
-		}
-
-		public override string ToString()
-		{
-			return string.Join(", ", Items);
-		}
-
-		class Node
-		{
-			public Node Left, Right;
-			public T Value { get; set; }
-
-			public int Count { get; private set; }
-			public int Height { get; private set; }
-
-			public Node Min
-			{
-				get
-				{
-					if (Left.Count == 0) return this;
-					else return Left.Min;
-				}
-			}
-
-			public Node Max
-			{
-				get
-				{
-					if (Right.Count == 0) return this;
-					else return Right.Max;
-				}
-			}
-
-			public Node(T value) => Value = value;
-
-			public void Update()
-			{
-				Count = Left.Count + Right.Count + 1;
-				Height = System.Math.Max(Left.Height, Right.Height) + 1;
-			}
-
-			public override string ToString() => $"Count = {Count}, Value = {Value}";
-		}
+		public override string ToString() => $"Count = {Count}, Value = {Value}";
 	}
 }
