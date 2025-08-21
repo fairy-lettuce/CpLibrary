@@ -22,12 +22,11 @@ namespace CpLibrary.Verify.Collections
 				var (query, x) = sr.ReadValue<int, int>();
 				if (query == 0)
 				{
-					if (s.Contains(x)) { }
-					else s.Add(x);
+					s.Add(x);
 				}
 				if (query == 1)
 				{
-					if (s.Contains(x)) s.Remove(x);
+					s.Remove(x);
 				}
 				if (query == 2)
 				{
@@ -41,7 +40,7 @@ namespace CpLibrary.Verify.Collections
 						sw.WriteLine(0);
 						continue;
 					}
-					var idx = s.UpperBound(x);
+					var idx = s.FindFirstGreaterThan(x).Index;
 					sw.WriteLine(idx);
 				}
 				if (query == 4)
@@ -51,11 +50,11 @@ namespace CpLibrary.Verify.Collections
 						sw.WriteLine(-1);
 						continue;
 					}
-					var idx = s.UpperBound(x);
+					var (idx, val) = s.FindLastLessOrEqual(x);
 					if (idx <= 0) sw.WriteLine(-1);
 					else
 					{
-						sw.WriteLine(s[idx - 1]);
+						sw.WriteLine(val);
 					}
 				}
 				if (query == 5)
@@ -65,11 +64,11 @@ namespace CpLibrary.Verify.Collections
 						sw.WriteLine(-1);
 						continue;
 					}
-					var idx = s.LowerBound(x);
+					var (idx, val) = s.FindFirstGreaterOrEqual(x);
 					if (idx >= s.Count) sw.WriteLine(-1);
 					else
 					{
-						sw.WriteLine(s[idx]);
+						sw.WriteLine(val);
 					}
 				}
 			}

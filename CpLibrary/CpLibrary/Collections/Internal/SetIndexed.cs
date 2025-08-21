@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CpLibrary.Collections;
+namespace CpLibrary.Collections.Internal;
 
-public class Set<T> : IEnumerable<T> where T : IComparable<T>
+public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 {
 	protected int root;
 	protected readonly IComparer<T> comparer;
@@ -12,8 +12,8 @@ public class Set<T> : IEnumerable<T> where T : IComparable<T>
 	protected Node[] nodes;
 	protected int used = 0;
 
-	public Set(bool isMultiSet = false) : this(Comparer<T>.Default, isMultiSet) { }
-	public Set(IComparer<T> comparer, bool isMultiSet = false)
+	public SetIndexed(bool isMultiSet = false) : this(Comparer<T>.Default, isMultiSet) { }
+	public SetIndexed(IComparer<T> comparer, bool isMultiSet = false)
 	{
 		this.comparer = comparer;
 		this.isMultiSet = isMultiSet;
@@ -21,18 +21,18 @@ public class Set<T> : IEnumerable<T> where T : IComparable<T>
 		nodes[0] = new Node();
 		root = 0;
 	}
-	public Set(IList<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
-	public Set(IList<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
+	public SetIndexed(IList<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
+	public SetIndexed(IList<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
 	{
 		nodes = new Node[list.Count + 1];
 		nodes[0] = new Node();
 		root = Build(list, 0, list.Count);
 		used = list.Count;
 	}
-	public Set(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
-	public Set(IList<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
+	public SetIndexed(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
+	public SetIndexed(IList<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
 
-	protected virtual int Build(IList<T> a, int l, int r)
+	int Build(IList<T> a, int l, int r)
 	{
 		if (l >= r) return 0;
 		var m = (l + r) >> 1;
@@ -104,14 +104,14 @@ public class Set<T> : IEnumerable<T> where T : IComparable<T>
 	public IEnumerator<T> GetEnumerator() => Items.AsEnumerable().GetEnumerator();
 	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-	protected virtual void EnsureOneFreeSlot()
+	protected void EnsureOneFreeSlot()
 	{
 		if (used + 1 < nodes.Length) return;
 		int newLen = nodes.Length <= 1 ? 2 : nodes.Length << 1;
 		Array.Resize(ref nodes, newLen);
 	}
 
-	protected virtual int NewNode(T value)
+	protected int NewNode(T value)
 	{
 		EnsureOneFreeSlot();
 		int p = ++used;
@@ -120,7 +120,7 @@ public class Set<T> : IEnumerable<T> where T : IComparable<T>
 		return p;
 	}
 
-	protected virtual void Update(int p)
+	protected void Update(int p)
 	{
 		if (p == 0) return;
 		var n = nodes[p];

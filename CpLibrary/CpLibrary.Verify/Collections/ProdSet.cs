@@ -27,7 +27,7 @@ namespace CpLibrary.Verify.Collections
 				if (query == 0)
 				{
 					var (p, c, d) = sr.ReadValue<long, int, int>();
-					var idx = ps.LowerBound((p, (0, 0)));
+					var idx = ps.LowerBound((p, (0, 0))).Index;
 					if (idx >= ps.Count || ps[idx].index != p)
 					{
 						ps.Add((p, (c, d)));
@@ -41,8 +41,8 @@ namespace CpLibrary.Verify.Collections
 				else
 				{
 					var (l, r, x) = sr.ReadValue<int, int, long>();
-					var l2 = ps.LowerBound((l, (0, 0)));
-					var r2 = ps.LowerBound((r, (0, 0)));
+					var l2 = ps.LowerBound((l, (0, 0))).Index;
+					var r2 = ps.LowerBound((r, (0, 0))).Index;
 					var prod = ps.Prod(l2, r2);
 					var ans = prod.f.a * x + prod.f.b;
 					sw.WriteLine(ans);
