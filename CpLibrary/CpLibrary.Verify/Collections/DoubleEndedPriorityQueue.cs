@@ -16,6 +16,7 @@ namespace CpLibrary.Verify.Collections
 		{
 			var (n, q) = sr.ReadValue<int, int>();
 			var s = sr.ReadLongArray(n);
+			Array.Sort(s);
 			var set = new MultiSet<long>(s);
 			for (int i = 0; i < q; i++)
 			{
