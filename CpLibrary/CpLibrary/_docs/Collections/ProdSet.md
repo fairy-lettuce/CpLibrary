@@ -28,12 +28,14 @@ documentation_of: //CpLibrary/Collections/ProdSet.cs
 
 全コンストラクタ共通: `isMultiSet` を `true` にすると要素の重複を許容します (多重集合)。
 
+`IList<T>` で初期化するとき、そのリストは**ソート済みであり**、かつ**要素の重複が存在しない** (`isMultiSet` が `false` の場合) 必要があります。
+
 - `Set()`: 空の集合で初期化します。
 - `Set(IComparer<T>)`: `IComparer<T>` で順序を指定し、空の集合で初期化します。
 - `Set(Comparison<T>)`: `Comparison<T>` で順序を指定し、空の集合で初期化します。
-- `Set(IEnumerable<T>)`: `IEnumerable<T>` の各要素で集合を初期化します。
-- `Set(IEnumerable<T>, IComparer<T>)`: `IComparer<T>` で順序を指定し、`IEnumerable<T>` の各要素で集合を初期化します。
-- `Set(IEnumerable<T>, Comparison<T>)`: `Comparison<T>` で順序を指定し、`IEnumerable<T>` の各要素で集合を初期化します。
+- `Set(IList<T>)`: `IList<T>` の各要素で集合を初期化します。
+- `Set(IList<T>, IComparer<T>)`: `IComparer<T>` で順序を指定し、`IList<T>` の各要素で集合を初期化します。
+- `Set(IList<T>, Comparison<T>)`: `Comparison<T>` で順序を指定し、`IList<T>` の各要素で集合を初期化します。
 
 ## プロパティ
 

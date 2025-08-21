@@ -22,16 +22,24 @@ namespace CpLibrary.Collections
 			this.comparer = comparer;
 			this.IsMultiSet = isMultiSet;
 		}
-		public Set(IEnumerable<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
-		public Set(IEnumerable<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
+		public Set(IList<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
+		public Set(IList<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
 		{
-			foreach (var item in list)
-			{
-				Add(item);
-			}
+			root = Build(list, 0, list.Count);
 		}
 		public Set(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
-		public Set(IEnumerable<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
+		public Set(IList<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
+
+		Node Build(IList<T> a, int l, int r)
+		{
+			if (l >= r) return nil;
+			var m = (l + r) >> 1;
+			var p = new Node(a[m]);
+			p.Left = Build(a, l, m);
+			p.Right = Build(a, m + 1, r);
+			p.Update();
+			return p;
+		}
 
 		public T this[int index]
 		{
