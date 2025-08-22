@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CpLibrary.Test", "CpLibrary
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CpLibrary.Verify", "CpLibrary.Verify\CpLibrary.Verify.csproj", "{40F12E28-5E5E-478D-9F57-04CDBC927598}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpLibrary.Benchmark", "CpLibrary.BenchMark\CpLibrary.Benchmark.csproj", "{0F4EC309-FE87-4DA4-9CA6-3C43986F32A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpLibrary.Benchmark", "CpLibrary.Benchmark\CpLibrary.Benchmark.csproj", "{0F4EC309-FE87-4DA4-9CA6-3C43986F32A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
