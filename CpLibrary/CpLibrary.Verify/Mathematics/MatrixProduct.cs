@@ -18,8 +18,8 @@ internal class MatrixProductTest : VerifySolver
 	public override void Run()
 	{
 		var (n, m, k) = sr.ReadValue<int, int, int>();
-		var a = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(n, m));
-		var b = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(m, k));
+		var a = new Matrix<ModInt>(sr.ReadMatrix<uint>(n, m).Select(i => i.Select(j => new ModInt(j)).ToArray()).ToArray());
+		var b = new Matrix<ModInt>(sr.ReadMatrix<uint>(m, k).Select(i => i.Select(j => new ModInt(j)).ToArray()).ToArray());
 		var c = a * b;
 		sw.WriteMatrix(c);
 	}

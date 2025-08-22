@@ -19,7 +19,7 @@ internal class PowOfMatrixTest : VerifySolver
 	public override void Run()
 	{
 		var (n, k) = sr.ReadValue<int, long>();
-		var a = new Matrix<ModInt>(sr.ReadMatrix<ModInt>(n, n));
+		var a = new Matrix<ModInt>(sr.ReadMatrix<uint>(n, n).Select(i => i.Select(j => new ModInt(j)).ToArray()).ToArray());
 		var b = a.Pow(k);
 		sw.WriteMatrix(b);
 	}
