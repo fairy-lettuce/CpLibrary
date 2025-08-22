@@ -21,7 +21,7 @@ namespace CpLibrary
 
 		char[] separators;
 
-		public ScannerStringSplit(StreamReader sr, char[] separators)
+		public ScannerOld(StreamReader sr, char[] separators)
 		{
 			this.sr = sr;
 			this.separators = separators;
@@ -29,9 +29,9 @@ namespace CpLibrary
 			index = 0;
 		}
 
-		public ScannerStringSplit(StreamReader sr) : this(sr, new char[] { ' ' }) { }
+		public ScannerOld(StreamReader sr) : this(sr, new char[] { ' ' }) { }
 
-		public ScannerStringSplit() : this(new StreamReader(Console.OpenStandardInput()), new char[] { ' ' }) { }
+		public ScannerOld() : this(new StreamReader(Console.OpenStandardInput()), new char[] { ' ' }) { }
 
 		public string Read()
 		{
