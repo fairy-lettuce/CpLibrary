@@ -10,7 +10,7 @@ namespace CpLibrary.Verify
 		public override void Solve()
 		{
 			var sr = new ScannerOld(new StreamReader(Console.OpenStandardInput()));
-			var sw = new StreamWriter(Console.OpenStandardOutput());
+			var sw = new StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false };
 
 			var q = sr.ReadInt();
 			for (int i = 0; i < q; i++)
@@ -18,6 +18,8 @@ namespace CpLibrary.Verify
 				var (x, y) = sr.ReadValue<long, long>();
 				sw.WriteLine(x + y);
 			}
+
+			sw.Flush();
 		}
 	}
 }
