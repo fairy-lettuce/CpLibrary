@@ -90,14 +90,14 @@ public class Xoshiro256StarStar : IRandom
 		while (i + 8 <= b.Length)
 		{
 			ulong r = NextULong();
-			MemoryMarshal.Write(b.Slice(i), r);
+			MemoryMarshal.Write(b.Slice(i), ref r);
 			i += 8;
 		}
 		if (i < b.Length)
 		{
 			ulong r = NextULong();
 			Span<byte> lastBytes = stackalloc byte[8];
-			MemoryMarshal.Write(lastBytes, r);
+			MemoryMarshal.Write(lastBytes, ref r);
 
 			lastBytes.Slice(0, b.Length - i).CopyTo(b.Slice(i));
 		}
