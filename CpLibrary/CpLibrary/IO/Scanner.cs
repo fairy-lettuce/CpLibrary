@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,124 +13,145 @@ using System.Threading;
 
 namespace CpLibrary
 {
-	public class Scanner : IDisposable
+	public class Scanner
 	{
-		public StreamReader sr { get; private set; }
+		public Stream stream { get; private set; }
 
-		char[] buffer;
-		int len;
+		byte[] buffer;
+		int length;
 		int index;
 
-		char[] separators;
+		readonly static byte[] DEFAULT_SEPARATORS = { (byte)'\n', (byte)'\r', (byte)'\t', (byte)' ' };
+		byte[] separators;
 
-		char[]? pooledToken;
-		int pooledTokenLen;
-		bool hasPooledToken;
-
-		public Scanner(StreamReader sr, char[] separators, int size = 1 << 12)
+		public Scanner(Stream stream, byte[] separators, int size = 1 << 12)
 		{
-			this.sr = sr;
+			this.stream = stream;
 			this.separators = separators;
-			buffer = GC.AllocateUninitializedArray<char>(size);
-			len = sr.Read(buffer, 0, buffer.Length);
-			index = 0;
+			buffer = GC.AllocateUninitializedArray<byte>(size);
+			length = index = 0;
 		}
 
-		public Scanner(StreamReader sr, int size = 1 << 12) : this(sr, new char[] { ' ' }, size) { }
+		public Scanner(Stream stream, int size = 1 << 12) : this(stream, DEFAULT_SEPARATORS, size) { }
 
-		public Scanner(int size = 1 << 12) : this(new StreamReader(Console.OpenStandardInput()), new char[] { ' ' }, size) { }
+		public Scanner(int size = 1 << 12) : this(Console.OpenStandardInput(), DEFAULT_SEPARATORS, size) { }
 
-		public void Dispose()
+		public Scanner(StreamReader sr, byte[] separators, int size = 1 << 12) : this(sr.BaseStream, separators, size) { }
+
+		public Scanner(StreamReader sr, int size = 1 << 12) : this(sr.BaseStream, DEFAULT_SEPARATORS, size) { }
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static bool IsSeparator(byte c) => c <= ' ';
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static bool IsNewLine(byte c) => c >= '\n' && c <= '\r';
+
+		void Fill()
 		{
-			if (hasPooledToken && pooledToken != null)
+			if ((uint)index >= (uint)length)
 			{
-				ArrayPool<char>.Shared.Return(pooledToken, clearArray: false);
-				pooledToken = null;
-				hasPooledToken = false;
-				pooledTokenLen = 0;
-			}
-		}
-
-		static bool IsSep(char c, ReadOnlySpan<char> extra)
-		{
-			if (c <= ' ') return true;
-			for (int i = 0; i < extra.Length; i++) if (c == extra[i]) return true;
-			return false;
-		}
-
-		protected void Refill()
-		{
-			len = sr.Read(buffer, 0, buffer.Length);
-			index = 0;
-		}
-
-		protected ReadOnlySpan<char> ReadToken()
-		{
-			if (hasPooledToken)
-			{
-				ArrayPool<char>.Shared.Return(pooledToken!, clearArray: false);
-				pooledToken = null;
-				hasPooledToken = false;
-				pooledTokenLen = 0;
+				length = stream.Read(buffer, 0, buffer.Length);
+				index = 0;
+				if (length < buffer.Length) buffer[length] = (byte)'\n';
 			}
 
-			while (true)
+			while (IsSeparator(buffer[index]))
 			{
-				while (index < len && IsSep(buffer[index], separators)) index++;
-				if (index < len) break;
-				Refill();
-				if (len == 0) return ReadOnlySpan<char>.Empty;
-			}
-
-			int start = index;
-			while (index < len && !IsSep(buffer[index], separators)) index++;
-
-			if (index < len)
-			{
-				return new ReadOnlySpan<char>(buffer, start, index - start);
-			}
-
-			int firstChunk = len - start;
-			pooledToken = ArrayPool<char>.Shared.Rent(Math.Max(64, firstChunk * 2));
-			hasPooledToken = true;
-			if (firstChunk > 0)
-			{
-				buffer.AsSpan(start, firstChunk).CopyTo(pooledToken);
-				pooledTokenLen = firstChunk;
-			}
-
-			while (true)
-			{
-				Refill();
-				if (len == 0) break;
-
-				int i = index;
-				while (i < len && !IsSep(buffer[i], separators)) i++;
-
-				int chunkLen = i - index;
-				int need = pooledTokenLen + chunkLen;
-				if (pooledToken!.Length < need)
+				index++;
+				if ((uint)index >= (uint)length)
 				{
-					var bigger = ArrayPool<char>.Shared.Rent(need * 2);
-					pooledToken.AsSpan(0, pooledTokenLen).CopyTo(bigger);
-					ArrayPool<char>.Shared.Return(pooledToken, clearArray: false);
-					pooledToken = bigger;
+					length = stream.Read(buffer, 0, buffer.Length);
+					index = 0;
+					if (length < buffer.Length) buffer[length] = (byte)'\n';
 				}
-
-				if (chunkLen > 0)
-				{
-					buffer.AsSpan(index, chunkLen).CopyTo(pooledToken.AsSpan(pooledTokenLen));
-					pooledTokenLen += chunkLen;
-				}
-
-				index = i;
-				if (index < len) break;
 			}
 
-			return new ReadOnlySpan<char>(pooledToken!, 0, pooledTokenLen);
+			// Int128 can take up to 40 digits
+			// We assume inputs are decimal, have no leading zeros, and are never "evil"
+			if (index + 64u >= length && !IsSeparator(buffer[^1]))
+			{
+				buffer.AsSpan(index, length - index).CopyTo(buffer);
+				length -= index;
+				index = 0;
+				length = stream.Read(buffer, length, buffer.Length - length) + length;
+				if (length < buffer.Length) buffer[length] = (byte)'\n';
+			}
 		}
 
-		public string Read() => ReadToken().ToString();
+		public Span<byte> ReadToken()
+		{
+			if ((uint)index >= (uint)length)
+			{
+				length = stream.Read(buffer, 0, buffer.Length);
+				index = 0;
+			}
+
+			while (IsSeparator(buffer[index]))
+			{
+				index++;
+				if ((uint)index >= (uint)length)
+				{
+					length = stream.Read(buffer, 0, buffer.Length);
+					index = 0;
+					if (length < buffer.Length)
+					{
+						var p = index;
+						index = length;
+						return buffer.AsSpan(p, length - p);
+					}
+				}
+			}
+
+			var pool = ArrayPool<byte>.Shared.Rent(buffer.Length);
+			var pindex = 0;
+
+#if NET8_0_OR_GREATER
+			var next = buffer.AsSpan(index, length - index).IndexOfAnyInRange((byte)0, (byte)' ');
+#else
+			var next = buffer.AsSpan(index, length - index).IndexOfAny(separators);
+#endif
+
+			while (length > 0 && (uint)next >= (uint)length)
+			{
+				if (pool.Length - pindex < length - index) Resize(ref pool, pool.Length);
+				buffer.AsSpan(index).CopyTo(pool.AsSpan(pindex));
+				pindex += length - index;
+				length = stream.Read(buffer, 0, buffer.Length);
+				index = 0;
+
+#if NET8_0_OR_GREATER
+				next = buffer.AsSpan(index, length - index).IndexOfAnyInRange((byte)0, (byte)' ');
+#else
+				next = buffer.AsSpan(index, length - index).IndexOfAny(separators);
+#endif
+
+			}
+
+			if (next == -1) next = length;
+			if (pool.Length - pindex < next) Resize(ref pool, pool.Length);
+			buffer.AsSpan(index, next).CopyTo(pool.AsSpan(pindex));
+			pindex += next;
+			index = next + index;
+
+			try
+			{
+				return pool.AsSpan(0, pindex);
+			}
+			finally
+			{
+				ArrayPool<byte>.Shared.Return(pool);
+			}
+		}
+
+		void Resize<T>(ref T[] arr, int l)
+		{
+			var p = arr;
+			arr = ArrayPool<T>.Shared.Rent(l << 1);
+			p.AsSpan().CopyTo(arr);
+			ArrayPool<T>.Shared.Return(p);
+		}
+
+		public string Read() => Encoding.UTF8.GetString(ReadToken());
 
 		public string ReadString() => Read();
 
@@ -143,66 +165,90 @@ namespace CpLibrary
 			return arr;
 		}
 
-		public int ReadInt() => ReadValue<int>();
+
+		public uint ReadUInt()
+		{
+			Fill();
+			Utf8Parser.TryParse(buffer.AsSpan(index), out uint value, out int bc);
+			index += bc;
+			return value;
+		}
+
+		public int ReadInt()
+		{
+			Fill();
+			Utf8Parser.TryParse(buffer.AsSpan(index), out int value, out int bc);
+			index += bc;
+			return value;
+		}
+		public ulong ReadULong()
+		{
+			Fill();
+			Utf8Parser.TryParse(buffer.AsSpan(index), out ulong value, out int bc);
+			index += bc;
+			return value;
+		}
+
+		public long ReadLong()
+		{
+			Fill();
+			Utf8Parser.TryParse(buffer.AsSpan(index), out long value, out int bc);
+			index += bc;
+			return value;
+		}
+
+		public double ReadDouble()
+		{
+			Fill();
+			Utf8Parser.TryParse(buffer.AsSpan(index), out double value, out int bc);
+			index += bc;
+			return value;
+		}
+
+		public decimal ReadDecimal()
+		{
+			Fill();
+			Utf8Parser.TryParse(buffer.AsSpan(index), out decimal value, out int bc);
+			index += bc;
+			return value;
+		}
 
 		public int[] ReadIntArray(int n) => ReadValueArray<int>(n);
-
-		public long ReadLong() => ReadValue<long>();
-
+		public uint[] ReadUIntArray(int n) => ReadValueArray<uint>(n);
+		public ulong[] ReadULongArray(int n) => ReadValueArray<ulong>(n);
 		public long[] ReadLongArray(int n) => ReadValueArray<long>(n);
-
-		public double ReadDouble() => ReadValue<double>();
-
 		public double[] ReadDoubleArray(int n) => ReadValueArray<double>(n);
+		public decimal[] ReadDecimalArray(int n) => ReadValueArray<decimal>(n);
 
-		public BigInteger ReadBigInteger() => BigInteger.Parse(ReadToken(), CultureInfo.InvariantCulture);
+		//public BigInteger ReadBigInteger() => BigInteger.Parse(ReadToken(), CultureInfo.InvariantCulture);
 
-		public T1 ReadValue<T1>()
-			where T1 : ISpanParsable<T1>
-			=> T1.Parse(ReadToken(), CultureInfo.InvariantCulture);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public T ReadValue<T>()
+		{
+			if (typeof(T) == typeof(int)) return (T)(object)ReadInt();
+			if (typeof(T) == typeof(uint)) return (T)(object)ReadUInt();
+			if (typeof(T) == typeof(long)) return (T)(object)ReadLong();
+			if (typeof(T) == typeof(ulong)) return (T)(object)ReadULong();
+			if (typeof(T) == typeof(double)) return (T)(object)ReadDouble();
+			if (typeof(T) == typeof(decimal)) return (T)(object)ReadDecimal();
+			if (typeof(T) == typeof(string)) return (T)(object)ReadString();
+			throw new NotSupportedException();
+		}
 
 		public (T1, T2) ReadValue<T1, T2>()
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
 			=> (ReadValue<T1>(), ReadValue<T2>());
 		public (T1, T2, T3) ReadValue<T1, T2, T3>()
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
 			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>());
 		public (T1, T2, T3, T4) ReadValue<T1, T2, T3, T4>()
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
 			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>());
 		public (T1, T2, T3, T4, T5) ReadValue<T1, T2, T3, T4, T5>()
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
 			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>());
 		public (T1, T2, T3, T4, T5, T6) ReadValue<T1, T2, T3, T4, T5, T6>()
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
-			where T6 : ISpanParsable<T6>
 			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>());
 		public (T1, T2, T3, T4, T5, T6, T7) ReadValue<T1, T2, T3, T4, T5, T6, T7>()
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
-			where T6 : ISpanParsable<T6>
-			where T7 : ISpanParsable<T7>
 			=> (ReadValue<T1>(), ReadValue<T2>(), ReadValue<T3>(), ReadValue<T4>(), ReadValue<T5>(), ReadValue<T6>(), ReadValue<T7>());
 
 		public T1[] ReadValueArray<T1>(int n)
-			where T1 : ISpanParsable<T1>
 		{
 			var arr = GC.AllocateUninitializedArray<T1>(n);
 			for (int i = 0; i < n; i++)
@@ -212,8 +258,6 @@ namespace CpLibrary
 			return arr;
 		}
 		public (T1[], T2[]) ReadValueArray<T1, T2>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
 		{
 			var a1 = GC.AllocateUninitializedArray<T1>(n);
 			var a2 = GC.AllocateUninitializedArray<T2>(n);
@@ -224,9 +268,6 @@ namespace CpLibrary
 			return (a1, a2);
 		}
 		public (T1[], T2[], T3[]) ReadValueArray<T1, T2, T3>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
 		{
 			var a1 = GC.AllocateUninitializedArray<T1>(n);
 			var a2 = GC.AllocateUninitializedArray<T2>(n);
@@ -238,10 +279,6 @@ namespace CpLibrary
 			return (a1, a2, a3);
 		}
 		public (T1[], T2[], T3[], T4[]) ReadValueArray<T1, T2, T3, T4>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
 		{
 			var a1 = GC.AllocateUninitializedArray<T1>(n);
 			var a2 = GC.AllocateUninitializedArray<T2>(n);
@@ -254,11 +291,6 @@ namespace CpLibrary
 			return (a1, a2, a3, a4);
 		}
 		public (T1[], T2[], T3[], T4[], T5[]) ReadValueArray<T1, T2, T3, T4, T5>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
 		{
 			var a1 = GC.AllocateUninitializedArray<T1>(n);
 			var a2 = GC.AllocateUninitializedArray<T2>(n);
@@ -272,12 +304,6 @@ namespace CpLibrary
 			return (a1, a2, a3, a4, a5);
 		}
 		public (T1[], T2[], T3[], T4[], T5[], T6[]) ReadValueArray<T1, T2, T3, T4, T5, T6>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
-			where T6 : ISpanParsable<T6>
 		{
 			var a1 = GC.AllocateUninitializedArray<T1>(n);
 			var a2 = GC.AllocateUninitializedArray<T2>(n);
@@ -292,13 +318,6 @@ namespace CpLibrary
 			return (a1, a2, a3, a4, a5, a6);
 		}
 		public (T1[], T2[], T3[], T4[], T5[], T6[], T7[]) ReadValueArray<T1, T2, T3, T4, T5, T6, T7>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
-			where T6 : ISpanParsable<T6>
-			where T7 : ISpanParsable<T7>
 		{
 			var a1 = GC.AllocateUninitializedArray<T1>(n);
 			var a2 = GC.AllocateUninitializedArray<T2>(n);
@@ -315,8 +334,6 @@ namespace CpLibrary
 		}
 
 		public (T1, T2)[] ReadTupleArray<T1, T2>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
 		{
 			var ret = GC.AllocateUninitializedArray<(T1, T2)>(n);
 			for (int i = 0; i < n; i++)
@@ -326,9 +343,6 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3)[] ReadTupleArray<T1, T2, T3>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
 		{
 			var ret = GC.AllocateUninitializedArray<(T1, T2, T3)>(n);
 			for (int i = 0; i < n; i++)
@@ -338,10 +352,6 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4)[] ReadTupleArray<T1, T2, T3, T4>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
 		{
 			var ret = GC.AllocateUninitializedArray<(T1, T2, T3, T4)>(n);
 			for (int i = 0; i < n; i++)
@@ -351,11 +361,6 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4, T5)[] ReadTupleArray<T1, T2, T3, T4, T5>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
 		{
 			var ret = GC.AllocateUninitializedArray<(T1, T2, T3, T4, T5)>(n);
 			for (int i = 0; i < n; i++)
@@ -365,12 +370,6 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4, T5, T6)[] ReadTupleArray<T1, T2, T3, T4, T5, T6>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
-			where T6 : ISpanParsable<T6>
 		{
 			var ret = GC.AllocateUninitializedArray<(T1, T2, T3, T4, T5, T6)>(n);
 			for (int i = 0; i < n; i++)
@@ -380,13 +379,6 @@ namespace CpLibrary
 			return ret;
 		}
 		public (T1, T2, T3, T4, T5, T6, T7)[] ReadTupleArray<T1, T2, T3, T4, T5, T6, T7>(int n)
-			where T1 : ISpanParsable<T1>
-			where T2 : ISpanParsable<T2>
-			where T3 : ISpanParsable<T3>
-			where T4 : ISpanParsable<T4>
-			where T5 : ISpanParsable<T5>
-			where T6 : ISpanParsable<T6>
-			where T7 : ISpanParsable<T7>
 		{
 			var ret = GC.AllocateUninitializedArray<(T1, T2, T3, T4, T5, T6, T7)>(n);
 			for (int i = 0; i < n; i++)
