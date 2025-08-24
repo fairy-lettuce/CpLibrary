@@ -93,23 +93,24 @@ namespace CpLibrary
 				{
 					length = stream.Read(buffer, 0, buffer.Length);
 					index = 0;
-					if (length < buffer.Length)
-					{
-						var p = index;
-						index = length;
-						return buffer.AsSpan(p, length - p);
-					}
 				}
 			}
-
-			var pool = ArrayPool<byte>.Shared.Rent(buffer.Length);
-			var pindex = 0;
 
 #if NET8_0_OR_GREATER
 			var next = buffer.AsSpan(index, length - index).IndexOfAnyInRange((byte)0, (byte)' ');
 #else
-			var next = buffer.AsSpan(index, length - index).IndexOfAny(separators);
+			var next = buffer.AsSpan(index, length - index).IndexOfAny(separators.AsSpan());
 #endif
+
+			if (length < buffer.Length)
+			{
+				var p = index;
+				index = (int)Math.Min((uint)(index + next), (uint)length);
+				return buffer.AsSpan(p, index - p);
+			}
+
+			var pool = ArrayPool<byte>.Shared.Rent(buffer.Length);
+			var pindex = 0;
 
 			while (length > 0 && (uint)next >= (uint)length)
 			{
