@@ -36,9 +36,9 @@ title: 2023/07 大規模ライブラリ改築 仕様書
 また信頼のおけるライブラリになるように、competitive-verifier を用いて verify およびドキュメンテーション作成を行う
 
 - [**DONE!**] competitive-verifier の導入
-- ベンチマークできるようにする
+- [**DONE!**] ベンチマークできるようにする -> 一応出来た
 
-### FertiLib から未移植のライブラリ
+### FertiLib から未移植のライブラリ・作りたいライブラリ
 
 - [ ] BinarySarch
 - [ ] PriorityQueue
@@ -48,9 +48,9 @@ title: 2023/07 大規模ライブラリ改築 仕様書
 - [ ] LazySegtree
   - ac-library-csharp があるからいらないかも？
 - [x] SWAG
-- [ ] UnionFind
+- [x] UnionFind
+- [ ] Persistent UnionFind
 - [ ] Retroactive UnionFind
-  - どの問題かで書いたことがある (忘れた)
 - [x] Geometry
 - [ ] GraphBase
   - グラフ周りはもうちょっと賢い構成のクラスにしたいなあ
@@ -68,3 +68,16 @@ title: 2023/07 大規模ライブラリ改築 仕様書
   - .NET 7 の Generic Math に対応させる
 - [ ] KMPSearch
 - [ ] Trie
+- [ ] aho-corasick
+- [ ] fibonacci heap
+- [ ] fps 関連の理解とライブラリ化
+- [ ] Complex を Point2D にする
+- [ ] Counter
+- [x] modint のテスト
+- [x] 乱数生成器
+- [ ] implicit treap
+- [ ] 永続データ構造とか
+- [ ] 最近作ったライブラリのドキュメンテーション
+- [ ] グラフのビジュアライザ
+- [ ] ドキュメンテーションの URL 微調整
+- [ ] CI/CD を AOT にする
