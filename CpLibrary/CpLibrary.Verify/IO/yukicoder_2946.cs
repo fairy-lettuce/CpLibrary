@@ -30,7 +30,7 @@ internal class ProjectionTest : VerifySolver
 				if (j > 0 && g[i][j] == g[i][j - 1]) uf.Unite(i * w + j, i * w + j - 1);
 			}
 		}
-		var ans = CreateArray(h, w, (i, j) => g[i][j]);
+		var ans = StaticItems.CreateArray(h, w, (i, j) => g[i][j]);
 		for (int i = 0; i < h; i++)
 		{
 			for (int j = 0; j < w; j++)
