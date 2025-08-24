@@ -105,7 +105,7 @@ namespace CpLibrary
 			if (length < buffer.Length)
 			{
 				var p = index;
-				index = (int)Math.Min((uint)(index + next), (uint)length);
+				index = (int)Math.Min((uint)(next), (uint)(length - index)) + index;
 				return buffer.AsSpan(p, index - p);
 			}
 
