@@ -4,30 +4,30 @@ using System.Linq;
 
 namespace CpLibrary.Collections.Internal;
 
-public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
+public class SetIndexed<T> : IEnumerable<T> where T : unmanaged, IComparable<T>
 {
-	protected int root;
-	protected readonly IComparer<T> comparer;
-	protected readonly bool isMultiSet;
-	protected Node[] nodes;
-	protected int used = 0;
+	int root;
+	readonly IComparer<T> comparer;
+	readonly bool isMultiSet;
+	NodePool<Node> nodes;
 
 	public SetIndexed(bool isMultiSet = false) : this(Comparer<T>.Default, isMultiSet) { }
 	public SetIndexed(IComparer<T> comparer, bool isMultiSet = false)
 	{
 		this.comparer = comparer;
 		this.isMultiSet = isMultiSet;
-		nodes = new Node[1];
-		nodes[0] = new Node();
+		nodes = new();
+		ref var node = ref nodes.AllocSlot(out _);
+		node = new(default(T), 0, 0, 0, 0);
 		root = 0;
 	}
 	public SetIndexed(IList<T> list, bool isMultiSet = false) : this(list, Comparer<T>.Default, isMultiSet) { }
 	public SetIndexed(IList<T> list, IComparer<T> comparer, bool isMultiSet = false) : this(comparer, isMultiSet)
 	{
-		nodes = new Node[list.Count + 1];
-		nodes[0] = new Node();
+		nodes = new NodePool<Node>(list.Count + 1);
+		ref var node = ref nodes.AllocSlot(out _);
+		node = new(default(T), 0, 0, 0, 0);
 		root = Build(list, 0, list.Count);
-		used = list.Count;
 	}
 	public SetIndexed(Comparison<T> comparison, bool isMultiSet = false) : this(Comparer<T>.Create(comparison), isMultiSet) { }
 	public SetIndexed(IList<T> list, Comparison<T> comparison, bool isMultiSet = false) : this(list, Comparer<T>.Create(comparison), isMultiSet) { }
@@ -36,8 +36,10 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 	{
 		if (l >= r) return 0;
 		var m = (l + r) >> 1;
-		var p = NewNode(a[m]);
-		ref var n = ref nodes[p];
+		ref var n = ref nodes.AllocSlot(out var p);
+		n.Value = a[m];
+		n.Count = 1;
+		n.Height = 1;
 		n.Left = Build(a, l, m);
 		n.Right = Build(a, m + 1, r);
 		nodes[p] = n;
@@ -49,7 +51,7 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 	{
 		get
 		{
-			if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException();
+			if ((uint)Count <= (uint)index) throw new ArgumentOutOfRangeException();
 			return Find(root, index);
 		}
 	}
@@ -58,7 +60,7 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 	public bool Remove(T x) => Erase(ref root, x);
 	public void RemoveAt(int index)
 	{
-		if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException();
+		if ((uint)Count <= index) throw new ArgumentOutOfRangeException();
 		EraseAt(ref root, index);
 	}
 
@@ -82,7 +84,6 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 	public void Clear()
 	{
 		root = 0;
-		used = 0;
 	}
 
 	public T Min() => nodes[MinIndex(root)].Value;
@@ -104,22 +105,6 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 	public IEnumerator<T> GetEnumerator() => Items.AsEnumerable().GetEnumerator();
 	System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-	protected void EnsureOneFreeSlot()
-	{
-		if (used + 1 < nodes.Length) return;
-		int newLen = nodes.Length <= 1 ? 2 : nodes.Length << 1;
-		Array.Resize(ref nodes, newLen);
-	}
-
-	protected int NewNode(T value)
-	{
-		EnsureOneFreeSlot();
-		int p = ++used;
-		var n = new Node(value, l: 0, r: 0, c: 1, h: 1);
-		nodes[p] = n;
-		return p;
-	}
-
 	protected void Update(int p)
 	{
 		if (p == 0) return;
@@ -133,10 +118,16 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 	{
 		if (p == 0)
 		{
-			p = NewNode(x);
+			ref var node = ref nodes.AllocSlot(out var k);
+			node.Value = x;
+			node.Left = 0;
+			node.Right = 0;
+			node.Count = 1;
+			node.Height = 1;
+			p = k;
 			return true;
 		}
-		var n = nodes[p];
+		ref var n = ref nodes[p];
 		bool ret;
 		int t = comparer.Compare(n.Value, x);
 		if (t > 0)
@@ -168,8 +159,8 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 		else
 		{
 			ret = true;
-			if (nodes[n.Right].Count == 0) { p = n.Left; return true; }
-			if (nodes[n.Left].Count == 0) { p = n.Right; return true; }
+			if (nodes[n.Right].Count == 0) { nodes.Free(p); p = n.Left; return true; }
+			if (nodes[n.Left].Count == 0) { nodes.Free(p); p = n.Right; return true; }
 
 			int mx = MaxIndex(n.Left);
 			n.Value = nodes[mx].Value;
@@ -186,8 +177,8 @@ public class SetIndexed<T> : IEnumerable<T> where T : IComparable<T>
 	{
 		var n = nodes[p];
 		int leftCount = nodes[n.Left].Count;
-		if (index < leftCount) { EraseAt(ref n.Left, index); nodes[p] = n; Balance(ref p); return; }
-		if (index > leftCount) { EraseAt(ref n.Right, index - leftCount - 1); nodes[p] = n; Balance(ref p); return; }
+		if (index < leftCount) { EraseAt(ref n.Left, index); nodes.Free(p); nodes[p] = n; Balance(ref p); return; }
+		if (index > leftCount) { EraseAt(ref n.Right, index - leftCount - 1); nodes.Free(p); nodes[p] = n; Balance(ref p); return; }
 
 		if (nodes[n.Left].Count == 0) { p = n.Right; return; }
 		if (nodes[n.Right].Count == 0) { p = n.Left; return; }
