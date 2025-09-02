@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
+using ModInt = CpLibrary.Mathematics.MontgomeryModInt<AtCoder.Mod998244353>;
 
 namespace CpLibrary.Verify.Collections;
 
@@ -17,12 +17,8 @@ internal class ImplicitTreapTest : VerifySolver
 	public override void Run()
 	{
 		var (n, q) = sr.ReadValue<int, int>();
-		var treap = new ImplicitTreap<(ModInt v, int len), (ModInt a, ModInt b), Op>();
-		var a = sr.ReadIntArray(n);
-		for (int i = 0; i < n; i++)
-		{
-			treap.Add(i, (a[i], 1));
-		}
+		var a = sr.ReadIntArray(n).Select(p => ((ModInt)p, 1)).ToArray();
+		var treap = new ImplicitTreap<(ModInt v, int len), (ModInt a, ModInt b), Op>(a);
 		for (int i = 0; i < q; i++)
 		{
 			var query = sr.ReadInt();
@@ -56,23 +52,10 @@ internal class ImplicitTreapTest : VerifySolver
 
 	readonly struct Op : ILazySegtreeOperator<(ModInt v, int len), (ModInt a, ModInt b)>
 	{
-		public (ModInt a, ModInt b) FIdentity => (1, 0);
-
 		public (ModInt v, int len) Identity => (0, 0);
-
-		public (ModInt a, ModInt b) Composition((ModInt a, ModInt b) nf, (ModInt a, ModInt b) cf)
-		{
-			return (nf.a * cf.a, nf.a * cf.b + nf.b);
-		}
-
-		public (ModInt v, int len) Mapping((ModInt a, ModInt b) f, (ModInt v, int len) x)
-		{
-			return (f.a * x.v + f.b * x.len, x.len);
-		}
-
-		public (ModInt v, int len) Operate((ModInt v, int len) x, (ModInt v, int len) y)
-		{
-			return (x.v + y.v, x.len + y.len);
-		}
+		public (ModInt a, ModInt b) FIdentity => (1, 0);
+		public (ModInt a, ModInt b) Composition((ModInt a, ModInt b) nf, (ModInt a, ModInt b) cf) => (nf.a * cf.a, nf.a * cf.b + nf.b);
+		public (ModInt v, int len) Mapping((ModInt a, ModInt b) f, (ModInt v, int len) x) => (f.a * x.v + f.b * x.len, x.len);
+		public (ModInt v, int len) Operate((ModInt v, int len) x, (ModInt v, int len) y) => (x.v + y.v, x.len + y.len);
 	}
 }

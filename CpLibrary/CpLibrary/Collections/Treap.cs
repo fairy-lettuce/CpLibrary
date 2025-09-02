@@ -15,7 +15,7 @@ public class ImplicitTreap<T, F, TOp>
 	int root;
 	static readonly Xoshiro256StarStar rand = new();
 
-	public ImplicitTreap(int size = 1 << 1)
+	public ImplicitTreap(int size = 1 << 10)
 	{
 		nodes = new(size);
 		ref var node = ref nodes.AllocSlot(out _);
@@ -30,9 +30,35 @@ public class ImplicitTreap<T, F, TOp>
 		root = 0;
 	}
 
-	public void Build(IList<T> list)
+	public ImplicitTreap(IList<T> a) : this(a.Count + 1)
 	{
-		throw new NotImplementedException();
+		root = Build(a, 0, a.Count);
+	}
+
+	public T this[int index]
+	{
+		get => nodes[Find(root, index)].value;
+		set => Set(root, index, value);
+	}
+
+	public int Build(IList<T> a, int l, int r)
+	{
+		if (l >= r) return 0;
+		var m = (l + r) >> 1;
+		ref var n = ref nodes.AllocSlot(out var p);
+		n.value = a[m];
+		n.prod = a[m];
+		n.lazy = op.FIdentity;
+		n.c = 1;
+		n.priority = NextPriority();
+		n.l = Build(a, l, m);
+		n.r = Build(a, m + 1, r);
+		// heapify
+		if (n.priority < nodes[n.l].priority) (n.priority, nodes[n.l].priority) = (nodes[n.l].priority, n.priority);
+		if (n.priority < nodes[n.r].priority) (n.priority, nodes[n.r].priority) = (nodes[n.r].priority, n.priority);
+		nodes[p] = n;
+		Update(p);
+		return p;
 	}
 
 	public int Count => nodes[root].c;
@@ -41,12 +67,9 @@ public class ImplicitTreap<T, F, TOp>
 
 	public void Remove(int index) => root = Erase(root, index);
 
-
+	// note: operation requires commutativity
 	public T Prod(int l, int r)
 	{
-		// split twice
-		// get fold value
-		// merge twice
 		var (lx, right) = Split(root, r);
 		var (left, mid) = Split(lx, l);
 		var prod = nodes[mid].prod;
@@ -57,9 +80,6 @@ public class ImplicitTreap<T, F, TOp>
 
 	public void Apply(int l, int r, F f)
 	{
-		// split twice
-		// apply
-		// merge twice
 		var (lx, right) = Split(root, r);
 		var (left, mid) = Split(lx, l);
 		if (mid != 0) Apply(mid, f);
@@ -69,9 +89,6 @@ public class ImplicitTreap<T, F, TOp>
 
 	public void Reverse(int l, int r)
 	{
-		// split twice
-		// reverse subtree
-		// merge twice
 		var (lx, right) = Split(root, r);
 		var (left, mid) = Split(lx, l);
 		Toggle(mid);
@@ -87,18 +104,18 @@ public class ImplicitTreap<T, F, TOp>
 
 	}
 
-	T Find(int k)
+	int Find(int t, int k)
+	{
+		throw new NotImplementedException();
+	}
+
+	void Set(int t, int k, T value)
 	{
 		throw new NotImplementedException();
 	}
 
 	int Join(int l, int r)
 	{
-		// TODO: impl Join
-		// algorithm:
-		// take the node with higher priority and unlink the edge for left/right child
-		// recursively join the rest left/right
-		// connect the resulting subtree as the new child
 		if (l == 0)
 		{
 			return r;
@@ -146,17 +163,11 @@ public class ImplicitTreap<T, F, TOp>
 			r = t;
 			Update(t);
 		}
-		//Update(l);
-		//Update(r);
 		return (l, r);
 	}
 
 	int Insert(int t, int k, T value, ulong priority)
 	{
-		// algorithm:
-		// go down the tree until priority
-		// split subtree into L, R
-		// make a new node with children L, R
 		if (t == 0)
 		{
 			ref var n = ref nodes.AllocSlot(out var idx);
@@ -203,10 +214,6 @@ public class ImplicitTreap<T, F, TOp>
 
 	int Erase(int t, int k)
 	{
-		// algorithm:
-		// go down the tree until key
-		// remove the node
-		// merge the left/right children
 		if (t == 0) return 0;
 		Propagate(t);
 		if (k < nodes[nodes[t].l].c)
@@ -285,14 +292,8 @@ public class ImplicitTreap<T, F, TOp>
 		ref var n = ref nodes[t];
 		n.c = nodes[n.l].c + nodes[n.r].c + 1;
 		var prod = n.value;
-		if (n.l != 0)
-		{
-			prod = op.Operate(nodes[n.l].prod, prod);
-		}
-		if (n.r != 0)
-		{
-			prod = op.Operate(prod, nodes[n.r].prod);
-		}
+		if (n.l != 0) prod = op.Operate(nodes[n.l].prod, prod);
+		if (n.r != 0) prod = op.Operate(prod, nodes[n.r].prod);
 		n.prod = prod;
 	}
 
@@ -322,6 +323,8 @@ public class ImplicitTreap<T, F, TOp>
 		public int c;
 		public ulong priority;
 		public bool rev;
+
+		public Node(T value, ulong priority) : this(value, value, op.FIdentity, 0, 0, 1, priority, false) { }
 
 		public Node(T value, T prod, F lazy, int l, int r, int c, ulong priority, bool rev)
 		{
