@@ -193,6 +193,21 @@ public class ImplicitTreap<T, F, TOp>
 
 	int Insert(int t, int k, T value, ulong priority)
 	{
+		ref var node = ref nodes.AllocSlot(out var idx);
+		node.value = value;
+		node.prod = value;
+		node.lazy = op.FIdentity;
+		node.l = 0;
+		node.r = 0;
+		node.c = 1;
+		node.priority = priority;
+		node.rev = false;
+		var (l, r) = Split(root, k);
+		return Join(Join(l, idx), r);
+	}
+
+	int Insert2(int t, int k, T value, ulong priority)
+	{
 		if (t == 0)
 		{
 			ref var node = ref nodes.AllocSlot(out var idx);
@@ -242,6 +257,14 @@ public class ImplicitTreap<T, F, TOp>
 	}
 
 	int Erase(int t, int k)
+	{
+		var (l, x) = Split(t, k);
+		var (mid, r) = Split(x, 1);
+		nodes.Free(mid);
+		return Join(l, r);
+	}
+
+	int Erase2(int t, int k)
 	{
 		if (t == 0) return 0;
 		Propagate(t);
