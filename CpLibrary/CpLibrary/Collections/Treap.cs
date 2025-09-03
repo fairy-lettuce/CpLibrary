@@ -106,24 +106,49 @@ public class ImplicitTreap<T, F, TOp>
 
 	int Find(int t, int k)
 	{
-		throw new NotImplementedException();
+		if (t == 0) return 0;
+		Propagate(t);
+		ref var n = ref nodes[t];
+		if (nodes[n.l].c > k)
+		{
+			var ret = Find(n.l, k);
+			Update(t);
+			return ret;
+		}
+		else if (nodes[n.l].c > k)
+		{
+			var ret = Find(n.r, k - nodes[n.l].c - 1);
+			Update(t);
+			return ret;
+		}
+		return t;
 	}
 
 	void Set(int t, int k, T value)
 	{
-		throw new NotImplementedException();
+		if (t == 0) return;
+		Propagate(t);
+		ref var n = ref nodes[t];
+		if (nodes[n.l].c > k)
+		{
+			var ret = Find(n.l, k);
+			Update(t);
+			return;
+		}
+		else if (nodes[n.l].c > k)
+		{
+			var ret = Find(n.r, k - nodes[n.l].c - 1);
+			Update(t);
+			return;
+		}
+		n.value = value;
+		Update(t);
 	}
 
 	int Join(int l, int r)
 	{
-		if (l == 0)
-		{
-			return r;
-		}
-		if (r == 0)
-		{
-			return l;
-		}
+		if (l == 0) return r;
+		if (r == 0) return l;
 		Propagate(l);
 		Propagate(r);
 		ref var ln = ref nodes[l];
@@ -170,46 +195,50 @@ public class ImplicitTreap<T, F, TOp>
 	{
 		if (t == 0)
 		{
-			ref var n = ref nodes.AllocSlot(out var idx);
-			n.value = value;
-			n.prod = value;
-			n.lazy = op.FIdentity;
-			n.l = 0;
-			n.r = 0;
-			n.c = 1;
-			n.priority = priority;
-			n.rev = false;
+			ref var node = ref nodes.AllocSlot(out var idx);
+			node.value = value;
+			node.prod = value;
+			node.lazy = op.FIdentity;
+			node.l = 0;
+			node.r = 0;
+			node.c = 1;
+			node.priority = priority;
+			node.rev = false;
 			return idx;
 		}
 		Propagate(t);
-		if (nodes[t].priority >= priority)
+		ref var n = ref nodes[t];
+		var lc = nodes[n.l].c;
+		if (n.priority >= priority)
 		{
-			if (k <= nodes[nodes[t].l].c)
+			if (k <= lc)
 			{
-				var ret = Insert(nodes[t].l, k, value, priority);
+				var ret = Insert(n.l, k, value, priority);
 				nodes[t].l = ret;
 				Update(t);
 				return t;
 			}
 			else
 			{
-				var ret = Insert(nodes[t].r, k - nodes[nodes[t].l].c - 1, value, priority);
+				var ret = Insert(n.r, k - lc - 1, value, priority);
 				nodes[t].r = ret;
 				Update(t);
 				return t;
 			}
 		}
-		var (l, r) = Split(t, k);
-		ref var node = ref nodes.AllocSlot(out var index);
-		node.value = value;
-		node.prod = value;
-		node.lazy = op.FIdentity;
-		node.l = l;
-		node.r = r;
-		node.priority = priority;
-		node.rev = false;
-		Update(index);
-		return index;
+		{
+			var (l, r) = Split(t, k);
+			ref var node = ref nodes.AllocSlot(out var index);
+			node.value = value;
+			node.prod = value;
+			node.lazy = op.FIdentity;
+			node.l = l;
+			node.r = r;
+			node.priority = priority;
+			node.rev = false;
+			Update(index);
+			return index;
+		}
 	}
 
 	int Erase(int t, int k)
@@ -235,7 +264,6 @@ public class ImplicitTreap<T, F, TOp>
 			var res = Join(nodes[t].l, nodes[t].r);
 			nodes.Free(t);
 			t = res;
-			// Update(t);
 			return t;
 		}
 	}
@@ -274,9 +302,12 @@ public class ImplicitTreap<T, F, TOp>
 			Toggle(n.r);
 			n.rev = false;
 		}
-		if (n.l != 0) Apply(n.l, n.lazy);
-		if (n.r != 0) Apply(n.r, n.lazy);
-		n.lazy = op.FIdentity;
+		if (!EqualityComparer<F>.Default.Equals(n.lazy, op.FIdentity))
+		{
+			if (n.l != 0) Apply(n.l, n.lazy);
+			if (n.r != 0) Apply(n.r, n.lazy);
+			n.lazy = op.FIdentity;
+		}
 	}
 
 	void Apply(int t, F f)
@@ -291,10 +322,7 @@ public class ImplicitTreap<T, F, TOp>
 		if (t == 0) return;
 		ref var n = ref nodes[t];
 		n.c = nodes[n.l].c + nodes[n.r].c + 1;
-		var prod = n.value;
-		if (n.l != 0) prod = op.Operate(nodes[n.l].prod, prod);
-		if (n.r != 0) prod = op.Operate(prod, nodes[n.r].prod);
-		n.prod = prod;
+		n.prod = op.Operate(op.Operate(nodes[n.l].prod, n.value), nodes[n.r].prod);
 	}
 
 	public int MaxHeight() => MaxHeight(root);
