@@ -5,6 +5,16 @@
 
 [competitive-verifier](https://github.com/competitive-verifier/competitive-verifier) を用いて GitHub Pages にライブラリのドキュメントを生成しています。
 
+## リポジトリ構成
+
+- ソリューション `CpLibrary`
+  - `CpLibrary`: ライブラリ本体
+  - `CpLibrary.Test`: ライブラリのテストコード
+  - `CpLibrary.Verify`: competitive-verifier を用いたライブラリの verify
+  - `CpLibrary.Benchmark`: ライブラリのベンチマークコード
+- ソリューション `CpProject`
+  - `CpProject`: コンテスト中などに使用するテンプレート
+
 ## 使い方
 
 Visual Studio でクローンして動かせば多分上手く行きます。
