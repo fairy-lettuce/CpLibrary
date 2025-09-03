@@ -35,17 +35,18 @@ public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnu
 
 	public Matrix(T[][] a)
 	{
-		if (a is null || a.Length == 0) throw new ArgumentException("Input array cannot be null or empty.", nameof(a));
+		Debug.Assert(a is not null, $"The input array {a} should not be null.");
+		Debug.Assert(a.Length > 0, $"The input array {a} should not be empty.");
 		row = a.Length;
 		column = a[0].Length;
-		if (!a.Select(b => b.Length).All(x => x == column)) throw new ArgumentException("All rows must have the same length.", nameof(a));
+		Debug.Assert(a.Select(b => b.Length).All(x => x == column), $"All rows in {nameof(a)} must have the same length.");
 		value = a.SelectMany(x => x).ToArray();
 	}
 
 	public Matrix(T[,] a)
 	{
-		if (a is null || a.Length == 0) throw new ArgumentException("Input array cannot be null or empty.", nameof(a));
-		row = a.GetLength(0);
+		Debug.Assert(a is not null, $"The input array {a} should not be null.");
+		Debug.Assert(a.Length > 0, $"The input array {a} should not be empty."); row = a.GetLength(0);
 		column = a.GetLength(1);
 		value = a.Cast<T>().ToArray();
 	}
@@ -68,8 +69,8 @@ public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnu
 
 	public static Matrix<T> operator +(Matrix<T> lhs, Matrix<T> rhs)
 	{
-		if (lhs.row != rhs.row) throw new ArgumentException();
-		if (lhs.column != rhs.column) throw new ArgumentException();
+		Debug.Assert(lhs.row == rhs.row);
+		Debug.Assert(lhs.column == rhs.column);
 		var ret = new T[lhs.row * lhs.column];
 		for (int i = 0; i < lhs.row * lhs.column; i++)
 		{
@@ -80,8 +81,8 @@ public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnu
 
 	public static Matrix<T> operator -(Matrix<T> lhs, Matrix<T> rhs)
 	{
-		if (lhs.row != rhs.row) throw new ArgumentException();
-		if (lhs.column != rhs.column) throw new ArgumentException();
+		Debug.Assert(lhs.row == rhs.row);
+		Debug.Assert(lhs.column == rhs.column);
 		var ret = new T[lhs.row * lhs.column];
 		for (int i = 0; i < lhs.row * lhs.column; i++)
 		{
@@ -104,7 +105,7 @@ public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnu
 
 	public static Matrix<T> operator *(Matrix<T> l, Matrix<T> r)
 	{
-		if (l.column != r.row) throw new ArgumentException();
+		Debug.Assert(l.column == r.row);
 		var rt = r.Transpose();
 		var lv = l.value;
 		var rtv = rt.value;
@@ -132,7 +133,7 @@ public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnu
 
 	public static Matrix<T> Pow(Matrix<T> x, long n)
 	{
-		if (x.column != x.row) throw new ArgumentException();
+		Debug.Assert(x.row == x.column);
 		var ret = new Matrix<T>(x.column, x.column);
 		for (int i = 0; i < x.column; i++)
 		{
@@ -162,7 +163,7 @@ public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnu
 
 	public T Determinant()
 	{
-		if (column != row) throw new ArgumentException();
+		Debug.Assert(row == column);
 		var a = new T[row * column];
 		value.AsSpan().CopyTo(a);
 		var swap = false;
@@ -264,7 +265,7 @@ public class Matrix<T> : IEquatable<Matrix<T>>, IEnumerable<T>, IEnumerable<IEnu
 
 	IEnumerable<T> GetRow(int idx)
 	{
-		if (idx < 0 || row <= idx) throw new ArgumentException();
+		Debug.Assert((uint)idx < (uint)row);
 		for (int i = 0; i < column; i++)
 		{
 			yield return value[idx * column + i];

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace CpLibrary.Collections
 {
@@ -31,7 +32,7 @@ namespace CpLibrary.Collections
 
 		public T Prod()
 		{
-			if (front.Count == 0 && back.Count == 0) throw new InvalidOperationException();
+			Debug.Assert(front.Count + back.Count > 0);
 			if (front.Count == 0) return back.Peek().prod;
 			if (back.Count == 0) return front.Peek().prod;
 			return operate(front.Peek().prod, back.Peek().prod);
@@ -46,7 +47,7 @@ namespace CpLibrary.Collections
 
 		public T Pop()
 		{
-			if (Count == 0) throw new InvalidOperationException();
+			Debug.Assert(Count > 0);
 			Count--;
 			if (front.Count == 0)
 			{

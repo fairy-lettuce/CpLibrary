@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CpLibrary.Collections.Internal;
@@ -51,7 +52,7 @@ public class SetIndexed<T> : IEnumerable<T> where T : unmanaged, IComparable<T>
 	{
 		get
 		{
-			if ((uint)Count <= (uint)index) throw new ArgumentOutOfRangeException();
+			Debug.Assert((uint)Count > (uint)index);
 			return Find(root, index);
 		}
 	}
@@ -60,7 +61,7 @@ public class SetIndexed<T> : IEnumerable<T> where T : unmanaged, IComparable<T>
 	public bool Remove(T x) => Erase(ref root, x);
 	public void RemoveAt(int index)
 	{
-		if ((uint)Count <= index) throw new ArgumentOutOfRangeException();
+		Debug.Assert((uint)Count > (uint)index);
 		EraseAt(ref root, index);
 	}
 

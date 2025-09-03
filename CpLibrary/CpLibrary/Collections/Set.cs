@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CpLibrary.Collections;
@@ -49,7 +50,7 @@ public class Set<T> : IEnumerable<T> where T : IComparable<T>
 	{
 		get
 		{
-			if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException();
+			Debug.Assert((uint)index < (uint)Count);
 			return Find(root, index);
 		}
 	}
@@ -58,7 +59,7 @@ public class Set<T> : IEnumerable<T> where T : IComparable<T>
 	public bool Remove(T x) => Erase(ref root, x);
 	public void RemoveAt(int index)
 	{
-		if (index < 0 || Count <= index) throw new ArgumentOutOfRangeException();
+		Debug.Assert((uint)index < (uint)Count);
 		EraseAt(ref root, index);
 	}
 

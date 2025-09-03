@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -23,10 +24,7 @@ public class Xoshiro256StarStar : IRandom
 		this.s1 = s1;
 		this.s2 = s2;
 		this.s3 = s3;
-		if ((s0 | s1 | s2 | s3) == 0)
-		{
-			throw new ArgumentException();
-		}
+		Debug.Assert((s0 | s1 | s2 | s3) != 0);
 	}
 
 	public Xoshiro256StarStar(Random rand)
@@ -65,7 +63,7 @@ public class Xoshiro256StarStar : IRandom
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public int Next(int b)
 	{
-		if (b < 0) throw new ArgumentOutOfRangeException();
+		Debug.Assert(b >= 0);
 		if (b == 0) return 0;
 		ulong threshold = ulong.MaxValue - ulong.MaxValue % (ulong)b;
 		ulong r;
@@ -76,7 +74,7 @@ public class Xoshiro256StarStar : IRandom
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public int Next(int a, int b)
 	{
-		if (a > b) throw new ArgumentException();
+		Debug.Assert(a <= b);
 		return Next(b - a) + a;
 	}
 
@@ -120,7 +118,7 @@ public class Xoshiro256StarStar : IRandom
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public long NextLong(long b)
 	{
-		if (b < 0) throw new ArgumentOutOfRangeException();
+		Debug.Assert(b >= 0);
 		if (b == 0) return 0;
 		ulong threshold = ulong.MaxValue - ulong.MaxValue % (ulong)b;
 		ulong r;
@@ -131,7 +129,7 @@ public class Xoshiro256StarStar : IRandom
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public long NextLong(long a, long b)
 	{
-		if (a > b) throw new ArgumentException();
+		Debug.Assert(a <= b);
 		return NextLong(b - a) + a;
 	}
 }

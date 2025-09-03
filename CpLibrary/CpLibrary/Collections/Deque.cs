@@ -55,7 +55,7 @@ namespace CpLibrary.Collections
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set
 			{
-				if (index < 0 || Count <= index) throw new IndexOutOfRangeException();
+				Debug.Assert((uint)index < (uint)Count);
 				buffer[(index + cur) & mask] = value;
 			}
 		}
@@ -76,7 +76,7 @@ namespace CpLibrary.Collections
 
 		public T PopFront()
 		{
-			if (Count == 0) throw new InvalidOperationException("Deque contains no elements.");
+			Debug.Assert(Count > 0);
 			var ret = buffer[cur];
 			cur = ++cur & mask;
 			Count--;
@@ -85,7 +85,7 @@ namespace CpLibrary.Collections
 
 		public T PopBack()
 		{
-			if (Count == 0) throw new InvalidOperationException("Deque contains no elements.");
+			Debug.Assert(Count > 0);
 			var ret = buffer[(cur + --Count) & mask];
 			return ret;
 		}
@@ -116,7 +116,7 @@ namespace CpLibrary.Collections
 
 		public void AddAt(int index, T value)
 		{
-			if (index < 0 || Count < index) throw new IndexOutOfRangeException();
+			Debug.Assert((uint)index < (uint)Count);
 			if (index < Count / 2)
 			{
 				PushFront(value);
@@ -139,7 +139,7 @@ namespace CpLibrary.Collections
 
 		public T RemoveAt(int index)
 		{
-			if (index < 0 || Count <= index) throw new IndexOutOfRangeException();
+			Debug.Assert((uint)index < (uint)Count);
 			var ret = this[index];
 			if (index < Count / 2)
 			{

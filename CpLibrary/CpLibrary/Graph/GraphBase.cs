@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Globalization;
 using System.Threading;
+using System.Diagnostics;
 
 namespace CpLibrary.Graph;
 
@@ -73,7 +74,7 @@ public static partial class Graph
 
 		public UndirectedGraph(int nodeCount, int[] u, int[] v) : this(nodeCount)
 		{
-			if (u.Length != v.Length) throw new ArgumentException($"The arrays {nameof(u)} and {nameof(v)} must have the same length.");
+			Debug.Assert(u.Length == v.Length, $"The arrays {nameof(u)} and {nameof(v)} must have the same length.");
 			for (var i = 0; i < u.Length; i++)
 			{
 				AddEdge(u[i], v[i]);
@@ -101,7 +102,7 @@ public static partial class Graph
 
 		public DirectedGraph(int nodeCount, int[] from, int[] to) : this(nodeCount)
 		{
-			if (from.Length != to.Length) throw new ArgumentException($"The arrays {nameof(from)} and {nameof(to)} must have the same length.");
+			Debug.Assert(from.Length == to.Length, $"The arrays {nameof(from)} and {nameof(to)} must have the same length.");
 			for (var i = 0; i < from.Length; i++)
 			{
 				AddEdge(from[i], to[i]);
@@ -124,9 +125,9 @@ public static partial class Graph
 
 		public UndirectedWeightedGraph(int nodeCount, int[] u, int[] v, T[] weight) : this(nodeCount)
 		{
-			if (u.Length != v.Length) throw new ArgumentException($"The arrays {nameof(u)} and {nameof(v)} must have the same length.");
-			if (u.Length != weight.Length) throw new ArgumentException($"The arrays {nameof(u)} and {nameof(weight)} must have the same length.");
-			if (weight.Length != v.Length) throw new ArgumentException($"The arrays {nameof(v)} and {nameof(weight)} must have the same length.");
+			Debug.Assert(u.Length == v.Length, $"The arrays {nameof(u)} and {nameof(v)} must have the same length.");
+			Debug.Assert(u.Length == weight.Length, $"The arrays {nameof(u)} and {nameof(weight)} must have the same length.");
+			Debug.Assert(weight.Length == v.Length, $"The arrays {nameof(weight)} and {nameof(v)} must have the same length.");
 			for (var i = 0; i < u.Length; i++)
 			{
 				AddEdge(u[i], v[i], weight[i]);
@@ -153,9 +154,9 @@ public static partial class Graph
 
 		public DirectedWeightedGraph(int nodeCount, int[] from, int[] to, T[] weight) : this(nodeCount)
 		{
-			if (from.Length != to.Length) throw new ArgumentException($"The arrays {nameof(from)} and {nameof(to)} must have the same length.");
-			if (from.Length != weight.Length) throw new ArgumentException($"The arrays {nameof(from)} and {nameof(weight)} must have the same length.");
-			if (weight.Length != to.Length) throw new ArgumentException($"The arrays {nameof(to)} and {nameof(weight)} must have the same length.");
+			Debug.Assert(from.Length == to.Length, $"The arrays {nameof(from)} and {nameof(to)} must have the same length.");
+			Debug.Assert(from.Length == weight.Length, $"The arrays {nameof(from)} and {nameof(weight)} must have the same length.");
+			Debug.Assert(weight.Length == to.Length, $"The arrays {nameof(weight)} and {nameof(to)} must have the same length.");
 			for (var i = 0; i < from.Length; i++)
 			{
 				AddEdge(from[i], to[i], weight[i]);

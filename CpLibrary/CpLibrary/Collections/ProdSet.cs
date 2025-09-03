@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CpLibrary.Collections
@@ -75,7 +76,7 @@ namespace CpLibrary.Collections
 
 		public T Prod(int l, int r)
 		{
-			if (0 > l || r > Count) throw new ArgumentException($"The range [{l}, {r}) should be within the range [0, {Count}).");
+			Debug.Assert(0 <= l && r <= Count);
 			if (l >= r) return op.Identity;
 			return Prod(root, nodes[nodes[root].Left].Count, 0, Count, l, r);
 		}
