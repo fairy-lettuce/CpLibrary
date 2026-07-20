@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CpProject を実行 (対話REPL + ライブ監視)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "debug: ライブ監視をアタッチ",
+      "program": "${workspaceFolder}/CpProject/bin/Debug/net7.0/CpProject.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/CpProject/Workspace",
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "CpProject を実行 (対話REPL + CPUトレース + ライブ監視)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "debug: トレース + ライブ監視をアタッチ",
+      "program": "${workspaceFolder}/CpProject/bin/Debug/net7.0/CpProject.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/CpProject/Workspace",
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    }
+  ]
+}

@@ -353,3 +353,6 @@ MigrationBackup/
 CpProject/Contest/*/*_combined.csx
 CpLibrary/.competitive-verifier/cache/*
 CpLibrary/.competitive-verifier/_jekyll/*
+
+# dotnet-trace output (see .vscode/tasks.json profiling tasks)
+.profiles/

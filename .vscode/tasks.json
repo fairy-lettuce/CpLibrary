@@ -1,0 +1,115 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/CpProject.sln",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "build: CpLibrary.sln (Test/Verify/Benchmark)",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/CpLibrary/CpLibrary.sln",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": "build"
+    },
+    {
+      "label": "test",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "test",
+        "${workspaceFolder}/CpLibrary/CpLibrary.Test/CpLibrary.Test.csproj"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "test", "isDefault": true }
+    },
+    {
+      "label": "profile: セッション実行 (CPUトレース + メモリ/GCを同時記録)",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "${workspaceFolder}/.vscode/scripts/profile-session.ps1"
+      ],
+      "dependsOn": "build",
+      "dependsOrder": "sequence",
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    },
+    {
+      "label": "profile: 起動中のCpProjectにメモリ/GCをライブ監視でアタッチ",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "${workspaceFolder}/.vscode/scripts/attach-diagnostics.ps1"
+      ],
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    },
+    {
+      "label": "debug: ライブ監視をアタッチ",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "${workspaceFolder}/.vscode/scripts/attach-diagnostics.ps1"
+      ],
+      "dependsOn": "build",
+      "dependsOrder": "sequence",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated", "group": "debug-diagnostics" },
+      "problemMatcher": {
+        "owner": "cpproject-attach",
+        "pattern": { "regexp": "^\\b\\B$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "タスク開始",
+          "endsPattern": "アタッチ準備完了"
+        }
+      }
+    },
+    {
+      "label": "debug: トレース + ライブ監視をアタッチ",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-File",
+        "${workspaceFolder}/.vscode/scripts/attach-diagnostics.ps1",
+        "-IncludeTrace"
+      ],
+      "dependsOn": "build",
+      "dependsOrder": "sequence",
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated", "group": "debug-diagnostics" },
+      "problemMatcher": {
+        "owner": "cpproject-attach",
+        "pattern": { "regexp": "^\\b\\B$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "タスク開始",
+          "endsPattern": "アタッチ準備完了"
+        }
+      }
+    }
+  ]
+}
