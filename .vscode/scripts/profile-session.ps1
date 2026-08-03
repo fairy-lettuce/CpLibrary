@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $ProfilesDir = Join-Path $RepoRoot ".profiles"
-$Dll = Join-Path $RepoRoot "CpProject" "bin" "Debug" "net7.0" "CpProject.dll"
+$Dll = Join-Path $RepoRoot "CpProject" "bin" "Debug" "net9.0" "CpProject.dll"
 $TracePath = Join-Path $ProfilesDir "trace.nettrace"
 $SpeedscopePath = Join-Path $ProfilesDir "trace.speedscope.json"
 $CountersPath = Join-Path $ProfilesDir "counters.csv"
