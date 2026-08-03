@@ -1,0 +1,17 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="Verify" />
+  </Configurations>
+  <Project Path="CpLibrary.Benchmark/CpLibrary.Benchmark.csproj">
+    <BuildType Solution="Verify|*" Project="Debug" />
+  </Project>
+  <Project Path="CpLibrary.Test/CpLibrary.Test.csproj">
+    <BuildType Solution="Verify|*" Project="Debug" />
+  </Project>
+  <Project Path="CpLibrary.Verify/CpLibrary.Verify.csproj" />
+  <Project Path="CpLibrary/CpLibrary.csproj">
+    <BuildType Solution="Verify|*" Project="Debug" />
+  </Project>
+</Solution>

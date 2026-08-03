@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CpLibrary/CpLibrary/CpLibrary.csproj" />
+  <Project Path="CpProject/CpProject.csproj" />
+</Solution>
