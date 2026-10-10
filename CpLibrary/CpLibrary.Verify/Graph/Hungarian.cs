@@ -12,7 +12,7 @@ using ModInt = AtCoder.StaticModInt<AtCoder.Mod998244353>;
 
 namespace CpLibrary.Verify.Graph;
 
-// competitive-verifier: document_title UnionFind (Library Checker: Unionfind)
+// competitive-verifier: document_title Assignment problem (Hungarian algorithm) (Library Checker: assignment)
 internal class HungarianTest : VerifySolver
 {
 	public override string Url => "https://judge.yosupo.jp/problem/assignment";
@@ -20,7 +20,7 @@ internal class HungarianTest : VerifySolver
 	public override void Run()
 	{
 		var n = sr.ReadInt();
-		var a = CreateArray(n, i => sr.ReadLongArray(n));
+		var a = CpLibrary.Util.CreateArray(n, i => sr.ReadLongArray(n));
 		var (x, p) = CpLibrary.Graph.Hungarian.Solve(a);
 		sw.WriteLine(x);
 		sw.WriteLine(p.Join(" "));
