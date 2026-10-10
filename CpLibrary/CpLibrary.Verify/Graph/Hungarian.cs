@@ -20,7 +20,7 @@ internal class HungarianTest : VerifySolver
 	public override void Run()
 	{
 		var n = sr.ReadInt();
-		var a = CpLibrary.Util.CreateArray(n, i => sr.ReadLongArray(n));
+		var a = CpLibrary.StaticItems.CreateArray(n, i => sr.ReadLongArray(n));
 		var (x, p) = CpLibrary.Graph.Hungarian.Solve(a);
 		sw.WriteLine(x);
 		sw.WriteLine(p.Join(" "));
